@@ -1,0 +1,49 @@
+			<div class="cart-sidebar">
+					<div class="cart-sidebar__title"><h3>{{ text_custcart }}</h3><a href="{{ cart }}">{{ text_lightshop_edit_cart }}</a></div>
+					{% if (products or vouchers) %} 
+						<ul class="cart__list">
+						   {% for product in products %} 
+							<li class="cart__list-item">
+								<div class="cart__img">
+									<a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+								</div>
+								<div class="cart__descr">
+									<span class="cart__article">{{ product['model'] }}</span>
+									<a href="{{ product['href'] }}" class="cart__model">{{ product['name'] }}</a>
+									<span class="cart__price">{{ product['total'] }}</span>
+									<span class="cart__count">{{ product['quantity'] }} {{ text_lightshop_cart_quantity }}</span>
+									{% if (product['option']) %} 
+									{% for option in product['option'] %} 
+									<span class="cart__count">{{ option['name'] }} {{ option['value'] }}</span>
+									{% endfor %} 
+									{% endif %} 
+									{% if (product['recurring']) %} 
+									<span class="cart__count">{{ text_recurring }} {{ product['recurring'] }}</span>
+									{% endif %} 
+								</div>
+							</li>
+       						   {% endfor %} 
+							   {% for voucher in vouchers %} 
+							<li class="cart__list-item">
+								<div class="cart__descr">
+									<span class="cart__model">{{ voucher['description'] }}</span>
+									<span class="cart__price">{{ voucher['amount'] }}</span>
+									<span class="cart__count">1 {{ text_lightshop_cart_quantity }}</span>
+								</div>
+							</li>
+							   {% endfor %} 
+						</ul>
+					<div class="cart-sidebar__bottom">
+						{% for total in totals %} 
+							{% if (total['code'] == 'total') %} 
+								<span class="cart-sidebar__total">{{ total['title'] }} <span>{{ total['text'] }}</span></span>
+							{% else %}						
+								<span class="cart-sidebar__info">{{ total['title'] }} <span>{{ total['text'] }}</span></span>
+							{% endif %} 
+						{% endfor %} 
+
+						{% else %} 
+						<span class="cart-sidebar__info">{{ text_empty }}</span>
+						{% endif %} 
+					</div>
+			</div>

@@ -1,0 +1,88 @@
+			<div class="cart-popup" id="cart">
+				<div class="cart-popup__top">
+					<span class="cart-popup__close js-cart-close"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></span>
+					<span class="cart-popup__title js-cart-title"><span class="js-cart-items">{{ text_lightshop_cart_title }} ({{ text_items }})</span></span>
+				</div>
+				<div class="cart-popup_bottom js-cart-bottom">
+					<div class="scroll-container">
+					{% if (products or vouchers) %} 
+						<ul class="cart__list">
+						   {% for product in products %} 
+							<li class="cart__list-item">
+								<div class="cart__img">
+									<a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+								</div>
+								<div class="cart__descr">
+									<span class="cart__article">{{ product['model'] }}</span>
+									<a href="{{ product['href'] }}" class="cart__model">{{ product['name'] }}</a>
+									<span class="cart__price">{{ product['total'] }}</span>
+									<span class="cart__count">{{ product['quantity'] }} {{ text_lightshop_cart_quantity }}</span>
+									{% if (product['option']) %} 
+									{% for option in product['option'] %} 
+									<span class="cart__count">{{ option['name'] }} {{ option['value'] }}</span>
+									{% endfor %} 
+									{% endif %} 
+									{% if (product['recurring']) %} 
+									<span class="cart__count">{{ text_recurring }} {{ product['recurring'] }}</span>
+									{% endif %} 
+								</div>
+								<div class="cart__close">
+									<a onclick="cart.remove('{{ product['cart_id'] }}');" title="{{ button_remove }}" class="cart__close-btn"><svg class="icon-cross"><use xlink:href="#cross"></use></svg></a>
+								</div>
+							</li>
+       						   {% endfor %} 
+							   {% for voucher in vouchers %} 
+							<li class="cart__list-item">
+								<div class="cart__descr">
+									<span class="cart__model">{{ voucher['description'] }}</span>
+									<span class="cart__price">{{ voucher['amount'] }}</span>
+									<span class="cart__count">1 {{ text_lightshop_cart_quantity }}</span>
+								</div>
+								<div class="cart__close">
+									<a onclick="voucher.remove('{{ voucher['key'] }}');" title="{{ button_remove }}" class="cart__close-btn"><svg class="icon-cross"><use xlink:href="#cross"></use></svg></a>
+								</div>
+							</li>
+							   {% endfor %} 
+						</ul>
+						{% for total in totals %} 
+						<span class="cart-popup__total">{{ total['title'] }} <span>{{ total['text'] }}</span></span>
+						{% endfor %} 
+
+						
+						
+						<div class="cart-popup__btn">
+
+							<a href="{{ cart }}" class="btn btn--transparent">{{ text_cart }}</a>
+							<a href="{{ checkout }}" class="btn">{{ text_lightshop_order }}</a>
+							{% if (buy_click['status'] is defined and buy_click['status']) %} 
+							<div class="cart-popup__link">
+								<a href="#popup-buy-click-cc" data-typefrom="cart-popup" data-for="" class="js-fancy-popup-cart">{{ text_lightshop_fast_order }}</a>
+							</div>
+							{% endif %} 
+						</div>
+						{% else %} 
+						<span class="cart-popup__discount">{{ text_empty }}</span>
+						{% endif %} 
+					</div>
+						
+					
+					
+				</div>
+				
+			</div>
+		{% if (buy_click['status'] is defined and buy_click['status']) %} 
+		<div class="popup-simple" id="popup-buy-click-cc">
+			<div class="popup-simple__inner" >
+				<form>
+				<h3>{{ text_lightshop_fast_order }}</h3>
+					{{ buyclick_form }} 
+
+					<button type="button" class="btn js-btn-add-cart-fast-custom quickbuy-send">{{ button_fastorder_sendorder }}</button>
+					<input name="redirect"  value="1" class="fast-redirect" type="hidden">
+					{% if (text_lightshop_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+					{% endif %} 
+				</form>
+			</div>	
+		</div>
+		{% endif %}

@@ -1,0 +1,45 @@
+<!-- main-slider -->	
+
+	<div class="main-slider">
+		<div  class="container arrows-container" {{ scale ? 'style="top: ' ~ (scale/2)|round(5) ~'vw;"' : ''}}></div>
+		<div class="main-slider__inner js-slider-main">
+		    {% for i,banner1 in banners %} 
+				{% for banner in banner1 %} 
+					{% if (img_link) %} 
+					<div class="main-slider__item main-slider__item--banner-{{ i }}" {{ scale ? 'style="height: '~ scale|round(5) ~'vw; padding: 0;"' : ''}}>
+					{{ banner['link'] ? '<a href="' ~ banner['link'] ~ '">' : ''}}
+						<div class="main-slider__img">
+							<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-bg' : 'class="src-img" src' }}="{{ banner['image'] }}" alt="{{ banner['slider_text'] }}">
+						</div>
+						{% if (not scale) %} 
+						<div class="container">
+							<h2 class="js-slider-main-title">{{ banner['slider_text'] }}</h2>
+							{% if (banner['link'] and banner['btn_text']) %} 
+								<a href="{{ banner['link'] }}" class="btn btn-blue">{{ banner['btn_text'] }}</a>
+							{% endif %} 
+						</div>
+						{% endif %} 
+					{{ banner['link'] ? '</a>' : ''}}
+					</div>
+					{% else %} 
+					<div class="main-slider__item main-slider__item--banner-{{ i }}" {{ scale ? 'style="height: '~ scale|round(5) ~'vw; padding: 0;"' : ''}}>
+						<div class="main-slider__img">
+							<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-bg' : 'class="src-img" src' }}="{{ banner['image'] }}" alt="{{ banner['slider_text'] }}">
+						</div>
+						{% if (not scale) %} 
+						<div class="container">
+							<h2 class="js-slider-main-title">{{ banner['slider_text'] }}</h2>
+							{% if (banner['link'] and banner['btn_text']) %} 
+								<a href="{{ banner['link'] }}" class="btn btn-blue">{{ banner['btn_text'] }}</a>
+							{% endif %} 
+						</div>
+						{% endif %} 
+					</div>
+					{% endif %} 
+				{% endfor %} 
+  		    {% endfor %} 
+		</div>
+	<input type="hidden" name="main_slider_autoplay_speed" value="{{ autoplay*1000 }}">	
+	<input type="hidden" name="main_slider_speed" value="{{ speed*100 }}">	
+	</div>
+

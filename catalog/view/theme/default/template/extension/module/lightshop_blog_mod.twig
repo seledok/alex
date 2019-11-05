@@ -1,0 +1,35 @@
+	{% if (blogs is not empty) %}	
+		<div class="blog--module">
+			<div class="container">
+				<div class="section-title">
+					<span class="h2">{{ heading_title }}</span><a href="{{ blog_href }}">{{ text_all_blogs }}</a>
+				</div>
+				<div class="blog__list-container">
+					<div class="blog__list-inner">
+						<ul class="blog__list">
+							{% for blog in blogs %} 
+							<li class="blog__list-item">
+								<div class="blog__img">
+									<a href="{{ blog['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ blog['image'] }}" alt=""></a>
+								</div>
+								<span class="blog__time">
+								{{ blog['date_added'] }} 
+								</span>
+								<span class="blog__title">
+									<a href="{{ blog['href'] }}" class="blog__title-link">
+										{{ blog['title'] }} 
+									</a>
+								</span>
+								<span class="blog__text">
+									<a href="{{ blog['href'] }}" class="blog__text-link">
+										{{ blog['description'] }} 
+									</a>
+								</span>
+							</li>
+							{% endfor %} 
+						</ul>
+					</div>	
+				</div>		
+			</div>
+		</div>
+	{% endif %}

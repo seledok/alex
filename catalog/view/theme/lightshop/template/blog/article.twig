@@ -1,0 +1,255 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+		
+		
+		
+		{% if thumb or images %}
+          <ul class="thumbnails">
+            {% if thumb %}
+            <li><a class="thumbnail" href="{{ popup }}" title="{{ heading_title }}"><img src="{{ thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            {% endif %}
+            {% if images %}
+            {% for image in images %}
+            <li class="image-additional"><a class="thumbnail" href="{{ image.popup }}" title="{{ heading_title }}"> <img src="{{ image.thumb }}" title="{{ heading_title }}" alt="{{ heading_title }}" /></a></li>
+            {% endfor %}
+            {% endif %}
+          </ul>
+          {% endif %}
+         
+          <div class="content">
+            <div class="editor">{{ description }}</div>
+			{% if review_status %}
+          <div class="rating">
+								<div class="product__rating">
+									<div class="product__rating-fill" style="width: {{ 20*rating }}%;" ></div>
+								</div>
+			  <a href="" onclick="gotoReview(); return false;">{{ reviews }}</a> / <a href="" onclick="gotoReviewWrite(); return false;">{{ text_write }}</a></p>
+          </div>
+          {% endif %}
+		  
+		  {% if download_status %}
+			<div class="blog-info">
+			{% if downloads %}
+			<br />
+			{% for download in downloads %}
+			<a href="{{ download.href }}" title=""><i class="fa fa-floppy-o"></i> {{ download.name }} {{ download.size }}</a><br>
+			{% endfor %}
+			<br />
+			{% endif %} 
+			</div>
+		  {% endif %} 
+            
+            
+{% if (products) %} 
+		<div class="recomend recomend--featured">
+			<div class="container">
+				<span class="h2">{{ text_related_product }}</span>
+				<div class="recomend-slider js-recom-slider">
+				{% for product in products %} 
+					<div class="recomend-slider__item product product--min">
+						<div class="product__img">
+							<a href="{{ product['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-lazy' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+						</div>
+						<div class="product__descr">
+							{% if (product['rating'] is not same as(false)) %} 
+							<div class="product__rating product__rating--sm">
+								<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+								</div>
+							</div>
+							{% endif %} 
+							<a href="{{ product['href'] }}" class="product__descr-link link--brown"><span>{{ product['name'] }}</span></a>
+							{% if (product['price']) %} 
+								{% if (product['special']) %} 
+								<span class="product__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="product__price">
+									{{ product['special'] }} 
+								</span>
+								{% else %} 
+								<span class="product__price">{{ product['price'] }}</span>
+								{% endif %}							
+							
+							{% endif %} 
+						</div>
+					</div>
+					{% endfor %}			
+				</div>
+				
+			</div>
+		</div>
+{% endif %}	
+
+		
+		{% if articles %}
+		<div class="recomend recomend--featured">
+			<div class="container">
+				<span class="h2">{{ text_related }}</span>
+				<div class="recomend-slider js-recom-slider">
+				 {% for article in articles %}
+					<div class="recomend-slider__item product product--min" style="height: 370px;">
+						<div class="product__img">
+							<a href="{{ article['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-lazy' : 'src' }}="{{ article['thumb'] }}" alt="{{ article['name'] }}"></a>
+						</div>
+						<div class="product__descr">
+							{% if (article['rating'] != constant('false')) %} 
+							<div class="product__rating product__rating--sm">
+								<div class="product__rating-fill" style="width: {{ 20*article['rating'] }}%;">
+								</div>
+							</div>
+							{% endif %} 
+							<a href="{{ article['href'] }}" class="product__descr-link link--brown"><span>{{ article['name'] }}</span></a>
+							<p style="max-height: 69px;overflow: hidden;padding: 0;">{{ article.description }}</p>
+						</div>
+					</div>
+					{% endfor %}			
+				</div>
+			</div>
+		</div>
+        {% endif %}
+		
+		{% if review_status %}
+		<div id="review"></div>
+		<div class="popup-simple" style="display: block;background: #F5F5F5;">
+			<div class="popup-simple__inner" style="background: #F5F5F5;">
+				<form id="form-review">
+					<h3>{{ text_write }}</h3>
+					{% if (review_guest) %}					
+					<div class="popup-simple__rating">
+					<span>{{ entry_rating }}</span>
+						<div class="popup-rating">							
+							{% set i=5 %}{% for i in i..1 %} 
+							<input class="popup-rating__input" type="radio" name="rating" value="{{ i }}" id="star{{ i }}" />
+							<label class="popup-rating__star" for="star{{ i }}"></label>
+							{% endfor %} 
+						</div>				
+					</div>				
+					<input name="name" id="input-name" type="text" placeholder="{{ entry_name }}" value="{{ customer_name }}">
+					<textarea rows="5" name="text" id="input-review" placeholder="{{ entry_review }}"></textarea>
+					{{ captcha }} 
+					<button type="button" class="btn" id="button-review">{{ button_continue }}</button>
+					{% if (text_review_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_review_pdata }}</div>
+					{% endif %} 
+					{% else %} 
+					{{ text_login }} 
+					{% endif %} 
+				</form>	
+				</div>
+				</div>
+            {% endif %}
+			</div>
+			
+			
+			
+			
+			
+			
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}
+<script type="text/javascript"><!--
+$('#review').delegate('.pagination a', 'click', function(e) {
+    e.preventDefault();
+
+    $('#review').fadeOut('slow');
+
+    $('#review').load(this.href);
+
+    $('#review').fadeIn('slow');
+});
+
+$('#review').load('index.php?route=blog/article/review&article_id={{ article_id }}');
+
+$('#button-review').on('click', function() {
+		$.ajax({
+			url: 'index.php?route=blog/article/write&article_id={{ article_id }}',
+			type: 'post',
+			dataType: 'json',
+			data: $("#form-review").serialize(),
+			beforeSend: function() {
+				$('#button-review').attr('disabled', 'disabled');
+			},
+			complete: function() {
+				$('#button-review').removeAttr('disabled');
+			},
+			success: function(json) {
+				$('.alert--red, .alert--green').remove();
+				if (json['error']) {
+					$('h3').before('<div class="alert alert--red" style="margin-bottom: 20px;"><span class="alert__text">' + json['error'] + '</span></div>');
+						setTimeout(function(){
+							$('.alert--red').remove();
+						}, 5000)	
+				}
+				if (json['success']) {
+					$('h3').before('<div class="alert alert--green" style="margin-bottom: 20px;"><span class="alert__text"> ' + json['success'] + '</span></div>');
+					$('input[name=\'name\']').val('');
+					$('textarea[name=\'text\']').val('');
+					$('input[name=\'rating\']:checked').prop('checked', false);
+						setTimeout(function(){
+							$('.alert--green').remove();
+							$.fancybox.close();
+						}, 5000)
+				}
+			}
+		});
+});
+
+$(document).ready(function() {
+	$('.thumbnails').magnificPopup({
+		type:'image',
+		delegate: 'a',
+		gallery: {
+			enabled: true
+		}
+	});
+});
+//--></script> 
+<script type="text/javascript"><!--
+$(document).ready(function() {
+  $('#description').find('a>img').each(function(){
+    $(this).parent().addClass('gallery');
+  });
+  $('#description').magnificPopup({
+    delegate: 'a.gallery',
+    type: 'image',
+    gallery: {
+        enabled: true
+    }
+  });
+
+  gotoReview = function() {
+    offset = $('#form-review').offset();
+    $('html, body').animate({ scrollTop: offset.top-20 }, 'slow');
+  }
+  gotoReviewWrite = function() {
+    offset = $('#form-review h2').offset();
+    $('html, body').animate({ scrollTop: offset.top-20 }, 'slow');
+  }
+  
+});
+--></script>
+</body></html>

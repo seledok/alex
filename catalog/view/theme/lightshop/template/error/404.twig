@@ -1,0 +1,33 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">	
+		<div class="error-404">
+			<div class="row">
+				<div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2">
+					<div class="error-404__inner">
+					<span>
+					{% if (logo_404) %} 
+						<img src="{{ logo_404 }}">
+					{% else %} 
+						<img src="catalog/view/theme/lightshop/img/404.png">
+					{% endif %} 
+					</span>
+						<div class="error__content">
+						<h2 class="error__content-title">404</h2>
+						<p class="error__content-text">{{ text_error }}<br>{{ text_404 }}</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>

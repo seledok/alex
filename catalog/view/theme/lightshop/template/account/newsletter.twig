@@ -1,0 +1,54 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < breadcrumbs|length) %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+			<div id="sidebar-mob-btn"></div>
+			
+			<form action="{{ action }}" method="post" enctype="multipart/form-data" class="form-horizontal">
+				<div class="form-box">
+					<div class="checkout">
+						<div class="checkout__input-row">
+							<div class="checkout__radio-box form-group">
+								<span class="checkout__input-box-title">{{ entry_newsletter }}</span>
+								<div class="checkout__radio-item">
+									<input name="newsletter" id="newsletter0" type="radio" value="0" {{ newsletter == 0 ? 'checked="checked"' : ''}}>
+										<label for="newsletter0">{{ text_no }}</label>
+								</div>	
+								<div class="checkout__radio-item">
+									<input name="newsletter" id="newsletter1" type="radio" value="1" {{ newsletter == 1 ? 'checked="checked"' : ''}}>
+									<label for="newsletter1">{{ text_yes }}</label>
+								</div>						
+							</div>
+						</div>
+					<div class="checkout__button-box">
+						<a href="{{ back }}" class="btn btn--empty">{{ button_back }}</a>
+						<button type="submit" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></button>
+					</div>
+					</div>
+				</div>
+			</form>
+	
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

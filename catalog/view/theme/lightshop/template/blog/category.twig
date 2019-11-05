@@ -1,0 +1,152 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+
+
+
+
+
+	   {% if thumb or description %}
+      <div class="row">
+        {% if thumb %}
+        <div class="col-sm-2"><img src="{{ thumb }}" alt="{{ heading_title }}" title="{{ heading_title }}" class="img-thumbnail" /></div>
+        {% endif %}
+        {% if description %}
+        <div class="col-sm-10">{{ description }}</div>
+		{% endif %}
+      </div>
+	  {% endif %}
+      {% if articles %}
+	  
+			<!-- CATALOG CONTENT-->		
+			
+<div class="clearfix"></div>
+			<div class="catalogue__content">
+				<div class="catalogue__content-top">
+					<div class="catalogue__sort">
+						<div class="catalogue__sort-sorts">
+							<span class="select">
+								<select class="select select--transparent" onchange="location = this.value;">
+									{% for sorts in sorts %} 
+										{% if sorts.value == '%s-%s'|format(sort, order) %}
+										<option value="{{ sorts['href'] }}" selected="selected">{{ text_sort }} {{ sorts.text }}</option>
+										{% else %} 
+										<option value="{{ sorts['href'] }}">{{ text_sort }} {{ sorts.text }}</option>
+										{% endif %} 
+									{% endfor %} 
+								</select>
+							</span>
+						</div>
+						<div class="catalogue__sort-limits">
+							<span class="select">
+								<select class="select select--transparent" onchange="location = this.value;">
+								{% for limits in limits %} 
+								{% if limits.value == limit %}
+								<option value="{{ limits['href'] }}" selected="selected">{{ text_limit }} {{ limits.text }}</option>
+								{% else %} 
+								<option value="{{ limits['href'] }}">{{ text_limit }} {{ limits.text }}</option>
+								{% endif %} 
+								{% endfor %} 
+								</select>
+							</span>
+						</div>
+					</div>
+				</div>
+				<!-- CATALOGUE CONTENT (LISTS)-->
+				<div  id="mainContainer" class="catalogue__content-lists"> 
+				
+					<!-- CATALOGUE FULL LIST-->
+					<div class="catalogue__full-list js-full-list active">
+						<ul class="catalogue__products-full-list">
+						{% for article in articles %} 
+							<li class="catalogue__products-full-list-item">
+								<div class="products-full-list__img">
+									<a href="{{ article.href }}" class="products-full-list__img-link">
+										<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ article.thumb }}" alt="{{ article.name }}">
+									</a>
+								</div>
+								<div class="products-full-list__description">
+									<div class="products-full-list__title">
+										<span class="products-full-list__name">
+
+											<a href="{{ article['href'] }}" class="catalogue__product-name catalogue__product-name--lg">
+												{{ article['name'] }} 
+											</a>
+										</span>
+										{% if (article['rating'] != constant('false')) %} 
+										<div class="products-full-list__rating">
+											<div class="product__rating">										
+												<div class="product__rating-fill" style="width: {{ article['rating']*20 }}%;"></div>
+											</div>
+										</div>
+										{% endif %} 
+									</div>
+									<p class="products-full-list__text">
+										{{ article['description'] }} 
+									</p>
+									<div class="products-full-list__description-bottom products-qty-info">
+										<div class="products-full-list__action">
+											<span class="products-full-list__action-btn">
+												<button type="button" class="btn products-full-list__btn catalogue__btn-cart-list" onclick="location.href = ('{{ article.href }}');">{{ button_more }}</button>
+											</span>
+										</div>
+									</div>
+								</div>
+							</li>
+						{% endfor %} 
+						</ul>
+					</div>
+					<!-- CATALOGUE FULL LIST END-->
+	   
+					<!-- CATALOGUE LISTS END-->
+				</div>
+				<!-- CATALOGUE CONTENT (LISTS) END-->
+				
+				<!-- CATALOGUE PAGINATION-->
+				<div class="catalogue__content-bottom">
+					<div class="catalogue__pagination">
+						{{ pagination }} 
+					</div>
+				</div>
+				<!-- CATALOGUE PAGINATION END-->
+			</div>
+			
+      {% else %}
+	<div class="empty-products">
+		<p>{{ text_empty }}</p>
+		<div class="checkout__button-box">
+		<a href="{{ continue }}" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-long-right"></use></svg></a>
+		</div>
+	</div>
+      {% endif %}
+	  
+	  
+	  
+	  
+	  
+	  
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>

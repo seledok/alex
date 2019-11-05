@@ -1,0 +1,61 @@
+{% if (products) %} 
+		<div class="recomend recomend--featured">
+			<div class="container">
+				<span class="h2">{{ heading_title }}</span>
+				<div class="recomend-slider js-recom-slider">
+				{% for product in products %} 
+					<div class="recomend-slider__item product product--min">
+							<div class="products-list__label">
+									{% if (product['isnewest']) %} 
+										<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+									{% endif %} 
+									{% if (product['special'] and product['sales']) %} 
+										<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+									{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+							</div>
+						<div class="product__img">
+							<a href="{{ product['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-lazy' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+						</div>
+						<div class="product__descr">
+							{% if (product['rating'] is not same as(false)) %} 
+							<div class="product__rating product__rating--sm">
+								<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+								</div>
+							</div>
+							{% endif %} 
+							<a href="{{ product['href'] }}" class="product__descr-link link--brown"><span>{{ product['name'] }}</span></a>
+							{% if (product['price']) %} 
+								{% if (product['special']) %} 
+								<span class="product__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="product__price">
+									{{ product['special'] }} 
+								</span>
+								{% else %} 
+								<span class="product__price">{{ product['price'] }}</span>
+								{% endif %}							
+							
+							{% endif %} 
+						</div>
+					</div>
+					{% endfor %}			
+				</div>
+				
+			</div>
+		</div>
+{% endif %}		
+

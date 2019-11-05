@@ -1,0 +1,67 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < breadcrumbs|length) %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+			<div id="sidebar-mob-btn"></div>
+
+			{% if (recurrings) %} 
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<tr class="table__row">
+							<td class="table__col table__col--right">{{ column_order_recurring_id }}</td>
+							<td class="table__col">{{ column_product }}</td>
+							<td class="table__col">{{ column_status }}</td>
+							<td class="table__col">{{ column_date_added }}</td>
+							<td class="table__col table__col--right"></td>
+						</tr>
+					</thead>
+					<tbody>
+						{% for recurring in recurrings %} 
+						<tr class="table__row table__row--hover">
+							<td class="table__col table__col--right">#{{ recurring['order_recurring_id'] }}</td>
+							<td class="table__col">{{ recurring['product'] }}</td>
+							<td class="table__col">{{ recurring['status'] }}</td>
+							<td class="table__col">{{ recurring['date_added'] }}</td>
+							<td class="table__col table__col--right"><a href="{{ recurring['view'] }}" title="{{ button_view }}" class="btn">{{ button_view }}</td>
+						</tr>
+						{% endfor %} 
+					</tbody>
+				</table>
+			</div>
+
+				{% if (pagination) %}	
+				<div class="catalogue__pagination">
+					{{ pagination }} 
+				</div>
+				{% endif %} 
+			{% else %} 
+			<p>{{ text_empty }}</p>
+			{% endif %} 
+					<div class="checkout__button-box">
+					<a href="{{ continue }}" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></a>
+				</div>		
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

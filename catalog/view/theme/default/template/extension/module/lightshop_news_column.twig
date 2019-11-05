@@ -1,0 +1,25 @@
+<div class="catalogue__news">
+
+	<span class="catalogue__news-title">
+		{{ heading_title }} 
+	</span>
+
+		<ul class="catalogue__news-list">
+        {% for news in newss %} 
+            <li class="catalogue__news-list-item">
+				<div class="catalogue__news-text">
+					<span class="catalogue__news-span">
+						{{ news['date_added'] }} 
+					</span>
+					<span class="catalogue__news-link">
+						<a href="{{ news['href'] }}" class="catalogue__news-link-inner">
+							{{ news['title'] }} 
+						</a>
+					</span>					
+				</div>
+			</li>
+        {% endfor %} 
+		</ul>
+
+</div>
+

@@ -1,0 +1,133 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (success) %} 
+	<div class="alert alert--green">
+		<span class="alert__text">
+			{{ success }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+			<div id="sidebar-mob-btn"></div>
+			{% if (products) %} 
+					<table class="catalogue__table active">
+					{% for product in products %} 
+						<tr class="catalogue__table-row">
+							<td class="catalogue__table-photo">
+								<a href="{{ product['href'] }}" class="catalogue__photo-link">
+									<img src="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+								</a>
+							</td>
+							<td class="catalogue__table-name">
+								{% if (product['rating'] is not same as(false)) %} 
+								<div class="catalogue__product-rating">
+									<div class="product__rating">										
+										<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;">											
+										</div>
+									</div>
+								</div>
+								{% endif %}	
+								<a href="{{ product['href'] }}" class="catalogue__product-name">
+									{{ product['name'] }} 
+								</a>
+							</td>
+							<td class="catalogue__table-price">
+							{% if (product['price']) %} 
+							{% if (product['special']) %} 
+								<span class="catalogue__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="catalogue__price catalogue__price--md">
+									{{ product['special'] }} 
+								</span>
+							{% else %}	
+								<span class="catalogue__price catalogue__price--md">
+									{{ product['price'] }} 
+								</span>
+							{% endif %}	
+							{% endif %}	
+							</td>
+							<td class="catalogue__table-btn" style="position: relative;">
+								<a class="catalogue__table-action-link" href="{{ product['remove'] }}">
+									<span class="catalogue__table-action-icon">
+									<svg class="icon-cross">
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cross"></use>
+									</svg>
+									</span>
+								</a>
+								<a class="btn btn--transparent catalogue__btn-cart {{ product['buy_btn'] ? 'disabled' : ''}}" {{ product['buy_btn'] ? '' : 'data-for="' ~ product['product_id'] ~ '"'}}  title="{{ button_cart }}">
+									<span class="catalogue__btn-cart-plus"> + </span>
+									<svg class="icon-cart">
+										<use xlink:href="#shopping-cart"></use>
+									</svg>
+								</a>
+							</td>
+							<td class="catalogue__table-spinner">
+								<div class="spinner-wrap">
+									<input type="text" class="spinner" value='{{ product['minimum'] }}' placeholder="{{ product['minimum'] }}">
+								</div>
+							</td>
+							<td class="catalogue__table-action">
+								<span class="catalogue__table-action-item">
+									<a class="catalogue__table-action-link" href="{{ product['remove'] }}">
+										<span class="catalogue__table-action-icon">
+										<svg class="icon-cross">
+											<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#cross"></use>
+										</svg>
+										</span>
+										<span class="catalogue__table-action-text">
+											{{ button_remove }} 
+										</span>
+									</a>
+								</span>
+								<span class="catalogue__table-action-item">
+									<a class="catalogue__table-action-link" onclick="compare.add('{{ product['product_id'] }}');">
+										<span class="catalogue__table-action-icon">
+											<svg class="icon-add-to-list">
+												<use xlink:href="#add-to-list"></use>
+											</svg>
+										</span>
+										<span class="catalogue__table-action-text">
+											{{ button_compare }} 
+										</span>
+									</a>
+								</span>
+							</td>
+						</tr>
+					{% endfor %} 
+					</table>
+					<p>&nbsp;</p>
+			{% else %} 
+			<p>{{ text_empty }}</p>
+			{% endif %} 
+			  	<div class="checkout__button-box">
+					<a href="{{ continue }}" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></a>
+				</div>
+		</div>
+		{{ column_right and islogged ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

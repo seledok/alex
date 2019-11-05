@@ -1,0 +1,26 @@
+		<!-- categories -->
+		
+		<div class="categories-min">
+			<div class="container">
+				<div class="categories-min__wrapper js-categories-min">
+				<div class="col-md-{{ column }} col-sm-6 col-xs-12 js-categories-sizer"></div>
+				{% for banner1 in banners %} 
+					{% for banner in banner1 %} 
+						<div class="{{ banner['width'] > 400 ? 'col-md-' ~ column*2 : 'col-md-' ~ column }} col-sm-6 col-xs-12 js-categories-item">
+							<div class="categories-min__item {{ banner['height'] > 300 ? 'categories-min__item--large' : '' }} {{ banner['full'] ? ' categories-min__item--full-img' : ''}}">
+							{% if (banner['link']) %} 
+								<a href="{{ banner['link'] }}">
+									<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ banner['image'] }}" alt="{{ banner['title'] }}">
+									<span class="categories-min__item-caption">{{ banner['title'] }}</span>
+								</a>
+							 {% else %} 
+									<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ banner['image'] }}" alt="{{ banner['title'] }}">
+									<span class="categories-min__item-caption">{{ banner['title'] }}</span>				
+							{% endif %} 
+							</div>
+						</div>
+					{% endfor %} 
+				{% endfor %} 
+				</div>	
+			</div>
+		</div>

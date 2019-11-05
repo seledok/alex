@@ -1,0 +1,17 @@
+<div class="home-text">
+	<div class="container">
+	<div class="row">
+	{% if (img) %} 
+		<div class="col-sm-4">	
+			<div class="home-text__img"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ img }}" alt="{{ heading_title }}"></div>
+		</div>
+	{% endif %} 
+		<div class="col-sm-{{ img ? '8' : '12'}}">
+			{% if (heading_title) %} 
+			<h1 class="home-text__title">{{ heading_title }}</h1>
+			{% endif %} 
+			<div class="home-text__content">{{ html }}</div>
+		</div>
+	</div>
+	</div>
+</div>

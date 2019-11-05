@@ -1,0 +1,110 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+			<p>{{ text_description }}</p>
+			<div class="form-box">
+			<form action="{{ action }}" method="post" enctype="multipart/form-data">
+				<div class="checkout">
+					<div class="checkout__input-row">
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_to_name }}</span>
+							<input type="text" name="to_name" value="{{ to_name }}" placeholder="{{ entry_to_name }}" id="input-to-name" class="{{ error_to_name ? 'error' : ''}}">
+							{% if (error_to_name) %} 
+							<div class="checkout__input-box-error">{{ error_to_name }}</div>
+							{% endif %} 
+						</div>
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_to_email }}</span>
+							<input type="text" name="to_email" value="{{ to_email }}" placeholder="{{ entry_to_email }}" id="input-to-email" class="{{ error_to_email ? 'error' : ''}}">
+							{% if (error_to_email) %} 
+							<div class="checkout__input-box-error">{{ error_to_email }}</div>
+							{% endif %} 
+						</div>	
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_from_name }}</span>
+							<input type="text" name="from_name" value="{{ from_name }}" placeholder="{{ entry_from_name }}" id="input-from-name" class="{{ error_from_name ? 'error' : ''}}">
+							{% if (error_from_name) %} 
+							<div class="checkout__input-box-error">{{ error_from_name }}</div>
+							{% endif %} 
+						</div>
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_from_email }}</span>
+							<input type="text" name="from_email" value="{{ from_email }}" placeholder="{{ entry_from_email }}" id="input-from-email" class="{{ error_from_email ? 'error' : ''}}">
+							{% if (error_from_email) %} 
+							<div class="checkout__input-box-error">{{ error_from_email }}</div>
+							{% endif %} 
+						</div>	
+						<div class="checkout__radio-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_theme }}</span>
+							{% for voucher_theme in voucher_themes %}
+							<div class="checkout__radio-item">
+								<input name="voucher_theme_id" id="voucher_theme_id-{{ voucher_theme.voucher_theme_id }}" type="radio" value="{{ voucher_theme.voucher_theme_id }}" {{ voucher_theme.voucher_theme_id == voucher_theme_id ? 'checked="checked"' : ''}}>
+								<label for="voucher_theme_id-{{ voucher_theme.voucher_theme_id }}">{{ voucher_theme.name }}</label>
+							</div>	
+							{% endfor %}
+							{% if (error_theme) %} 
+							<div class="checkout__input-box-error">{{ error_theme }}</div>
+							{% endif %} 
+						</div>
+						<div class="checkout__textarea-box form-group">
+							<span class="checkout__input-box-title">{{ entry_message }}</span>
+							<textarea name="message" placeholder="{{ entry_message }}" id="input-message">{{ message }}</textarea>
+						</div>	
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title required">{{ entry_amount }} {{ help_amount }}</span>
+							<input type="text" name="amount" value="{{ amount }}" size="5" placeholder="{{ entry_amount }}" id="input-amount" class="{{ error_amount ? 'error' : ''}}">
+							{% if (error_amount) %} 
+							<div class="checkout__input-box-error">{{ error_amount }}</div>
+							{% endif %} 
+						</div>	
+					</div>
+					<div class="checkout__checkbox">
+							<div class="checkout__checkbox-box-row">
+								<div class="checkout__checkbox-item">
+									<input name="agree" id="agree" type="checkbox" value="1" {{ agree ? 'checked="checked"' : ''}}>
+									<label for="agree">{{ text_agree }}</label>
+								</div>					
+							</div>					
+					</div>	
+					<div class="checkout__button-box">
+						<button type="submit" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></button>
+					</div>
+				</div>
+			</form>
+			</div>
+ 		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

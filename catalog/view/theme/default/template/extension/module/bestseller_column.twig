@@ -1,0 +1,57 @@
+{% if (products) %} 
+				<div class="catalogue__product">
+					<span class="catalogue__product-title">
+						{{ heading_title }} 
+					</span>
+					<ul class="catalogue__product-list">
+					{% for product in products %} 
+						<li class="catalogue__product-list-item">		
+							<a class="catalogue__product-list-link" href="{{ product['href'] }}">
+								<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+							</a>
+							<div class="catalogue__product-list-item-desc">
+							
+								<div class="products-list__label">
+									{% if (product['isnewest']) %} 
+										<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+									{% endif %} 
+									{% if (product['special'] and product['sales']) %} 
+										<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+									{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+								</div>
+							
+								<a class="link--brown" href="{{ product['href'] }}"><span>{{ product['name'] }}</span></a>
+								<div class="catalogue__product-list-item-price">
+								{% if (product['price']) %} 
+									{% if (product['special']) %} 
+									<span class="product__price-old">
+										{{ product['price'] }} 
+									</span>
+									<span class="product__price">
+										{{ product['special'] }} 
+									</span>
+									{% else %} 
+									<span class="product__price">{{ product['price'] }}</span>
+									{% endif %}							
+								
+								{% endif %} 
+								</div>
+							</div>
+						</li>
+					{% endfor %} 
+					</ul>
+				</div>
+{% endif %}		

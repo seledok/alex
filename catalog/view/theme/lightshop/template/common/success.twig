@@ -1,0 +1,58 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		{% if (order_id is defined) %} 
+		<div class="row">
+			{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+			<div class="col-sm-{{ col }}">
+				<div class="row">
+					<div class="col-md-8 col-sm-8 col-xs-12 col-md-offset-2 col-sm-offset-2">
+						<div class="checkout-success">
+							<img src="catalog/view/theme/lightshop/img/checkout-success.png">
+							<h1 class="checkout-success__title">{{ heading_title }}</h1>
+							<div class="checkout-success__message">
+							{{ text_message }} 
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+		</div>
+		{% else %} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	    <h1 class="content__title">{{ heading_title }}</h1>
+		<div class="row">
+			{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+			<div class="col-sm-{{ col }}">
+				{{ text_message }} 
+				<a href="{{ continue }}" class="btn">{{ button_continue }}</a>
+			</div>
+			{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+		</div>
+		{% endif %} 
+	{{ content_bottom }} 
+	</div>
+</main>
+<script type="text/javascript"><!--
+	{% if (order_id is defined) %} 
+		$(document).ready(function() {
+			sendGAch("order_id={{ order_id }}",'purchase');
+			sendYM('lightshop_checkout_success');
+		});
+	{% endif %} 
+//--></script>	
+{{ footer }}</body></html>

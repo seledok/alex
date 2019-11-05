@@ -1,0 +1,52 @@
+<li class="tabs__list-item js-tab">
+	<a href="#" class="tabs__link">
+		{{ text_lightshop_shipping }}<svg class="icon-chevron-top"><use xlink:href="#chevron-small-left"></use></svg>
+	</a>
+</li>
+<div class="tabs-content js-tab-content js-tab-descr">
+	<div class="tabs-content__title js-tab-title">
+		<a href="#" class="tabs-content__title-link">
+			{{ text_lightshop_shipping }}<svg class="icon-chevron-top"><use xlink:href="#chevron-small-left"></use></svg>
+		</a>
+	</div>
+	<div class="tabs-content__inner  js-tab-inner">
+		<div class="checkout">
+			<div class="checkout__input-row">
+				<div class="checkout__input-box checkout__input-box--inline">
+					<span class="checkout__input-box-title">{{ entry_country }}</span>
+					<div class="select">
+						<select name="country_id" id="input-country" class="select--squer select select-checkout" data-placeholder="{{ entry_country }}">
+						  <option value="">{{ text_select }}</option>
+						  {% for country in countries %} 
+						  {% if (country['country_id'] == country_id) %} 
+						  <option value="{{ country['country_id'] }}" selected="selected">{{ country['name'] }}</option>
+						  {% else %} 
+						  <option value="{{ country['country_id'] }}">{{ country['name'] }}</option>
+						  {% endif %} 
+						  {% endfor %} 
+						</select>				
+					</div>
+				</div>
+				<div class="checkout__input-box checkout__input-box--inline">
+					<span class="checkout__input-box-title">{{ entry_zone }}</span>
+					<div class="select">
+						<select name="zone_id" id="input-zone" class="select--squer select select-checkout" data-placeholder="{{ entry_zone }}"></select>
+					</div>
+				</div>
+				<div class="checkout__input-box checkout__input-box--inline">
+					<span class="checkout__input-box-title">{{ entry_postcode }}</span>
+					<input type="text" name="postcode" value="{{ postcode }}" placeholder="{{ entry_postcode }}" id="input-postcode" class="checkout__input-box-title">		
+				</div>
+			</div>
+			<div class="checkout__button-box">
+				<button type="button" id="button-quote" class="btn btn--transparent">{{ button_quote }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></button>
+			</div>
+		</div>
+	</div>
+<input type="hidden" name="fix_text_shipping_method" value="{{ text_shipping_method }}" />	
+<input type="hidden" name="fix_shipping_method" value="{{ shipping_method }}" />	
+<input type="hidden" name="fix_text_select" value="{{ text_select }}" />	
+<input type="hidden" name="fix_zone_id" value="{{ zone_id }}" />	
+<input type="hidden" name="fix_button_shipping" value="{{ button_shipping }}" />	
+<input type="hidden" name="fix_text_none" value="{{ text_none }}" />	
+</div>

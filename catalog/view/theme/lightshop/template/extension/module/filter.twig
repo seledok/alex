@@ -1,0 +1,97 @@
+
+<a href="#" class="js-btn-filter catalogue__filter-btn">{{ text_lightshop_filter }}</a>
+<div class="catalogue__filter js-filter-resp">
+	<div class="catalogue__filter-top">
+		<span class="catalogue__filter-top-title">
+			{{ text_lightshop_filter }} 
+		</span>
+		<a href="#" class="catalogue__block-hide js-filter-hide">
+			<svg class="icon-chevron-bottom">
+				<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use>
+			</svg>
+		</a>
+	</div>
+	<div class="catalogue__filter-scroll">
+
+			<input type="hidden" name="min_price_init" value="{{ priceLimits['min_price'] }}" id="min_price_init">
+			<input type="hidden" name="max_price_init" value="{{ priceLimits['max_price'] }}" id="max_price_init">
+			<input type="hidden" name="min_price_current" value="{{ min_price }}" id="min_price_current">
+			<input type="hidden" name="max_price_current" value="{{ max_price }}" id="max_price_current">
+			<input type="hidden" name="filter_category_id" value="{{ category_id }}" id="filter_category_id">
+
+
+
+	
+					<div class="catalogue__filter-section js-filter-parent" id="filterblock">
+						<div class="catalogue__filter-heading">
+							<span class="catalogue__filter-title">
+								{{ text_lightshop_filter_price }} 
+							</span>
+							<span class="catalogue__filter-arrow js-filter-arrow">
+								<svg class="icon-chevron-bottom">
+									<use xlink:href="#chevron-small-left"></use>
+								</svg>
+							</span>
+						</div>
+						<div class="catalogue__filter-content js-filter-content">
+							<div class="price-slider">
+								<div class="price-slider__drag-area">
+									<div id="slider-range" class="price-slider__drag-area-inner js-price-slider">
+										
+									</div>
+								</div>
+								<div class="price-slider__inputs">
+									<label class="price-slider__inputs-text" data-for="price-slider-from">{{ text_lightshop_from }}</label>
+									<span class="price-slider__inputs-input price-slider__inputs-input--from">
+										<span class="js-span-start">{{ min_price_format }}</span>
+											<input type="text" name="min_price" class="js-price-slider-input price_limit" id="min_price" data-index="0" value="-1">
+										
+									</span>
+									<label class="price-slider__inputs-text" data-for="price-slider-to">{{ text_lightshop_to }}</label>
+									<span class="price-slider__inputs-input">
+										<span class="js-span-end">{{ max_price_format }}</span>
+											<input type="text" name="max_price" class="js-price-slider-input price_limit" id="max_price" data-index="1" value="-1">
+										
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					
+	{% for filter_group in filter_groups %} 
+	<div class="catalogue__filter-section js-filter-parent">
+		<div class="catalogue__filter-heading">
+			<span class="catalogue__filter-title">
+				{{ filter_group['name'] }} 
+			</span>
+			<span class="catalogue__filter-arrow js-filter-arrow">
+				<svg class="icon-chevron-bottom">
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use>
+				</svg>
+			</span>
+		</div>
+		<div class="catalogue__filter-content js-filter-content">
+			<ul id="filter-group{{ filter_group['filter_group_id'] }}" class="catalogue__brands">
+			{% for i,filter in filter_group['filter'] %} 
+				<li class="catalogue__brands-item">
+					{% if filter['filter_id'] in filter_category %} 
+					<input type="checkbox" id="filter-{{ filter['filter_id'] }}-{{ i }}" value="{{ filter['filter_id'] }}" name="filter[]" checked="checked">
+					<label for="filter-{{ filter['filter_id'] }}-{{ i }}">{{ filter['name'] }}</label>
+					{% else %} 
+					<input type="checkbox" id="filter-{{ filter['filter_id'] }}-{{ i }}" value="{{ filter['filter_id'] }}" name="filter[]" {{ not filter['isactive'] ? 'disabled' : ''}}>
+					<label for="filter-{{ filter['filter_id'] }}-{{ i }}">{{ filter['name'] }}</label>
+					{% endif %} 
+				</li>
+			{% endfor %} 
+			</ul>
+		</div>
+	</div>
+	{% endfor %} 
+	<div class="catalogue__filter-button-filter">
+		<button type="button" id="button-filter" class="btn btn--transparent btn--sm">{{ text_lightshop_show }}</button>
+		<button type="button" id="resetfilter"  class="btn btn--link btn--sm">{{ text_lightshop_reset }}</button>
+	</div>
+	<input type="hidden" name="fix_filter_action" value="{{ action }}">
+	</div>
+</div>

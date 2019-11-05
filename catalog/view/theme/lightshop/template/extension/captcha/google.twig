@@ -1,0 +1,30 @@
+<script src="//www.google.com/recaptcha/api.js?hl={{ lang }}"></script>
+		{% if route|slice(0, 9) == 'checkout/' %}
+		<!-- captcha for checkout -->
+		<div class="checkout__input-row">
+			<div class="checkout__captcha-box">
+					<div id="input-payment-captcha" class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+					{% if (error_captcha) %} 
+					<div class="checkout__input-box-error">{{ error_captcha }}</div>
+					{% endif %} 
+			</div>	
+		</div>
+		{% elseif (route == 'information/contact' or route == 'product/product' ) %} 
+		<!-- captcha for popup -->
+		<div class="popup-simple__inner-captcha">
+			<div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+			{% if (error_captcha) %} 
+			<div class="popup-simple__inner-error-text">{{ error_captcha }}</div>
+			{% endif %} 
+		</div>
+		{% else %} 
+		<!-- captcha for gray input -->
+		<div class="checkout__input-row">
+			<div class="checkout__captcha-box">
+					<div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+					{% if (error_captcha) %} 
+					<div class="checkout__input-box-error">{{ error_captcha }}</div>
+					{% endif %} 
+			</div>	
+		</div>
+		{% endif %}

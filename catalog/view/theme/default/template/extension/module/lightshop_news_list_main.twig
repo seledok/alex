@@ -1,0 +1,47 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="news">
+		<ul class="news__list">
+        {% for news in newss %} 
+            <li class="news__list-item">
+				<a class="news__link" href="{{ news['href'] }}">
+					<span class="news__date">
+						{{ news['date_added'] }} 
+					</span>
+					<span class="news__title">		
+						<span class="news__title-inner">{{ news['title'] }}</span>
+					</span>
+					<span class="news__text">
+						{{ news['description'] }} 
+					</span>					
+				</a>
+			</li>
+        {% endfor %} 
+		</ul>
+	</div>
+				<div class="catalogue__content-bottom">
+					<div class="catalogue__pagination">
+						{{ pagination }} 
+					</div>
+				</div>
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>
+

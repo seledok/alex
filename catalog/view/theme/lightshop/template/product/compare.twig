@@ -1,0 +1,246 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+		{{ content_top }} 
+			<div class="breadcrumbs breadcrumbs--sm-pad">
+				<ul class="breadcrumb__list">
+				{% for i,breadcrumb in breadcrumbs %} 
+				{% if (i == 0) %} 
+					<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+				{% elseif (i + 1 < (breadcrumbs)|length) %}
+					<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+				{% else %} 
+					<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+				{% endif %} 
+				{% endfor %} 			
+				</ul>
+			</div>
+		<h1 class="content__title">{{ heading_title }}</h1>
+			
+		<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+		{% if (products) %} 
+			<div class="comparison">
+				<div class="comparison__head">
+					<div class="row clearfix">
+						<div class="col-md-4 left_side brr-none">
+						</div>
+						<div class="col-md-8 right_side">
+							<!-- slider-wrap -->
+							<div class="slider-wrap">
+								<div class="slick-prev2" type="button">{{ text_prev2 }}</div>
+								<div class="slider-for1">
+								
+								{% for product in products %} 
+									<div class="ares-slider__item">
+										<div class="product">
+											<a class="cart__close-btn" href="{{ product['remove'] }}" title="{{ button_remove }}">
+												<svg class="icon-cross">
+													<use xlink:href="#cross">
+												</svg>
+											</a>
+											<div class="product__img-block">
+											{% if (product['thumb']) %} 
+											<a href="{{ product['href'] }}">
+												<img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" title="{{ product['name'] }}">
+											</a>
+											{% endif %} 
+											</div>
+											<div class="product__name">
+												<a href="{{ product['href'] }}" class="link--brown">{{ product['name'] }}</a>
+											</div>
+											<div class="product__price">
+											{% if (product['price']) %} 
+											{% if (not product['special']) %} 
+											<span class="catalogue__price">{{ product['price'] }}</span> 
+											{% else %} 
+											<span class="catalogue__price-old">{{ product['price'] }}</span> 
+											<span class="catalogue__price">{{ product['special'] }}</span> 
+											{% endif %} 
+											{% endif %} 
+											</div>
+											{% if (not product['buy_btn']) %} 
+											<a class="btn btn--transparent catalogue__btn-cart" onclick="cart.add('{{ product['product_id'] }}', '{{ product['minimum'] }}');">
+												<span class="catalogue__btn-cart-plus"> + </span>
+												<svg class="icon-cart">
+													<use xlink:href="#shopping-cart">
+												</svg>
+											</a>
+											{% else %} 
+											<a class="btn btn--transparent catalogue__btn-cart disabled">
+												<span class="catalogue__btn-cart-plus"> + </span>
+												<svg class="icon-cart">
+													<use xlink:href="#shopping-cart">
+												</svg>
+											</a>
+											{% endif %} 
+										</div>
+									</div>
+									{% endfor %} 
+
+								</div>
+								<div class="slick-next2" type="button">{{ text_next2 }}</div>
+							</div>
+							<!-- /slider-wrap -->
+						</div>
+					</div>
+				</div>
+				<div class="comparison__cont">
+					<div class="row clearfix">
+						<div class="col-md-4 left_side">
+							<div class="table-wrap">
+								<div class="column">
+									<div class="cell"><p>{{ text_model }}</p></div>
+								</div>
+								<div class="column">
+									<div class="cell"><p>{{ text_manufacturer }}</p></div>
+								</div>
+								<div class="column">
+									<div class="cell"><p>{{ text_availability }}</p></div>
+								</div>
+								{% if (review_status) %} 
+								<div class="column">
+									<div class="cell"><p>{{ text_rating }}</p></div>
+								</div>
+								{% endif %} 
+								<div class="column">
+									<div class="cell"><p>{{ text_weight }}</p></div>
+								</div>
+								<div class="column">
+									<div class="cell"><p>{{ text_dimension }}</p></div>
+								</div>
+								
+								{% for i,attribute_group in attribute_groups %} 
+								<div class="column column--attribute-group-name">
+									<div class="cell">
+										<div class="filter-panel"><div class="text"><span class="icon active"></span><p>{{ attribute_group['name'] }}</p></div></div>
+									</div>
+								</div>
+								{% for key,attribute in attribute_group['attribute'] %} 
+								<div class="column fill-left">
+									<div class="cell"><p>{{ attribute['name'] }}</p></div>
+								</div>
+								{% endfor %} 
+								{% endfor %} 
+							</div>
+						</div>
+						<div class="col-md-8 right_side">
+							<!-- slider-wrap -->
+							<div class="slider-wrap">
+								<div class="slider-nav1">
+								
+								{% for product in products %} 
+									<div class="nav-el">
+										<div class="table-wrap">
+											<div class="column">
+												<div class="cell"><p>{{ product['model'] }}</p></div>
+											</div>
+											<div class="column">
+												<div class="cell"><p>{{ product['manufacturer'] }}</p></div>
+											</div>
+											<div class="column">
+												<div class="cell"><p>{{ product['availability'] }}</p></div>
+											</div>
+											{% if (review_status) %} 
+											<div class="column">
+												<div class="cell"><p>{{ product['rating'] }}/5. {{ product['reviews'] }}</p></div>
+											</div>
+											{% endif %} 
+											<div class="column">
+												<div class="cell"><p>{{ product['weight'] }}</p></div>
+											</div>
+											<div class="column">
+												<div class="cell"><p>{{ product['length'] }} x {{ product['width'] }} x {{ product['height'] }}</p></div>
+											</div>
+											
+											{% for attribute_group in attribute_groups %} 
+											<div class="column hd-mob">
+												<div class="cell"><p>&nbsp;</p></div>
+											</div>
+											{% for key,attribute in attribute_group['attribute'] %} 
+											{% if (product['attribute'][key] is defined) %} 
+											<div class="column">
+												<div class="cell"><p>{{ product['attribute'][key] }}</p></div>
+											</div>
+											{% else %} 
+											<div class="column">
+												<div class="cell"><p>&nbsp;</p></div>
+											</div>
+											{% endif %} 
+											{% endfor %} 
+											{% endfor %} 
+										</div>
+									</div>
+								{% endfor %} 
+
+								</div>
+							</div>
+							<!-- /slider-wrap -->
+						</div>
+						</div>
+					</div>
+				</div>
+				
+			{% else %} 
+			<p>{{ text_empty }}</p>
+			<a href="{{ continue }}" class="btn">{{ button_continue }}</a>
+			{% endif %} 
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>
+
+{{ footer }} 
+<script>
+function comparison_slider () {
+	$('.slider-for1').slick({
+		slidesToShow: {{ compare_total < 4 ? compare_total : 3 }},
+		slidesToScroll: 1,
+		autoplay: false,
+		dots: false,
+		infinite: false,
+		arrows: true,
+		asNavFor: '.slider-nav1',
+		responsive: [
+			{
+				breakpoint: 767,
+				settings: {
+					slidesToShow: {{ compare_total < 2 ? compare_total : 2 }}
+				}
+			}
+		]
+	});
+	$('.slider-nav1').slick({
+		slidesToShow: {{ compare_total < 4 ? compare_total : 3 }},
+		slidesToScroll: 1,
+		asNavFor: '.slider-for1',
+		dots: false,
+		infinite: false,
+		arrows: true,
+		focusOnSelect: true,
+		responsive: [
+			{
+				breakpoint: 767,
+				settings: {
+					slidesToShow: {{ compare_total < 2 ? compare_total : 2 }}
+				}
+			}
+		]
+	});
+	compSliderArrows();
+	$('.slider-for1').on('breakpoint', function(event, slick){
+		compSliderArrows();
+	});
+	$('.slider-nav1').on('breakpoint', function(event, slick){
+		compSliderArrows();
+	});
+}
+
+$(document).on('ready', function() {
+	comparison_slider();
+});
+</script>
+</body></html>

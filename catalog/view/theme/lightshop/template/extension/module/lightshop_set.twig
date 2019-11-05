@@ -1,0 +1,96 @@
+{% if (sets) %} 
+		<div class="package">
+			<div class="container">
+						<span class="h2">{{ heading_title }}</span>
+				    {% for setid,set in sets %} 
+					<div class="package__result">
+						<div class="package__result-container" data-for="{{ setid }}">
+								{% for product in set['products'] %} 
+									<div class="package__result-item product product--min productsinset" data-for="{{ product['product_id'] }}">
+										{% if (product['countvariants'] > 1) %} 
+											<span href="#popup-set-click" data-for="{{ product['product_id'] }}" class="package__result-item-close js-set-chng-btn js-fancy-popup"><svg class="icon-cross"><use xlink:href="#cross"></use></svg></span>
+										{% else %} 
+											<span href="#popup-set-click" data-for="{{ product['product_id'] }}" class="package__result-item-close" style="display: none;"></span>
+										{% endif %} 
+										<div class="products-full-list__label">
+											{% if (product['isnewest']) %} 
+												<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+											{% endif %} 
+											 {% if (product['special'] and product['sales']) %} 
+												<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+											{% endif %} 
+											{% if (product['popular']) %} 
+												<span class="label label--popular">{{ product['popular'] }}</span>
+											{% endif %} 
+											{% if (product['hit']) %} 
+												<span class="label label--hit">{{ product['hit'] }}</span>
+											{% endif %} 
+											{% if (product['catch']) %} 
+												{% if (product['nocatch']) %} 
+													<span class="label label--nocatch">{{ product['catch'] }}</span>
+												{% else %} 
+													<span class="label label--catch">{{ product['catch'] }}</span>
+												{% endif %} 
+											{% endif %} 
+										</div>
+										<div class="product__img">
+											<a href="{{ product['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+										</div>
+										<div class="product__descr">
+											{% if (product['rating'] is not same as(false)) %} 
+											<div class="product__rating product__rating--sm">
+												<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+												</div>
+											</div>
+											{% endif %} 
+											<a href="{{ product['href'] }}" class="product__descr-link link--brown">{{ product['name'] }}</a>
+											{% if (product['special']) %} 
+												<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+												<span class="catalogue__price catalogue__price--sm">
+													{{ product['special'] }} 
+													{% if (product['quantity'] > 1) %} 
+													<span class="product__quantity"> x {{ product['quantity'] }} {{ text_quantity }}</span>	
+													{% endif %} 
+												</span>
+											{% else %}	
+												<span class="product__price">
+												{{ product['price'] }} 
+													{% if (product['quantity'] > 1) %} 
+													<span class="product__quantity"> x {{ product['quantity'] }} {{ text_quantity }}</span>	
+													{% endif %} 
+												</span>
+											{% endif %} 
+											
+										</div>
+									</div>
+
+								{% endfor %}			
+									<div class="package__result-item package__result-item--total">
+										<form class="setdata setdata-{{ setid }}">
+											<span class="package__result-sum set-total">{{ set['total'] }}</span>
+											{% if (set['discount'] > 0) %} 
+												<span class="package__result-discount set-discount">{{ text_sale }} {{ set['discount'] }}</span>
+											{% endif %} 
+											<button type="button" class="btn products-full-list__btn js-btn-add-set2cart">{{ button_cart }}</button>
+											<input type="hidden" class="set_product_data" name="setid" value="{{ setid }}" >
+											<input type="hidden" class="set_product_data" name="mode" value="{{ set['mode'] }}" >
+											{% for product in set['products'] %} 
+												<input type="hidden" class="set_product_data" data-for="{{ product['product_id'] }}" name="setproducts[{{ product['product_id'] }}]" value="{{ product['quantity'] }}" >
+											{% endfor %} 
+										</form>
+									</div>
+						</div>
+					</div>
+					{% endfor %} 
+			</div>
+		</div>
+
+
+		<div id="popup-set-click" class="popup-package js-popup-package" style="display: none;">
+			<div id="popup-set-click-content" class="popup-package__inner">
+			</div>
+		</div>
+
+
+{% endif %}		
+

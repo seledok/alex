@@ -1,0 +1,226 @@
+{% if (view == '1') %} 
+	{% for tab,product_tab in product_tabs %} 
+	{% if (products[tab] is not empty) %}  
+		<div class="recomend">
+			<div class="container">
+				<span class="h2">{{ product_tab['description'][language_id]['name'] }}</span>
+				<div class="recomend-slider js-recom-slider">
+				{% for key,product in products[tab] %} 
+					<div class="recomend-slider__item product product--min">
+							<div class="products-list__label">
+									{% if (product['isnewest']) %} 
+										<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+									{% endif %} 
+									{% if (product['special'] and product['sales']) %} 
+										<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+									{% endif %} 
+									{% if (product['popular']) %} 
+										<span class="label label--popular">{{ product['popular'] }}</span>
+									{% endif %} 
+									{% if (product['hit']) %} 
+										<span class="label label--hit">{{ product['hit'] }}</span>
+									{% endif %} 
+									{% if (product['catch']) %} 
+										{% if (product['nocatch']) %} 
+											<span class="label label--nocatch">{{ product['catch'] }}</span>
+										{% else %} 
+											<span class="label label--catch">{{ product['catch'] }}</span>
+										{% endif %} 
+									{% endif %} 
+							</div>
+						<div class="product__img">
+							<a href="{{ product['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-lazy' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+						</div>
+						<div class="product__descr">
+							{% if (product['rating'] != constant('false')) %} 
+							<div class="product__rating product__rating--sm">
+								<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+								</div>
+							</div>
+							{% endif %} 
+							<a href="{{ product['href'] }}" class="product__descr-link link--brown"><span>{{ product['name'] }}</span></a>
+							{% if (product['price']) %} 
+								{% if (product['special']) %} 
+								<span class="product__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="product__price">
+									{{ product['special'] }} 
+								</span>
+								{% else %} 
+								<span class="product__price">{{ product['price'] }}</span>
+								{% endif %}							
+							
+							{% endif %} 
+						</div>
+					</div>
+					{% endfor %}			
+				</div>
+				
+			</div>
+		</div>
+	  {% endif %}
+	{% endfor %} 
+	
+	
+{% elseif (view == '2') %} 
+
+
+	{% for tab,product_tab in product_tabs %} 
+	{% if (products[tab] is not empty) %} 
+		<div class="recomend">
+			<div class="container">
+			<span class="h2">{{ product_tab['description'][language_id]['name'] }}</span>
+			<div class="catalogue__content" style="padding: 0 0 1px;">
+				<div class="catalogue__products-lists active">
+				{% if (tp_limit == 4) %} 
+					<ul class="catalogue__products-list catalogue__products-list--four">
+				{% elseif (tp_limit == 5) %} 
+					<ul class="catalogue__products-list catalogue__products-list--five">
+				{% else %} 
+					<ul class="catalogue__products-list">
+				{% endif %} 
+					{% for key,product in products[tab] %} 
+						<li class="catalogue__products-list-item">
+							<div class="products-list__link" >
+										<a class="products-list__img" href="{{ product['href'] }}">
+											<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+										</a>
+									<div class="products-list__label">
+											{% if (product['isnewest']) %} 
+												<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+											{% endif %} 
+											{% if (product['special'] and product['sales']) %} 
+												<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+											{% endif %} 
+											{% if (product['popular']) %} 
+												<span class="label label--popular">{{ product['popular'] }}</span>
+											{% endif %} 
+											{% if (product['hit']) %} 
+												<span class="label label--hit">{{ product['hit'] }}</span>
+											{% endif %} 
+											{% if (product['catch']) %} 
+												{% if (product['nocatch']) %} 
+													<span class="label label--nocatch">{{ product['catch'] }}</span>
+												{% else %} 
+													<span class="label label--catch">{{ product['catch'] }}</span>
+												{% endif %} 
+											{% endif %} 
+									</div>
+									<div class="products-list__caption">
+										{% if (product['rating'] != constant('false')) %} 
+										<div class="product__rating product__rating--sm">
+											<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;"></div>
+										</div>
+										{% endif %} 
+										<a href="{{ product['href'] }}" class="catalogue__product-name products-list__name"><span>{{ product['name'] }}</span></a>
+									{% if (product['special']) %} 
+										<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+										<span class="catalogue__price catalogue__price--sm">{{ product['special'] }}</span>
+									{% else %}	
+										<span class="catalogue__price catalogue__price--sm">{{ product['price'] }}</span>
+									{% endif %}	
+									</div>
+							</div>
+						</li>
+						{% endfor %} 
+					</ul>
+				</div>
+				
+			</div>
+			</div>
+		</div>
+	 {% endif %}
+	{% endfor %}
+
+
+{% else %} 
+		<!-- catalog -->
+
+		<div class="catalog-min">
+			<div class="container js-tabs-box">
+				<div class="tabs tabs--light">
+				  <ul class="tabs__list">
+					{% set t = 0 %} 
+				  	{% for tab,product_tab in product_tabs %} 
+					  {% if (products[tab] is not empty) %} 
+						<li class="tabs__list-item js-tab {% if (not t) %} active {% endif %}">
+							<a href="#tab-data-{{ tab }}" class="tabs__link">
+								{{ product_tab['description'][language_id]['name'] is defined ? product_tab['description'][language_id]['name'] : '' }} 
+							</a>
+						</li>
+						{% set t = t + 1 %} 
+					   {% endif %} 
+						
+				  	{% endfor %} 
+				  </ul>
+				</div>
+				<div class="catalog-min__tabs-content">
+					<div class="catalog-min__tabs-container">
+						{% set y = 0 %} 
+					  {% for tab,product_tab in product_tabs if products[tab] is not empty %} 
+
+						<div class="tabs-content js-tab-content {% if (not y) %} active {% endif %}">
+						  
+						  {% set t = 0 %}{% for t in t..products %}						    
+							  <div class="catalog-min__row">
+								{% set y_min = t*tp_limit %} {% set y_max = (t+1)*tp_limit-1 %} 
+								{% set i=y_min %}{% for i in i..y_max %} 
+								{% if (products[tab][i] is defined) %} 
+								 {% set product = products[tab][i] %}							
+								<div class="product product--min">
+									<div class="products-list__label">
+											{% if (product['isnewest']) %} 
+												<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+											{% endif %} 
+											{% if (product['special'] and product['sales']) %} 
+												<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+											{% endif %} 
+											{% if (product['popular']) %} 
+												<span class="label label--popular">{{ product['popular'] }}</span>
+											{% endif %} 
+											{% if (product['hit']) %} 
+												<span class="label label--hit">{{ product['hit'] }}</span>
+											{% endif %} 
+											{% if (product['catch']) %} 
+												{% if (product['nocatch']) %} 
+													<span class="label label--nocatch">{{ product['catch'] }}</span>
+												{% else %} 
+													<span class="label label--catch">{{ product['catch'] }}</span>
+												{% endif %} 
+											{% endif %} 
+									</div>
+									<div class="product__img">
+										<a href="{{ product['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>						
+									</div>
+									<div class="product__descr">
+										{% if (product['rating'] != constant('false')) %} 
+										<div class="product__rating">
+										  <div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;"></div>
+										</div>
+										{% endif %} 
+										<a href="{{ product['href'] }}" class="link--brown">{{ product['name'] }}</a>
+										<div class="clearfix"></div>
+									{% if (product['special']) %} 
+										<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+										<span class="catalogue__price catalogue__price--sm">{{ product['special'] }}</span>
+									{% else %}	
+										<span class="catalogue__price catalogue__price--sm">{{ product['price'] }}</span>
+									{% endif %}	
+									</div>
+								</div>
+							   {% endif %} 
+							   {% endfor %} 
+							
+							  </div>							
+							
+						  {% endfor %} 
+							
+						</div>
+					{% set y = y + 1 %} 
+					  {% endfor %} 
+					</div>	
+				</div>	
+			</div>
+		</div>
+{% endif %}

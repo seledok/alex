@@ -1,0 +1,196 @@
+
+					<!-- CATALOGUE LISTS-->
+					<div  class="catalogue__products-lists js-lists {{ viewSub }} active">
+						<ul class="catalogue__products-list">
+						{% for product in products %} 
+							<li class="catalogue__products-list-item {{ catalog_type == 1 ? 'catalogue__products-list-item--type2' : ''}}">
+							  {% if (not product['images']) %} 
+								<div class="products-list__link" >
+									{% if (product_detail == 1) %} 
+									<!-- Quick view when clicking on a link -->
+										<a data-for="{{ product['product_id'] }}" href="{{ product['href'] }}" class="products-list__img js-product-view-btn">
+											<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+										</a>
+									{% else %} 
+										<a class="products-list__img" href="{{ product['href'] }}">
+											<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+										</a>
+									{% endif %} 
+									<div class="products-list__label">
+										{% if (product['isnewest']) %} 
+											<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+										{% endif %} 
+										{% if (product['special'] and product['sales']) %} 
+											<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+										{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+									</div>
+									<div class="products-list__caption">
+										{% if (product['rating'] is not same as(false)) %} 
+										<div class="product__rating product__rating--sm">
+											<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;"></div>
+										</div>
+										{% endif %} 
+										{% if (product_detail == 1) %} 
+										<!-- Quick view when clicking on a link -->
+										<a data-for="{{ product['product_id'] }}" href="{{ product['href'] }}" class="catalogue__product-name products-list__name js-product-view-btn"><span>{{ product['name'] }}</span></a>
+										{% else %} 
+										<a href="{{ product['href'] }}" class="catalogue__product-name products-list__name"><span>{{ product['name'] }}</span></a>
+										{% endif %} 
+									{% if (product['special']) %} 
+										<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+										<span class="catalogue__price catalogue__price--sm">{{ product['special'] }}</span>
+									{% else %}	
+										<span class="catalogue__price catalogue__price--sm">{{ product['price'] }}</span>
+									{% endif %}	
+									</div>
+									<span class="products-list__like" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product['product_id'] }}');">
+										<svg class="icon-heart icon-heart--gray">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</span>
+									<div class="products-list__action {{ catalog_type == 1 ? 'products-list__action--type2' : 'js-btn-clear'}}">
+										<div class="products-list__btns">
+										{% if (product_detail == 2) %} 
+										<!-- Quick view when clicking on a link -->
+											<span class="products-list__btns-item">
+												<a data-for="{{ product['product_id'] }}" title="{{ text_product_view_btn }}" class="btn products-list__btn js-product-view-btn">
+													<svg class="icon-eye">
+														<use xlink:href="#eye"></use>
+													</svg>
+												</a>
+											</span>
+										{% endif %} 
+												<span class="products-list__btns-item">
+													<button type="button" class="products-list__btn {{ product_detail == 2 ? '' : 'products-list__btn--lg'}}" title="{{ button_cart }}" onclick="cart.add('{{ product['product_id'] }}', '{{ product['minimum'] }}');" {{ product['buy_btn'] ? 'disabled' : ''}}>
+													{{ catalog_type == 1 ? button_cart : '' }}
+													<svg class="icon-cart">
+														<use xlink:href="#shopping-cart"></use>
+													</svg>
+													</button>
+												</span>
+										</div>
+										<a class="products-list__compare" onclick="compare.add('{{ product['product_id'] }}');">
+											<span class="products-list__compare-icon">
+												<svg class="icon-add-to-list">
+													<use xlink:href="#add-to-list"></use>
+												</svg>
+											</span>
+											<span class="products-list__compare-text">
+												{{ button_compare }} 
+											</span>
+										</a>
+									</div>
+								</div>
+							  {% else %} 
+						<!-- Product with image slider -->
+
+									<div  class="products-list__link js-btn-hover-parent">
+										<div class="products-list__img js-simple-slider">
+												<a {# Quick view when clicking on a link #} {{ product_detail == 1 ? 'data-for="' ~ product['product_id'] ~ '"' : ''}} href="{{ product['href'] }}" class="products-list__img-item {{ product_detail == 1 ? 'js-product-view-btn' : ''}}">
+													<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="" class="js-img-hover">
+												</a>
+											{% for imageX in product['images'] %} 
+												<a {# Quick view when clicking on a link #} {{ product_detail == 1 ? 'data-for="' ~ product['product_id'] ~ '"' : ''}} href="{{ product['href'] }}" class="products-list__img-item {{ product_detail == 1 ? 'js-product-view-btn' : ''}}">
+													<img data-lazy="{{ imageX }}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" alt="" class="js-img-hover">
+												</a>
+											{% endfor %} 
+										</div>
+									<div class="products-list__label">
+										{% if (product['isnewest']) %} 
+											<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+										{% endif %} 
+										{% if (product['special'] and product['sales']) %} 
+											<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+										{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+									</div>
+										<div class="products-list__caption">
+											{% if (product['rating'] is not same as(false)) %} 
+											<div class="product__rating product__rating--sm">
+												<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;">
+												</div>
+											</div>
+											{% endif %} 
+											{% if (product_detail == 1) %} 
+											<!-- Quick view when clicking on a link -->
+											<a data-for="{{ product['product_id'] }}" href="{{ product['href'] }}" class="catalogue__product-name products-list__name js-product-view-btn"><span>{{ product['name'] }}</span></a>
+											{% else %} 
+											<a href="{{ product['href'] }}" class="catalogue__product-name products-list__name"><span>{{ product['name'] }}</span></a>
+											{% endif %} 
+										{% if (product['special']) %} 
+											<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+											<span class="catalogue__price catalogue__price--sm">{{ product['special'] }}</span>
+										{% else %}	
+											<span class="catalogue__price catalogue__price--sm">{{ product['price'] }}</span>
+										{% endif %} 
+										</div>
+										<span class="products-list__like" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product['product_id'] }}');">
+										<svg class="icon-heart icon-heart--gray">
+											<use xlink:href="#heart"></use>
+										</svg>
+										</span>
+										<div class="products-list__action {{ catalog_type == 1 ? 'products-list__action--type2' : 'js-btn-clear'}}">
+											<div class="products-list__btns">
+												{% if (product_detail == 2) %} 
+												<!-- Quick view when clicking on a link -->
+													<span class="products-list__btns-item">
+														<a data-for="{{ product['product_id'] }}" title="{{ text_product_view_btn }}" class="btn products-list__btn js-product-view-btn">
+														<svg class="icon-eye">
+															<use xlink:href="#eye"></use>
+														</svg>
+														</a>
+													</span>
+												{% endif %} 
+												<span class="products-list__btns-item">
+													<button type="button" class="products-list__btn {{ product_detail == 2 ? '' : 'products-list__btn--lg'}}" title="{{ button_cart }}" onclick="cart.add('{{ product['product_id'] }}', '{{ product['minimum'] }}');" {{ product['buy_btn'] ? 'disabled' : ''}}>
+													{{ catalog_type == 1 ? button_cart : '' }}
+													<svg class="icon-cart">
+														<use xlink:href="#shopping-cart"></use>
+													</svg>
+													</button>
+												</span>
+											</div>
+											<a class="products-list__compare" onclick="compare.add('{{ product['product_id'] }}');">
+												<span class="products-list__compare-icon">
+												<svg class="icon-add-to-list">
+													<use xlink:href="#add-to-list"></use>
+												</svg>
+												</span>
+												<span class="products-list__compare-text">
+													{{ button_compare }} 
+												</span>
+											</a>
+										</div>
+									</div>
+							  
+							  {% endif %} 
+							</li>
+						{% endfor %} 
+						</ul>
+					</div>
+					<!-- CATALOGUE LISTS END-->

@@ -1,0 +1,127 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < breadcrumbs|length) %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+			<div id="sidebar-mob-btn"></div>
+			 <table class="table">
+				<thead>
+				  <tr class="table__row">
+					<td class="table__col" colspan="2">{{ text_return_detail }}</td>
+				  </tr>
+				</thead>
+				<tbody>
+				  <tr class="table__row">
+					<td class="table__col" style="width: 50%;"><b>{{ text_return_id }}</b> #{{ return_id }}<br />
+					  <b>{{ text_date_added }}</b> {{ date_added }}</td>
+					<td class="table__col" style="width: 50%;"><b>{{ text_order_id }}</b> #{{ order_id }}<br />
+					  <b>{{ text_date_ordered }}</b> {{ date_ordered }}</td>
+				  </tr>
+				</tbody>
+			  </table>
+			  <h3 class="checkout__h3">{{ text_product }}</h3>
+			  <div class="table-responsive">
+				<table class="table table-bordered table-hover">
+				  <thead>
+					<tr class="table__row">
+					  <td class="table__col" style="width: 33.3%;">{{ column_product }}</td>
+					  <td class="table__col" style="width: 33.3%;">{{ column_model }}</td>
+					  <td class="table__col table__col--right" style="width: 33.3%;">{{ column_quantity }}</td>
+					</tr>
+				  </thead>
+				  <tbody>
+					<tr class="table__row">
+					  <td class="table__col">{{ product }}</td>
+					  <td class="table__col">{{ model }}</td>
+					  <td class="table__col table__col--right">{{ quantity }}</td>
+					</tr>
+				  </tbody>
+				</table>
+			  </div>
+			  <h3 class="checkout__h3">{{ text_reason }}</h3>
+			  <div class="table-responsive">
+				<table class="list table table-bordered table-hover">
+				  <thead>
+					<tr class="table__row">
+					  <td class="table__col" style="width: 33.3%;">{{ column_reason }}</td>
+					  <td class="table__col" style="width: 33.3%;">{{ column_opened }}</td>
+					  <td class="table__col" style="width: 33.3%;">{{ column_action }}</td>
+					</tr>
+				  </thead>
+				  <tbody>
+					<tr class="table__row">
+					  <td class="table__col">{{ reason }}</td>
+					  <td class="table__col">{{ opened }}</td>
+					  <td class="table__col">{{ action }}</td>
+					</tr>
+				  </tbody>
+				</table>
+			  </div>
+			  {% if comment %}
+			  <div class="table-responsive">
+				<table class="table table-bordered table-hover">
+				  <thead>
+					<tr class="table__row">
+					  <td class="table__col">{{ text_comment }}</td>
+					</tr>
+				  </thead>
+				  <tbody>
+					<tr class="table__row">
+					  <td class="table__col">{{ comment }}</td>
+					</tr>
+				  </tbody>
+				</table>
+			  </div>
+			  {% endif %}
+			  <h3 class="checkout__h3">{{ text_history }}</h3>
+			  <div class="table-responsive">
+				<table class="table table-bordered table-hover">
+				  <thead>
+					<tr class="table__row">
+					  <td class="table__col" style="width: 33.3%;">{{ column_date_added }}</td>
+					  <td class="table__col" style="width: 33.3%;">{{ column_status }}</td>
+					  <td class="table__col" style="width: 33.3%;">{{ column_comment }}</td>
+					</tr>
+				  </thead>
+				  <tbody>
+				  
+				  {% if histories %}
+				  {% for history in histories %}
+				  <tr class="table__row">
+					<td class="table__col">{{ history.date_added }}</td>
+					<td class="table__col">{{ history.status }}</td>
+					<td class="table__col">{{ history.comment }}</td>
+				  </tr>
+				  {% endfor %}
+				  {% else %}
+				  <tr class="table__row">
+					<td colspan="3" class="text-center">{{ text_no_results }}</td>
+				  </tr>
+				  {% endif %}
+					</tbody>
+				  
+				</table>	
+			  </div>
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

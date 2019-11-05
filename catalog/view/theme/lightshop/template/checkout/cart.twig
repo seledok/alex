@@ -1,0 +1,209 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (attention) %} 
+	<div class="alert alert--yellow">
+		<span class="alert__text">
+			{{ attention }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+{% if (success) %} 
+	<div class="alert alert--green">
+		<span class="alert__text">
+			{{ success }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h1 class="content__title">{{ heading_title }} {% if (weight) %} {{ ' (' ~ weight ~ ')' }} {% endif %}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+			<div class="col-sm-{{ col }}">
+				<div class="cart">
+					<form action="{{ action }}" method="post" enctype="multipart/form-data" id="cartcontent">	 
+					<div class="cart__products">
+						<table class="cart__table">
+						{% for product in products %} 
+							<tr class="cart__table-row">
+							{% if (product['thumb']) %} 
+								<td class="cart__table-photo">
+									<a href="{{ product['href'] }}" class="cart__photo">
+										<img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" title="{{ product['name'] }}">
+									</a>
+								</td>
+							{% endif %}	
+								<td {% if (not product['thumb']) %}colspan="2"{% endif %}	 class="cart__table-name">
+										<a href="{{ product['href'] }}" class="cart__product-name">
+											{{ product['name'] }} 
+										</a>
+										{% if (not product['stock']) %} 
+										***
+										{% endif %} 
+								</td>
+								<td class="cart__table-discount">
+									<span class="cart__discount">
+										{{ product['model'] }}<br>
+										
+										{% if (product['option']) %} 
+											{% for option in product['option'] %}					 
+												{{ option['name'] }}: {{ option['value'] }}<br>
+											{% endfor %} 
+										{% endif %} 
+									  
+										{% if (product['reward']) %} 
+											{{ product['reward'] }}<br>
+										{% endif %} 
+										
+										{% if (product['recurring']) %} 
+											{{ text_recurring_item }} {{ product['recurring'] }}<br>
+										{% endif %}	
+									</span>
+								</td>
+								<td class="cart__table-price">
+									<span class="catalogue__price catalogue__price--md catalogue__price--think" title="{{ column_price }}">
+										{{ product['price'] }} 
+									</span>
+								</td>					
+								<td class="cart__table-spinner">
+									<div class="spinner-wrap">
+										<input name="quantity[{{ product['cart_id'] }}]" type="text" class="spinner" value='{{ product['quantity'] }}' placeholder="{{ product['quantity'] }}" >
+									</div>
+								</td>
+
+								<td class="cart__table-price-total">
+									<span class="catalogue__price catalogue__price--md catalogue__price--total" title="{{ column_total }}">
+										{{ product['total'] }} 
+									</span>
+								</td>
+								<td class="cart__table-delete">
+									<a onclick="cart.remove('{{ product['cart_id'] }}');" class="cart__delete" title="{{ button_remove }}">
+										<svg class="icon-cross">
+											<use xlink:href="#cross"></use>
+										</svg>
+									</a>
+								</td>
+							</tr>
+							{% endfor %} 
+					  {% for voucher in vouchers %} 
+							<tr class="cart__table-row">
+								<td colspan="5" class="cart__table-name">{{ voucher['description'] }}</td>
+								<td class="cart__table-price-total">
+									<span class="catalogue__price catalogue__price--md catalogue__price--total" title="{{ column_total }}">
+										{{ voucher['amount'] }} 
+									</span>
+								</td>
+								
+								<td class="cart__table-delete">
+									<a onclick="voucher.remove('{{ voucher['key'] }}');" class="cart__delete" title="{{ button_remove }}">
+										<svg class="icon-cross">
+											<use xlink:href="#cross"></use>
+										</svg>
+									</a>
+								</td>
+							</tr>
+					  {% endfor %}					
+						</table>
+					</div>
+					</form>
+					
+					<div class="cart__meta">	  
+						{% if (modules) %} 
+						<div class="product-info cart--tabs js-product-info js-cart-tabs"> 
+							<div class="js-tabs-box js-tabs-box-product">
+								<div class="tabs">
+									<ul class="tabs__list js-cart-tabs-list"></ul>
+								</div>
+								<div class="product-info__tabs-container js-cart-tabs-container"></div>
+							</div>	
+						</div>	
+						<div class="js-cart-tabs-modules">
+							{% for module in modules %} 
+							{{ module }} 
+							{% endfor %} 
+						</div>		
+						{% endif %} 
+						<div class="cart__sum">
+						{% for i,total in totals %} 
+							{% if (i + 1 < (totals)|length) %} 
+								<span class="cart__sum-text">
+									{{ total['title'] }}:
+									<span class="cart__sum-text-price">
+										{{ total['text'] }} 
+									</span>
+								</span><br>			
+							{% else %} 
+								<span class="cart__sum-text">
+									{{ total['title'] }}:
+									<span class="cart__sum-price">
+										{{ total['text'] }} 
+									</span>
+								</span><br>				
+							{% endif %}
+						{% endfor %}				
+						</div>
+					</div>
+					<div class="cart__buttons">
+						<div class="cart__buttons-left">
+							<a href="{{ continue }}" class="btn btn--transparent">
+								{{ button_shopping }} 
+							</a>
+						</div>
+						<div class="cart__buttons-right">
+							<span class="cart__buttons-right-btn">
+								<a href="{{ checkout }}" class="btn">{{ button_checkout }}</a>
+							</span>
+							{% if (buy_click['status']) %} 
+								<button type="button" href="#popup-buy-click" data-typefrom="cart-popup" data-for="" class="btn btn--link js-fancy-popup-cart" style="min-width: inherit;">{{ text_lightshop_fast_order }}</button>
+							{% endif %} 
+						</div>
+					</div>
+				</div>
+			</div>
+			{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+		</div>	
+		{{ content_bottom }} 
+	</div>
+</main>
+		{% if (buy_click['status']) %} 
+		<div class="popup-simple" id="popup-buy-click">
+			<div class="popup-simple__inner" >
+				<form id="data">
+				<h3>{{ text_lightshop_fast_order }} </h3>
+					{{ buyclick_form }} 
+					{{ captcha_fo }} 
+					<button type="button" class="btn js-btn-add-cart-fast quickbuy-send">{{ button_fastorder_sendorder }}</button>
+					<input name="redirect"  value="1" id="fast-redirect" type="hidden">
+					{% if (text_lightshop_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+					{% endif %} 
+				</form>
+			</div>	
+		</div>
+		{% endif %} 
+{{ footer }}</body></html>

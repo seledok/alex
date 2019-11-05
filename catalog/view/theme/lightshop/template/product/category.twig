@@ -1,0 +1,395 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+
+{% if (products) %} {# Categories with products #} 
+<!--MAIN CONTENT CATALOGUE-->
+<main {{ schema ? 'itemscope itemtype="http://schema.org/Product"' : ''}} class="content {{ thumb and category_background ? 'content-catalogue' : ''}}">
+
+{% if (content_top) %} 
+	<div class="container">
+	{{ content_top }} 
+	</div>
+{% endif %} 
+
+	{% if (schema) %} 
+		<!-- Microdata -->
+		<div itemtype="http://schema.org/AggregateOffer" itemscope="" itemprop="offers">
+			<meta content="{{ product_total }}" itemprop="offerCount"> <!-- Number of goods -->
+			<meta content="{{ maxPrice }}" itemprop="highPrice"> <!-- The highest price for a product -->
+			<meta content="{{ minPrice }}" itemprop="lowPrice"> <!-- The lowest price for the goods -->
+			<meta content="{{ currency }}" itemprop="priceCurrency"> <!-- Currency -->
+		</div>
+	{% endif %} 
+
+<div class="catalogue">
+	
+	
+	<!-- CATALOGUE TOP-->
+	{% if (thumb and category_background) %} 
+	<div class="catalogue__top" {{ lazyload ? 'data-src="' ~ thumb ~ '"' : 'style="background-image: url(' ~ thumb ~ ');"' }}>
+	{% endif %}	
+		<div class="container">
+			<div class="breadcrumbs {{ thumb and category_background ? 'catalogue__breadcrumbs' : 'breadcrumbs--sm-pad'}}">  
+				<ul class="breadcrumb__list">
+				{% for i,breadcrumb in breadcrumbs %} 
+				{% if (i == 0) %} 
+					<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+				{% elseif (i + 1 < breadcrumbs|length and breadcrumb['cat_id'] is defined) %} 
+					<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a data-href="#categories-popup{{ i }}" class="js-popup-call-hover breadload" data-id="{{ breadcrumb['cat_id'] }}" data-i="{{ i }}" href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+				{% else %} 
+					<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+				{% endif %} 
+				{% endfor %} 			
+				</ul>
+				{% for i,breadcrumb in breadcrumbs %} 
+					<div class="popup" id="categories-popup{{ i }}">
+					</div>
+				{% endfor %} 		
+			</div>	
+			
+			{% if (thumb and category_background) %} 
+			<h1 {{ schema ? 'itemprop="name"' : ''}} class="catalogue__title">{{ heading_title }}</h1>
+			{% else %} 
+			<h1 {{ schema ? 'itemprop="name"' : ''}} class="content__title">{{ heading_title }}</h1>
+			{% endif %} 
+		</div>
+	{% if (thumb and category_background) %}	
+	</div>
+	{% endif %}	
+	<!-- CATALOGUE TOP-->
+	
+	<!-- CATALOGUE MAIN CONTENT INNER-->
+	<div class="catalogue__inner" {{ thumb and category_background ? '' : 'style="padding-top: 0;"'}}>
+		<div class="container">
+
+{% else %} {# Categories without products #}	
+		
+<!--MAIN CONTENT CATEGORIES-->
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < breadcrumbs|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a data-href="#categories-popup{{ i }}" class="js-popup-call-hover" href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+				{% for i,breadcrumb in breadcrumbs %} 
+					<div class="popup" id="categories-popup{{ i }}">
+						<div class="nav-submenu nav-submenu--min">
+							<ul class="nav-submenu__list">
+					{% if (breadcrumb['breadList'] is defined) %} 
+						{% for breadlist in breadcrumb['breadList'] %} 
+							<li class="nav-submenu__list-item"><a href="{{ breadlist['href'] }}" class="nav-submenu__link">{{ breadlist['name'] }}</a></li>
+						{% endfor %} 
+					{% endif %} 
+							</ul>
+						</div>
+					</div>
+				{% endfor %} 
+		</div>				
+{% endif %}		
+
+{% if (categories) %} 
+	<div class="categories">
+
+		<div class="categories__inner">
+
+				{% if (not products and category_categories) %} 
+				<div class="categories__heading categories__heading--col-{{ category_categories }} {{ categories|length == 1 ? 'categories-heading--fix' : ''}}">
+					<h1 class="categories__title js-cat-title-height">
+					{{ heading_title }} 
+					</h1>
+					{% if (description) %} 
+					<div class="categories__heading-text">
+						<div class="categories__heading-text-inner js-custom-scroll">					
+							<div class="editor">
+								{{ description }}		
+							</div>
+						</div>
+					</div>
+					{% endif %} 
+				</div>
+				{% endif %} 
+	
+			
+			<div class="row">
+				{% if (category_categories) %} 
+					{% for i,category in categories %} 
+					{% if (i < (category_categories == 2 ? 3 : 2)) %} 
+					<div class="col-md-{{ category_categories }} col-sm-6">
+						<div class="categories__item categories__item--col-{{ category_categories }}">
+						{% if (not lazyload) %} 
+							<a href="{{ category['href'] }}" class="categories__link js-animate" style="background-image: url({{ category['thumb'] }}); {{ category_background ? '' : 'background-size: contain;'}}">
+						{% else %} 
+							<a data-src="{{ category['thumb'] }}" href="{{ category['href'] }}" class="categories__link js-animate" style="{{ category_background ? '' : 'background-size: contain;'}}">
+						{% endif %} 
+								<div class="categories__caption js-animate-caption">
+									<span class="categories__caption-text">
+										{{ category['name'] }} 
+									</span>
+								</div>
+								<span class="categories-overlay"></span>
+							</a>
+						</div>
+					</div>
+					{% endif %} 
+					{% endfor %} 
+
+					{% if (not products) %} 
+					<div class="col-md-{{ colmd }}  col-sm-6 col-xs-6 categories__item-heading">
+						<div class="categories__item categories__item--col-{{ category_categories }}"></div>
+					</div>
+					{% endif %} 
+
+					{% for i,category in categories %} 
+					{% if (i >= (category_categories == 2 ? 3 : 2)) %} 
+					<div class="col-md-{{ category_categories }} col-sm-6">
+						<div class="categories__item categories__item--col-{{ category_categories }}">
+						{% if (not lazyload) %} 
+							<a href="{{ category['href'] }}" class="categories__link js-animate" style="background-image: url({{ category['thumb'] }}); {{ category_background ? '' : 'background-size: contain;'}}">
+						{% else %} 
+							<a data-src="{{ category['thumb'] }}" href="{{ category['href'] }}" class="categories__link js-animate" style="{{ category_background ? '' : 'background-size: contain;'}}">
+						{% endif %} 
+								<div class="categories__caption js-animate-caption">
+									<span class="categories__caption-text">
+										{{ category['name'] }} 
+									</span>
+								</div>
+								<span class="categories-overlay"></span>
+							</a>
+						</div>
+					</div>				
+					{% endif %} 
+					{% endfor %} 
+				{% endif %} 
+			</div>
+			
+			
+		</div>
+		
+	</div>
+{% endif %} 
+
+<div class="clearfix"></div>
+	<div class="row">
+	
+{% if (products) %}		
+		{{ column_left ? '<div class="col-md-3"><div class="catalogue__sidebar">' ~ column_left ~ '</div></div>' : ''}}
+		<div class="col-md-{{ col }}">
+		{{ column_right ? '<div id="sidebar-mob-btn"></div>' : ''}}
+
+<div class="clearfix"></div>
+
+			<!-- CATALOGUE CONTENT-->		
+			
+
+			<div class="catalogue__content">
+				<div class="catalogue__content-top">
+					<div class="catalogue__sort">
+						{% if (category_sorts) %} 
+						<div class="catalogue__sort-sorts">
+							<span class="select">
+								<select class="select select--transparent" onchange="location = this.value;">
+									{% for sorts in sorts %} 
+										{% if (sorts['value'] == sort ~ '-' ~ order) %} 
+										<option value="{{ sorts['href'] }}" selected="selected">{{ text_sort }} {{ sorts['text'] }}</option>
+										{% else %} 
+										<option value="{{ sorts['href'] }}">{{ text_sort }} {{ sorts['text'] }}</option>
+										{% endif %} 
+									{% endfor %} 
+								
+								</select>
+							</span>
+						</div>
+						{% endif %} 
+						{% if (category_limits) %} 
+						<div class="catalogue__sort-limits">
+							<span class="select">
+								<select class="select select--transparent" onchange="location = this.value;">
+								{% for limits in limits %} 
+								{% if (limits['value'] == limit) %} 
+								<option value="{{ limits['href'] }}" selected="selected">{{ text_limit }} {{ limits['text'] }}</option>
+								{% else %} 
+								<option value="{{ limits['href'] }}">{{ text_limit }} {{ limits['text'] }}</option>
+								{% endif %} 
+								{% endfor %} 
+								</select>
+							</span>
+						</div>
+						{% endif %} 
+					</div>
+
+					<div class="catalogue__product-view">
+						<div class="product-view">
+							<ul class="product-view__list js-drop-select-drop">
+								<li class="product-view__list-item active js-list-select js-select-lists" data-columns="main">
+									<a href="#" class="product-view__link">
+										<svg class="icon-tile-three">
+											<use xlink:href="#tile-three"></use>
+										</svg>
+									</a>
+								</li>
+								<li class="product-view__list-item  js-list-select js-select-table" data-columns="table">
+									<a href="#" class="product-view__link">
+										<svg class="icon-table">
+											<use xlink:href="#table"></use>
+										</svg>
+									</a>
+								</li>
+								<li class="product-view__list-item  js-list-select js-select-full-list" data-columns="list"> 
+									<a href="#" class="product-view__link">
+										<svg class="icon-tile-wide">
+											<use xlink:href="#tile-wide"></use>
+										</svg>
+									</a>
+								</li>
+								<li class="product-view__list-item js-list-select js-select-four-items product-view__list-item--hide-mobile" data-columns="main-four">
+									<a href="#" class="product-view__link">
+										<svg class="icon-tile-four">
+											<use xlink:href="#tile-four"></use>
+										</svg>
+									</a>
+								</li>
+								<li class="product-view__list-item js-list-select js-select-five-items product-view__list-item--hide-mobile" data-columns="main-five">
+									<a href="#" class="product-view__link">
+										<svg class="icon-tile-five">
+											<use xlink:href="#tile-five"></use>
+										</svg>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- CATALOGUE CONTENT (LISTS)-->
+				<div  id="mainContainer" class="catalogue__content-lists"> 
+					{{ productsview }}
+
+					<!-- CATALOGUE LISTS END-->
+				</div>
+				<!-- CATALOGUE CONTENT (LISTS) END-->
+				
+				<!-- CATALOGUE PAGINATION-->
+				<div class="catalogue__content-bottom">
+					<div class="catalogue__pagination">
+						{{ pagination }} 
+					</div>
+					<input type="hidden" id="path_id" value='{{ path }}'>
+					<input type="hidden" id="url" value='{{ url }}'>
+				</div>
+				<!-- CATALOGUE PAGINATION END-->
+			</div>
+			
+
+
+	{% if (description) %} 
+		<div class="catalogue__description"><div {{ schema ? 'itemprop="description"' : ''}} class="editor">{{ description }}</div></div>
+	{% else %} 
+	{{ schema ? '<meta itemprop="description" content="' ~ heading_title ~ '">' : ''}}
+	{% endif %} 
+{% endif %} 
+
+{% if ((not categories or category_categories == 0) and not products) %} 
+<div class="col-md-12">
+	<h1 class="categories__title">
+	{{ heading_title }} 
+	</h1>
+	{% if (description) %}					
+		<div class="catalogue__description"><div class="editor">{{ description }}</div></div>	
+	{% endif %}	
+	<div class="empty-products">
+		<p>{{ text_empty }}</p>
+		<div class="checkout__button-box">
+		<a href="{{ continue }}" class="btn btn--transparent">{{ button_continue }}<svg class="icon-arrow-long-right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#arrow-long-right"></use></svg></a>
+		</div>
+	</div>
+</div>
+{% endif %} 
+
+{% if (products) %} 
+		</div>
+	{{ column_right ? '<div class="col-md-3"><div class="sidebar sidebar--right">' ~ column_right ~ '</div></div>' : ''}}
+{% endif %} 
+
+	</div>	
+
+
+
+{% if (products) %} 
+			<!-- CATALOGUE CONTENT END-->
+		</div><!-- container end -->
+	</div><!-- catalogue__inner end -->
+	<!-- CATALOGUE MAIN CONTENT INNER END-->
+{{ content_bottom }} 
+</div><!-- catalogue end -->
+{% else %} {# Categories without products #} 
+	{{ content_bottom }} 
+	</div><!-- container end -->
+{% endif %} 
+
+<input type="hidden" id="path" value='{{ path }}'>
+<input type="hidden" id="cat_url" value='{{ cat_url }}'>
+<input type="hidden" id="currencydata" value='{{ currencydata }}'>
+<div id="popupprod" class="catalogue__product-detail js-tabs-box js-product-view">
+</div>
+
+</main>
+		{% if (buy_click['status']) %} 
+		<div class="popup-simple" id="popup-buy-click">
+			<div class="popup-simple__inner" >
+				<form>
+				<h3>{{ text_lightshop_buy_click }}</h3> 
+					{{ buyclick_form }}
+					{{ captcha_fo }} 
+					<button type="button" class="btn js-btn-add-cart-fast-popup quickbuy-send">{{ button_fastorder_sendorder }}</button>
+					<input name="quantity"  value="" id="cat_qty" type="hidden">
+					<input name="product_id" value="" id="cat_prod_id" type="hidden">
+					<input name="redirect"  value="1" class="fast-redirect" type="hidden">
+					{% if (text_lightshop_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+					{% endif %} 
+				</form>
+			</div>	
+		</div>
+		{% endif %} 
+{{ footer }} 
+<script>
+$(document).on('ready', function() {
+	var view = '{{ viewLayer }}';
+	if(window.innerWidth < 767) {
+		view = '{{ viewLayerM }}';
+		$('.js-lists').removeClass('catalogue__products-list--four');
+		$('.js-lists').removeClass('catalogue__products-list--five');
+	}else{
+		var v  = '{{ viewSub }}';
+		$('.js-lists').removeClass('catalogue__products-list--four');
+		$('.js-lists').removeClass('catalogue__products-list--five');
+		if(v != ''){
+			$('.js-lists').addClass('active ' + v);
+		}		
+	}
+	
+	if (localStorage.getItem('display')) {
+//		view = localStorage.getItem('display');
+	}
+
+	$(".product-view__list-item").removeClass('active'); 
+	$(".product-view__list-item").each(function(indx, element){
+		if($(element).attr('data-columns') == view){
+			$(element).addClass('active');
+		}		
+	});
+	$('.product-view__list .active').insertBefore($(".product-view__list-item").first());
+
+	breadLoad();	
+	
+});
+</script>
+</body></html>

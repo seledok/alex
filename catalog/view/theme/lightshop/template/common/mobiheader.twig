@@ -1,0 +1,92 @@
+				<span class="popup-close js-popup-close"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg></span>
+				<span class="popup__title">{{ text_header_category }}</span>
+				<div class="popup__submenu-scroll">
+				<div class="nav-submenu">
+					<ul class="nav-submenu__list">					
+								  {% for key,main_nav in main_navs %} 
+									   {% if (main_nav['settype'] == 0) %} 
+									     {% if (main_nav.type[main_nav.settype].links is not defined) %} {% set main_nav=main_nav|merge({'type': {(main_nav.settype): {'links':topcat}}}) %} {% endif %}
+										  {% for key,link in main_nav.type[main_nav.settype].links %} 
+											{% set cat_id = key|slice(1) %}									   
+											  {% if (not (categories[cat_id]['children'])|length) %} 
+											  <li class="nav-submenu__list-item">
+												<a href="{{ categories[cat_id]['href'] }}" class="nav-submenu__link">{{ top_links[key]|keys|first }}</a>
+											  </li>
+											  {% else %} 
+												<li class="nav-submenu__list-item nav-submenu__item">
+													<a href="#mnav{{ key }}" class="nav-submenu__link nav-submenu__title js-submenu-link">{{ top_links[key]|keys|first }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a>
+													<ul class="nav-submenu__list nav-submenu__item">
+													  <li class="nav-submenu__list-item nav-submenu__list-item--title"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg>{{ top_links[key]|keys|first }}</li>
+																											  
+															   {% for category in categories[cat_id]['children'] %}	
+																	<li class="nav-submenu__list-item nav-submenu__item">
+																	  {% if ((category['children'])|length) %} 
+																		<a href="{{ category['href'] }}" class="nav-submenu__link nav-submenu__title js-submenu-link"> {{ category['name'] }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a>
+																		<ul class="nav-submenu__list">
+																			<li class="nav-submenu__list-item nav-submenu__list-item--title"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg> {{ category['name'] }}</li>
+																			   {% for category3 in category['children'] %}					
+																				<li class="nav-submenu__list-item"><a href="{{ category3['href'] }}" class="nav-submenu__link"> {{ category3['name'] }}</a></li>					
+																			  {% endfor %} 
+																			  <li class="nav-submenu__list-item nav-submenu__item"><a href="{{ category['href'] }}" class="nav-submenu__link nav-submenu__title">{{ text_show_more }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a></li>
+																		</ul>
+																	</li>
+																	  {% else %} 
+																		<li class="nav-submenu__list-item"><a href="{{ category['href'] }}" class="nav-submenu__link nav-submenu__title"> {{ category['name'] }}</a></li>
+																	  {% endif %}													
+															  {% endfor %} 
+													  <li class="nav-submenu__list-item nav-submenu__item"><a href="{{ categories[cat_id]['href'] }}" class="nav-submenu__link nav-submenu__title">{{ text_show_more }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a></li>
+													</ul>
+												</li>
+											 {% endif %} 
+										 {% endfor %}	
+									   {% elseif (main_nav['settype'] == 1) %} 
+											 {% if (main_nav.type[main_nav.settype].links is not defined) %} {% set main_nav=main_nav|merge({'type': {(main_nav.settype): {'links':[]}}}) %}{% endif %}
+											<li class="nav-submenu__list-item nav-submenu__item">
+												 <a href="#mnav{{ key }}" class="nav-submenu__link nav-submenu__title js-submenu-link">{{ main_nav['type'][main_nav['settype']]['language'][language_id]['name'] }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a>
+												<ul class="nav-submenu__list nav-submenu__item">										  
+												  <li class="nav-submenu__list-item nav-submenu__list-item--title"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg>{{ main_nav['type'][main_nav['settype']]['language'][language_id]['name'] }}</li>
+												   
+												    {% for id,link in main_nav.type[main_nav.settype].links %} 
+													 
+													 <li class="nav-submenu__list-item"><a href="{{ link }}" class="nav-submenu__link nav-submenu__title">{{ top_links[id] is defined ? top_links[id]|keys|first : '' }}</a></li>
+												   {% endfor %}								   
+												</ul>
+											 </li>
+									   {% elseif (main_nav['settype'] == 2) %} 
+											 {% if (main_nav.type[main_nav.settype].links is not defined) %} {% set main_nav=main_nav|merge({'type': {(main_nav.settype): {'links':[]}}}) %}{% endif %}
+											 {% for id,link in main_nav.type[main_nav.settype].links %} 
+												<li class="nav-submenu__list-item">
+													<a href="{{ link }}" class="nav-submenu__link">{{ top_links[id] is defined ? top_links[id]|keys|first : '' }}</a>
+												</li>
+											{% endfor %} 
+									   {% endif %} 
+								  {% endfor %} 
+								  <!-- MAIN NAV  -->					
+					
+					</ul>
+					<div class="nav-submenu nav-submenu-about">
+						<ul class="nav-submenu__list">						
+							 {% for key,header_nav in header_navs %} 
+							   {% if (header_nav['settype']) %} 
+								 {% for id,link in header_nav['type'][header_nav['settype']]['links'] %} 
+									<li class="nav-submenu__list-item"><a href="{{ link }}" class="nav-submenu__link">{{ top_links[id] is defined ? top_links[id]|keys|first : '' }}</a></li>
+								{% endfor %} 
+							   {% else %} 
+							    <li class="nav-submenu__list-item nav-submenu__item">
+								 <a href="#nav{{ key }}" class="nav-submenu__link nav-submenu__title js-submenu-link">{{ header_nav['type'][header_nav['settype']]['language'][language_id]['name'] }}<svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></a>								
+									  
+									<ul class="nav-submenu__list">
+									  <li class="nav-submenu__list-item nav-submenu__list-item--title"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg>{{ header_nav['type'][header_nav['settype']]['language'][language_id]['name'] }}</li>
+									   {% if (header_nav['type'][header_nav['settype']]['links'] is defined) %} 
+										{% for id,link in header_nav['type'][header_nav['settype']]['links'] %} 
+										 <li class="nav-submenu__list-item"><a href="{{ link }}" class="nav-submenu__link">{{ top_links[id] is defined ? top_links[id]|keys|first : '' }}</a></li>
+									   {% endfor %} 
+									   {% endif %} 
+									</ul>								  
+								</li>
+							   {% endif %} 
+							{% endfor %}				
+						</ul>
+					</div>
+				</div>
+				</div>

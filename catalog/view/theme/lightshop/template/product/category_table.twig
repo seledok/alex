@@ -1,0 +1,95 @@
+					<!-- CATALOGUE TABLE-->
+					<table class="catalogue__table js-table active">
+					{% for product in products %} 
+						<tr class="catalogue__table-row">
+							<td class="catalogue__table-photo">
+							{% if (product_detail == 1) %} 
+							<!-- Quick view when clicking on a link -->
+								<a href="{{ product['href'] }}" data-for="{{ product['product_id'] }}" class="catalogue__photo-link js-product-view-btn">
+									<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+								</a>
+							{% else %} 
+								<a href="{{ product['href'] }}" class="catalogue__photo-link">
+									<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+								</a>
+							{% endif %} 
+							</td>
+							<td class="catalogue__table-name">
+								{% if (product['rating'] is not same as(false)) %} 
+								<div class="catalogue__product-rating">
+									<div class="product__rating">										
+										<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;">											
+										</div>
+									</div>
+								</div>
+								{% endif %} 
+								{% if (product_detail == 1) %} 
+								<!-- Quick view when clicking on a link -->
+								<a href="{{ product['href'] }}" data-for="{{ product['product_id'] }}" class="catalogue__product-name js-product-view-btn">
+									{{ product['name'] }} 
+								</a>
+								{% else %} 
+								<a href="{{ product['href'] }}" class="catalogue__product-name">
+									<span>{{ product['name'] }}</span>
+								</a>
+								{% endif %} 
+							</td>
+							<td class="catalogue__table-price">
+							{% if (product['price']) %} 
+							{% if (product['special']) %} 
+								<span class="catalogue__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="catalogue__price catalogue__price--md">
+									{{ product['special'] }} 
+								</span>
+							{% else %}	
+								<span class="catalogue__price catalogue__price--md">
+									{{ product['price'] }} 
+								</span>
+							{% endif %}	
+							{% endif %}	
+							</td>
+							<td class="catalogue__table-btn">
+								<a class="btn btn--transparent catalogue__btn-cart {{ product['buy_btn'] ? 'disabled' : ''}}" {{ product['buy_btn'] ? '' : 'data-for="' ~ product['product_id'] ~ '"'}}  title="{{ button_cart }}">
+									<span class="catalogue__btn-cart-plus"> + </span>
+									<svg class="icon-cart">
+										<use xlink:href="#shopping-cart"></use>
+									</svg>
+								</a>
+							</td>
+							<td class="catalogue__table-spinner">
+								<div class="spinner-wrap">
+									<input type="text" class="spinner" value='{{ product['minimum'] }}' placeholder="{{ product['minimum'] }}">
+								</div>
+							</td>
+							<td class="catalogue__table-action">
+								<span class="catalogue__table-action-item">
+									<a class="catalogue__table-action-link" onclick="wishlist.add('{{ product['product_id'] }}');">
+										<span class="catalogue__table-action-icon">
+											<svg class="icon-heart icon-heart--gray">
+												<use xlink:href="#heart"></use>
+											</svg>
+										</span>
+										<span class="catalogue__table-action-text">
+											{{ button_wishlist }} 
+										</span>
+									</a>
+								</span>
+								<span class="catalogue__table-action-item">
+									<a class="catalogue__table-action-link" onclick="compare.add('{{ product['product_id'] }}');">
+										<span class="catalogue__table-action-icon">
+											<svg class="icon-add-to-list">
+												<use xlink:href="#add-to-list"></use>
+											</svg>
+										</span>
+										<span class="catalogue__table-action-text">
+											{{ button_compare }} 
+										</span>
+									</a>
+								</span>
+							</td>
+						</tr>
+					{% endfor %} 
+					</table>
+					<!-- CATALOGUE TABLE END-->

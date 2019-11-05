@@ -1,0 +1,75 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (success) %} 
+	<div class="alert alert--green">
+		<span class="alert__text">
+			{{ success }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+			
+			{{ text_description }} 
+				<div class="account-form">
+					<div class="account-form__col account-form__col--register">
+						<span class="account__title">{{ text_new_affiliate }}</span>
+						<p>{{ text_register_account }}</p>
+						<a href="{{ register }}" class="btn">{{ button_continue }}</a>
+					</div>
+					<div class="account-form__col">
+						<span class="account__title">{{ text_returning_affiliate }}</span>
+						<form action="{{ action }}" method="post" enctype="multipart/form-data">
+							<div class="account__input-box">
+								<input type="text" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email"  required>
+							</div>
+							<div class="account__input-box account__input-box--pass">
+								<input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" required>
+								<a href="{{ forgotten }}">{{ text_forgotten }}</a>
+							</div>
+							<p>&nbsp;</p>
+							<button class="btn" type="submit">{{ button_login }}</button>
+							{% if (redirect) %} 
+							<input type="hidden" name="redirect" value="{{ redirect }}" />
+							{% endif %}						
+						</form>
+					</div>
+				</div>
+	  
+	  
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>

@@ -1,0 +1,16 @@
+<div class="sidebar">
+	<a href="#sidebar-information" class="js-popup-call sidebar-mobile-btn">{{ text_lightshop_information }}</a>
+	<div class="popup left popup-nav" id="sidebar-information">
+	<span class="popup-close js-popup-close"><svg class="icon-chevron-left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use></svg></span>
+	<span class="popup__title">{{ text_lightshop_information }}</span>
+	<div class="nav-submenu nav-submenu--sidebar">
+		<ul class="nav-submenu__list">
+        {% for information in informations %} 
+            <li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ information['href'] }}">{{ information['title'] }}</a></li>
+        {% endfor %} 
+		<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ contact }}" >{{ text_contact }}</a></li>
+		<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ sitemap }}" >{{ text_sitemap }}</a></li>
+		</ul>
+	</div>
+	</div>
+</div>

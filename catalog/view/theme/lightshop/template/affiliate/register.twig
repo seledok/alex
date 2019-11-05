@@ -1,0 +1,587 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+			<form action="{{ action }}" method="post" enctype="multipart/form-data">
+
+			<p>{{ text_account_already }}</p>
+			<p>{{ text_signup }}</p>
+			<div class="form-box">
+			<div class="checkout">
+				<h3 class="checkout__h3">{{ text_your_details }}</h3>
+				<div id="account">
+				<div class="checkout__input-row" id="account">
+					<div class="checkout__radio-box form-group" style="display: {{ (customer_groups)|length > 1 ? 'inline-block' : 'none' }};">
+							<span class="checkout__input-box-title required">{{ entry_customer_group }}</span>
+								{% for i,customer_group in customer_groups %} 
+									{% if (customer_group['customer_group_id'] == customer_group_id) %} 
+									<div class="checkout__radio-item">
+										<input name="customer_group_id" id="customer_group-{{ customer_group['customer_group_id'] }}-{{ i }}" type="radio" value="{{ customer_group['customer_group_id'] }}" checked="checked">
+										<label for="customer_group-{{ customer_group['customer_group_id'] }}-{{ i }}">{{ customer_group['name'] }}</label>
+									</div>
+									{% else %} 
+									<div class="checkout__radio-item">
+										<input name="customer_group_id" id="customer_group-{{ customer_group['customer_group_id'] }}-{{ i }}" type="radio" value="{{ customer_group['customer_group_id'] }}">
+										<label for="customer_group-{{ customer_group['customer_group_id'] }}-{{ i }}">{{ customer_group['name'] }}</label>
+									</div>								
+									{% endif %} 
+								{% endfor %}					
+					</div>					
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_firstname }}</span>
+						<input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="{{ error_firstname ? 'error' : ''}}">
+						{% if (error_firstname) %} 
+						<div class="checkout__input-box-error">{{ error_firstname }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_lastname }}</span>
+						<input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="{{ error_lastname ? 'error' : ''}}">
+						{% if (error_lastname) %} 
+						<div class="checkout__input-box-error">{{ error_lastname }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_email }}</span>
+						<input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="checkout__input-box-title {{ error_email ? 'error' : ''}}">
+						{% if (error_email) %} 
+						<div class="checkout__input-box-error">{{ error_email }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_telephone }}</span>
+						<input type="tel" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class=" {{ error_telephone ? 'error' : ''}}">
+						{% if (not error_telephone) %} 
+						<div class="checkout__input-box-error">{{ error_telephone }}</div>
+						{% endif %} 
+					</div>
+	
+					{% for custom_field in custom_fields %} 
+					{% if (custom_field['location'] == 'account') %} 
+					{% if (custom_field['type'] == 'select') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<div class="select">
+						<select name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="select--squer select select-checkout" data-placeholder="{{ text_select }}">
+							<option value="">{{ text_select }}</option>
+							{% for custom_field_value in custom_field['custom_field_value'] %} 
+							{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+							<option value="{{ custom_field_value['custom_field_value_id'] }}" selected="selected">{{ custom_field_value['name'] }}</option>
+							{% else %} 
+							<option value="{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</option>
+							{% endif %} 
+							{% endfor %}						
+						</select>
+						</div>
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'radio') %} 
+						<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__radio-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+							<span class="checkout__input-box-title {{ custom_field['required'] ? 'required' : '' }}">{{ custom_field['name'] }}</span>
+								{% for custom_field_value in custom_field['custom_field_value'] %} 
+									{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+									<div class="checkout__radio-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="radio" value="{{ custom_field_value['custom_field_value_id'] }}" checked="checked">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>
+									{% else %} 
+									<div class="checkout__radio-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="radio" value="{{ custom_field_value['custom_field_value_id'] }}">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>								
+									{% endif %} 
+								{% endfor %} 
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %}							
+						</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'checkbox') %} 
+						<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__checkbox-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+							<span class="checkout__input-box-title {{ custom_field['required'] ? 'required' : '' }}">{{ custom_field['name'] }}</span>
+								{% for custom_field_value in custom_field['custom_field_value'] %} 
+									{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+									<div class="checkout__checkbox-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="checkbox" value="{{ custom_field_value['custom_field_value_id'] }}" checked="checked">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>
+									{% else %} 
+									<div class="checkout__checkbox-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="checkbox" value="{{ custom_field_value['custom_field_value_id'] }}">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>								
+									{% endif %} 
+								{% endfor %} 
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %}								
+						</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'text') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class=" {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'textarea') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__textarea-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<textarea name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class=" {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}</textarea>
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'file') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__file-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						
+						<button type="button" id="button-custom-field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn">{{ button_upload }}</button>
+						<input type="hidden" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : '' }}" />
+						
+
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'date') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="YYYY-MM-DD" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="date  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'time') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="HH:mm" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="time  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'datetime') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="YYYY-MM-DD HH:mm" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="datetime  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% endif %} 
+					{% endfor %}	
+				</div>
+				</div>
+
+
+				<h3 class="checkout__h3">{{ text_your_affiliate }}</h3>
+				<div id="affiliate">
+				<div class="checkout__input-row" id="affiliate">
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_company }}</span>
+						<input type="text" name="company" value="{{ company }}" placeholder="{{ entry_company }}" id="input-company">
+					</div>		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_website }}</span>
+						<input type="text" name="website" value="{{ website }}" placeholder="{{ entry_website }}" id="input-website">
+					</div>		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_tax }}</span>
+						<input type="text" name="tax" value="{{ tax }}" placeholder="{{ entry_tax }}" id="input-tax">
+					</div>				
+					<div class="checkout__radio-box form-group">
+						<span class="checkout__input-box-title">{{ entry_payment }}</span>
+						<div class="checkout__radio-item">
+							<input name="payment" id="payment-1" type="radio" value="cheque" {{ payment == 'cheque' ? 'checked="checked"' : ''}}>
+							<label for="payment-1">{{ text_cheque }}</label>
+						</div>	
+						<div class="checkout__radio-item">
+							<input name="payment" id="payment-2" type="radio" value="paypal" {{ payment == 'paypal' ? 'checked="checked"' : ''}}>
+							<label for="payment-2">{{ text_paypal }}</label>
+						</div>	
+						<div class="checkout__radio-item">
+							<input name="payment" id="payment-3" type="radio" value="bank" {{ payment == 'bank' ? 'checked="checked"' : ''}}>
+							<label for="payment-3">{{ text_bank }}</label>
+						</div>						
+					</div>					
+				</div>					
+				<div class="checkout__input-row payment" id="payment-cheque">		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_cheque }}</span>
+						<input type="text" name="cheque" value="{{ cheque }}" placeholder="{{ entry_cheque }}" id="input-cheque" class="{{ error_cheque ? 'error' : ''}}">
+						{% if (error_cheque) %} 
+						<div class="checkout__input-box-error">{{ error_cheque }}</div>
+						{% endif %} 
+					</div>	
+				</div>				
+				<div class="checkout__input-row payment" id="payment-paypal">		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_paypal }}</span>
+						<input type="text" name="paypal" value="{{ paypal }}" placeholder="{{ entry_paypal }}" id="input-paypal" class="{{ error_paypal ? 'error' : ''}}">
+						{% if (error_paypal) %} 
+						<div class="checkout__input-box-error">{{ error_paypal }}</div>
+						{% endif %} 
+					</div>	
+				</div>
+				<div class="checkout__input-row payment" id="payment-bank">		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_bank_name }}</span>
+						<input type="text" name="bank_name" value="{{ bank_name }}" placeholder="{{ entry_bank_name }}" id="input-bank_name">
+					</div>		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_bank_branch_number }}</span>
+						<input type="text" name="bank_branch_number" value="{{ bank_branch_number }}" placeholder="{{ entry_bank_branch_number }}" id="input-bank_branch_number">
+					</div>		
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_bank_swift_code }}</span>
+						<input type="text" name="bank_swift_code" value="{{ bank_swift_code }}" placeholder="{{ entry_bank_swift_code }}" id="input-bank_swift_code">
+					</div>			
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_bank_account_name }}</span>
+						<input type="text" name="bank_account_name" value="{{ bank_account_name }}" placeholder="{{ entry_bank_account_name }}" id="input-bank_account_name" class="{{ error_bank_account_name ? 'error' : ''}}">
+						{% if (error_bank_account_name) %} 
+						<div class="checkout__input-box-error">{{ error_bank_account_name }}</div>
+						{% endif %} 
+					</div>			
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_bank_account_number }}</span>
+						<input type="text" name="bank_account_number" value="{{ bank_account_number }}" placeholder="{{ entry_bank_account_number }}" id="input-bank_account_number" class="{{ error_bank_account_number ? 'error' : ''}}">
+						{% if (error_bank_account_number) %} 
+						<div class="checkout__input-box-error">{{ error_bank_account_number }}</div>
+						{% endif %} 
+					</div>	
+					{% for custom_field in custom_fields %} 
+					{% if (custom_field['location'] == 'affiliate') %} 
+					{% if (custom_field['type'] == 'select') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<div class="select">
+						<select name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="select--squer select select-checkout" data-placeholder="{{ text_select }}">
+							<option value="">{{ text_select }}</option>
+							{% for custom_field_value in custom_field['custom_field_value'] %} 
+							{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+							<option value="{{ custom_field_value['custom_field_value_id'] }}" selected="selected">{{ custom_field_value['name'] }}</option>
+							{% else %} 
+							<option value="{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</option>
+							{% endif %} 
+							{% endfor %}						
+						</select>
+						</div>
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'radio') %} 
+						<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__radio-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+							<span class="checkout__input-box-title {{ custom_field['required'] ? 'required' : '' }}">{{ custom_field['name'] }}</span>
+								{% for custom_field_value in custom_field['custom_field_value'] %} 
+									{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+									<div class="checkout__radio-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="radio" value="{{ custom_field_value['custom_field_value_id'] }}" checked="checked">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>
+									{% else %} 
+									<div class="checkout__radio-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="radio" value="{{ custom_field_value['custom_field_value_id'] }}">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>								
+									{% endif %} 
+								{% endfor %} 
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %}							
+						</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'checkbox') %} 
+						<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__checkbox-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+							<span class="checkout__input-box-title {{ custom_field['required'] ? 'required' : '' }}">{{ custom_field['name'] }}</span>
+								{% for custom_field_value in custom_field['custom_field_value'] %} 
+									{% if (account_custom_field[custom_field['custom_field_id']] is defined and custom_field_value['custom_field_value_id'] == account_custom_field[custom_field['custom_field_id']]) %} 
+									<div class="checkout__checkbox-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="checkbox" value="{{ custom_field_value['custom_field_value_id'] }}" checked="checked">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>
+									{% else %} 
+									<div class="checkout__checkbox-item">
+										<input name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" id="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}" type="checkbox" value="{{ custom_field_value['custom_field_value_id'] }}">
+										<label for="custom_field[{{ custom_field['custom_field_id'] }}]-{{ custom_field_value['custom_field_value_id'] }}">{{ custom_field_value['name'] }}</label>
+									</div>								
+									{% endif %} 
+								{% endfor %} 
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %}								
+						</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'text') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class=" {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'textarea') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__textarea-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<textarea name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class=" {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}</textarea>
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'file') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__file-box form-group custom-field" data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						
+						<button type="button" id="button-custom-field{{ custom_field['custom_field_id'] }}" data-loading-text="{{ text_loading }}" class="btn">{{ button_upload }}</button>
+						<input type="hidden" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : '' }}" />
+						
+
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'date') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="YYYY-MM-DD" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="date  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'time') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="HH:mm" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="time  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% if (custom_field['type'] == 'datetime') %} 
+					<div id="custom-field{{ custom_field['custom_field_id'] }}" class="checkout__input-box form-group custom-field " data-sort="{{ custom_field['sort_order'] }}">
+						<span class="checkout__input-box-title">{{ custom_field['name'] }}</span>
+						<input type="text" name="custom_field[{{ custom_field['location'] }}][{{ custom_field['custom_field_id'] }}]" value="{{ account_custom_field[custom_field['custom_field_id']] is defined ? account_custom_field[custom_field['custom_field_id']] : custom_field['value'] }}" data-date-format="YYYY-MM-DD HH:mm" placeholder="{{ custom_field['name'] }}" id="input-custom-field{{ custom_field['custom_field_id'] }}" class="datetime  {{ error_custom_field[custom_field['custom_field_id']] is defined ? 'error' : ''}}">
+						{% if (error_custom_field[custom_field['custom_field_id']] is defined) %} 
+						<div class="checkout__input-box-error">{{ error_custom_field[custom_field['custom_field_id']] }}</div>
+						{% endif %} 
+					</div>					
+					{% endif %} 
+					{% endif %} 
+					{% endfor %}	
+				</div>	
+				</div>	
+				<h3 class="checkout__h3">{{ text_your_password }}</h3>
+				<div class="checkout__input-row">					
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_password }}</span>
+						<input type="password" name="password" value="{{ password }}" placeholder="{{ entry_password }}" id="input-password" class="{{ error_password ? 'error' : ''}}">
+						{% if (error_password) %} 
+						<div class="checkout__input-box-error">{{ error_password }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_confirm }}</span>
+						<input type="password" name="confirm" value="{{ confirm }}" placeholder="{{ entry_confirm }}" id="input-confirm" class="{{ error_confirm ? 'error' : ''}}">
+						{% if (error_confirm) %} 
+						<div class="checkout__input-box-error">{{ error_confirm }}</div>
+						{% endif %} 
+					</div>					
+				</div>						
+				{{ captcha }} 
+				{% if (text_agree) %} 
+				<div class="checkout__checkbox">
+						<div class="checkout__checkbox-box-row">
+							<div class="checkout__checkbox-item">
+								<input name="agree" id="agree" type="checkbox" value="1" {{ agree ? 'checked="checked"' : ''}}>
+								<label for="agree">{{ text_agree }}</label>
+							</div>					
+						</div>					
+				</div>	
+				{% endif %} 
+
+				<div class="checkout__button-box">
+						<button type="submit" class="btn">{{ button_continue }}</button>
+				</div>
+			</div>
+			</div>
+			</form>
+			<input type="hidden" name="fix_text_select" value="{{ text_select }}">	
+			<input type="hidden" name="fix_zone_id" value="{{ zone_id }}">			
+			<input type="hidden" name="fix_text_none" value="{{ text_none }}">				
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }} 
+<script>
+// Sort the custom fields
+$('#account .form-group[data-sort]').detach().each(function() {
+	if ($(this).attr('data-sort') >= 0 && $(this).attr('data-sort') <= $('#account .form-group').length) {
+		$('#account .form-group').eq($(this).attr('data-sort')).before(this);
+	}
+
+	if ($(this).attr('data-sort') > $('#account .form-group').length) {
+		$('#account .form-group:last').after(this);
+	}
+
+	if ($(this).attr('data-sort') == $('#account .form-group').length) {
+		$('#account .form-group:last').after(this);
+	}
+
+	if ($(this).attr('data-sort') < -$('#account .form-group').length) {
+		$('#account .form-group:first').before(this);
+	}
+});
+
+$('#affiliate .form-group[data-sort]').detach().each(function() {
+	if ($(this).attr('data-sort') >= 0 && $(this).attr('data-sort') <= $('#affiliate .form-group').length) {
+		$('#affiliate .form-group').eq($(this).attr('data-sort')).before(this);
+	}
+
+	if ($(this).attr('data-sort') > $('#affiliate .form-group').length) {
+		$('#affiliate .form-group:last').after(this);
+	}
+
+	if ($(this).attr('data-sort') == $('#affiliate .form-group').length) {
+		$('#affiliate .form-group:last').after(this);
+	}
+
+	if ($(this).attr('data-sort') < -$('#affiliate .form-group').length) {
+		$('#affiliate .form-group:first').before(this);
+	}
+});
+
+$('input[name=\'customer_group_id\']').on('change', function() {
+	$.ajax({
+		url: 'index.php?route=account/register/customfield&customer_group_id=' + this.value,
+		dataType: 'json',
+		success: function(json) {
+			$('.custom-field').hide();
+			$('.custom-field').removeClass('required');
+
+			for (i = 0; i < json.length; i++) {
+				custom_field = json[i];
+
+				$('#custom-field' + custom_field['custom_field_id']).show();
+
+				if (custom_field['required']) {
+					$('#custom-field' + custom_field['custom_field_id']).addClass('required');
+				}
+			}
+		},
+		error: function(xhr, ajaxOptions, thrownError) {
+			alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	});
+});
+
+$('input[name=\'customer_group_id\']:checked').trigger('change');
+
+$('button[id^=\'button-custom-field\']').on('click', function() {
+	var node = this;
+
+	$('#form-upload').remove();
+
+	$('body').prepend('<form enctype="multipart/form-data" id="form-upload" style="display: none;"><input type="file" name="file" /></form>');
+
+	$('#form-upload input[name=\'file\']').trigger('click');
+
+	if (typeof timer != 'undefined') {
+    	clearInterval(timer);
+	}
+
+	timer = setInterval(function() {
+		if ($('#form-upload input[name=\'file\']').val() != '') {
+			clearInterval(timer);
+
+			$.ajax({
+				url: 'index.php?route=tool/upload',
+				type: 'post',
+				dataType: 'json',
+				data: new FormData($('#form-upload')[0]),
+				cache: false,
+				contentType: false,
+				processData: false,
+				beforeSend: function() {
+					$(node).attr('disabled', 'disabled');
+				},
+				complete: function() {
+					$(node).removeAttr('disabled');
+				},
+				success: function(json) {
+					$(node).parent().find('.checkout__input-box-error').remove();
+
+					if (json['error']) {
+						$(node).parent().find('input').after('<div class="checkout__input-box-error">' + json['error'] + '</div>');
+					}
+
+					if (json['success']) {						
+						$('.alerts').append($('<div class="alert alert--green"><span class="alert__text"> ' + json['success'] + ' </span><a href="#" class="alert__close">x</a></div>').hide().fadeIn(500));
+						alertClose();
+						
+						$(node).parent().find('input').val(json['code']);
+					}
+				},
+				error: function(xhr, ajaxOptions, thrownError) {
+					alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+				}
+			});
+		}
+	}, 500);
+});
+
+$('input[name=\'payment\']').on('change', function() {
+	$('.payment').hide();
+
+	$('#payment-' + this.value).show();
+});
+
+$('input[name=\'payment\']:checked').trigger('change');
+</script>
+</body></html>

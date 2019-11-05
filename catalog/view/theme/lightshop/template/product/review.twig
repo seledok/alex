@@ -1,0 +1,30 @@
+{% if (reviews) %} 
+{% for review in reviews %} 
+							<div {{ schema ? 'itemprop="review" itemscope itemtype="http://schema.org/Review"' : ''}} class="product-info__feedback-item">
+								<div class="product-info__feedback-img">
+									<svg class="icon-user">
+										<use xlink:href="#user"></use>
+									</svg>
+								</div>
+								<div class="product-info__feedback-title">
+									<span {{ schema ? 'itemprop="author"' : ''}}>{{ review['author'] }}</span>
+									<span class="product-info__feedback-time" {{ schema ? 'itemprop="datePublished"' : ''}} content="{{ review['date_added_schema'] }}">
+										<svg class="icon-calendar">
+											<use xlink:href="#calendar"></use>
+										</svg>
+										{{ review['date_added'] }} 
+									</span>
+								</div>
+								<div class="product-info__feedback-rating">
+									<div class="product__rating">
+										<div class="product__rating-fill" style="width: {{ 20*review['rating'] }}%;"  >	
+										</div>
+									</div>
+								</div>
+								<p {{ schema ? 'itemprop="description"' : ''}}class="product-info__feedback-text">{{ review['text'] }}</p>
+							</div>
+{% endfor %} 
+{{ pagination }} 
+{% else %} 
+<p class="product-info__feedback-noreviews">{{ text_no_reviews }}</p>
+{% endif %}

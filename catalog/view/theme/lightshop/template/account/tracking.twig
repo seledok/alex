@@ -1,0 +1,52 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+			<p>{{ text_description }}</p>
+			<div class="form-box">
+				<div class="checkout">
+					<div class="checkout__textarea">
+						<span class="checkout__input-box-title">{{ entry_code }}</span>
+						<textarea id="input-code" placeholder="{{ entry_code }}">{{ code }}</textarea>				
+					</div>		
+				
+					<div class="checkout__input-row">
+						<div class="checkout__input-box form-group">
+							<span class="checkout__input-box-title">{{ entry_generator }}</span>
+							<input type="text" name="product" value="" placeholder="{{ entry_generator }}" id="input-generator">
+						</div>
+					</div>
+					<div class="checkout__textarea">
+						<span class="checkout__input-box-title">{{ entry_link }}</span>
+						<textarea id="input-link" placeholder="{{ entry_link }}"></textarea>				
+					</div>		
+					<div class="checkout__button-box">
+						<button type="submit" class="btn btn--transparent">{{ button_continue }}</button>
+					</div>				
+				</div>	
+			</div>
+ 		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

@@ -1,0 +1,88 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>	
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">
+			<div class="editor">
+				{{ description }} 
+			</div>
+			{% if (products) %} 
+			<div class="recomend">
+					<span class="h2">{{ text_related }}</span>
+					<div class="recomend-slider js-recom-slider">
+						{% for product in products %} 
+						<div class="recomend-slider__item product product--min">
+							<div class="products-list__label">
+									{% if (product['isnewest']) %} 
+										<div class="label">{{ labelsinfo['new']['name'][language_id] }}</div>
+									{% endif %} 
+									{% if (product['special'] and product['sales']) %} 
+										<div class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</div>
+									{% endif %} 
+									{% if (product['popular']) %} 
+										<span class="label label--popular">{{ product['popular'] }}</span>
+									{% endif %} 
+									{% if (product['hit']) %} 
+										<span class="label label--hit">{{ product['hit'] }}</span>
+									{% endif %} 
+									{% if (product['catch']) %} 
+										{% if (product['nocatch']) %} 
+											<span class="label label--nocatch">{{ product['catch'] }}</span>
+										{% else %} 
+											<span class="label label--catch">{{ product['catch'] }}</span>
+										{% endif %} 
+									{% endif %} 
+							</div>
+							<div class="product__img">
+								<a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+							</div>
+							<div class="product__descr">
+								{% if (product['rating'] != constant('false')) %} 
+								<div class="product__rating product__rating--sm">
+									<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+									</div>
+								</div>
+								{% endif %} 
+								<a href="{{ product['href'] }}" class="product__descr-link link--brown"><span>{{ product['name'] }}</span></a>
+								{% if (product['price']) %} 
+									{% if (product['special']) %} 
+									<span class="product__price-old">
+										{{ product['price'] }} 
+									</span>
+									<span class="product__price">
+										{{ product['special'] }} 
+									</span>
+									{% else %} 
+									<span class="product__price">{{ product['price'] }}</span>
+									{% endif %}							
+								
+								{% endif %} 
+							</div>
+						</div>
+						{% endfor %} 
+					</div>
+			</div>
+			{% endif %} 
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>	
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>

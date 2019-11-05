@@ -1,0 +1,108 @@
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+	</div>
+{% endif %} 
+{% if (shipping_methods) %} 
+<h3 class="checkout__h3">{{ text_lightshop_ship }}</h3>
+
+{{ st4_col ? '' : '<div class="checkout__input-row">'}}
+{% for shipping_method in shipping_methods %} 
+{{ st4_col ? '<div class="checkout__input-row">' : ''}}
+		<div class="checkout__radio-box" {{ st4_col ? 'style="width: 100%;"' : ''}}>
+			{% if (st4_title_status) %} 
+			<span class="checkout__input-box-title">{{ shipping_method['title'] }}</span>
+			{% endif %} 
+			{% if (not shipping_method['error']) %} 
+				{% for quote in shipping_method['quote'] %} 
+					<div class="checkout__radio-item">
+						{% if (quote['code'] == shipping_code or not shipping_code) %} 
+						{% set shipping_code = quote['code'] %} 
+						<input name="shipping_method" id="shipping_method-{{ quote['code'] }}" type="radio" value="{{ quote['code'] }}" checked="checked">
+						{% else %} 
+						<input name="shipping_method" id="shipping_method-{{ quote['code'] }}" type="radio" value="{{ quote['code'] }}">
+						{% endif %} 
+						<label for="shipping_method-{{ quote['code'] }}">
+							{{ quote['title'] }} ({{ quote['text'] }})
+							{% if (quote['description'] is defined) %} 
+							<div class="shipping-method__description">{{ quote['description'] }}</div>
+							{% endif %} 
+						</label>
+					</div>
+				{% endfor %}	
+				{% else %} 
+				<div class="alert alert--red">
+					<span class="alert__text">
+						{{ shipping_method['error'] }} 
+					</span>
+				</div>
+				{% endif %} 
+		</div>
+{{ st4_col ? '</div>' : ''}}
+{% endfor %} 
+{{ st4_col ? '' : '</div>'}}
+{% endif %} 
+
+{% if (payment_methods) %} 
+<h3 class="checkout__h3">{{ text_lightshop_pay }}</h3>
+{{ st4_col ? '' : '<div class="checkout__input-row">'}}
+{% for payment_method in payment_methods %} 
+{{ st4_col ? '<div class="checkout__input-row">' : ''}}
+		<div class="checkout__radio-box" {{ st4_col ? 'style="width: 100%;"' : ''}}>
+			{% if (st4_title_status) %} 
+			<span class="checkout__input-box-title">{{ payment_method['title'] }}</span>
+			{% endif %} 
+					<div class="checkout__radio-item">
+						{% if (payment_method['code'] == payment_code or not payment_code) %} 
+						{% set payment_code = payment_method['code'] %} 
+						<input name="payment_method" id="payment_method-{{ payment_method['code'] }}" type="radio" value="{{ payment_method['code'] }}" checked="checked">
+						{% else %} 
+						<input name="payment_method" id="payment_method-{{ payment_method['code'] }}" type="radio" value="{{ payment_method['code'] }}">
+						{% endif %} 
+						<label for="payment_method-{{ payment_method['code'] }}">
+							{{ payment_method['title'] }} 
+							{% if (payment_method['terms']) %} 
+							({{ payment_method['terms'] }})
+							{% endif %}							
+							{% if (payment_method['description'] is defined) %} 
+							<div class="payment-method__description">{{ payment_method['description'] }}</div>
+							{% endif %} 
+						</label>
+					</div>
+		</div>
+{{ st4_col ? '</div>' : ''}}
+{% endfor %} 
+{{ st4_col ? '' : '</div>'}}
+{% endif %} 
+<div class="checkout__textarea">
+	<span class="checkout__input-box-title">{{ text_comments }}</span>
+	<textarea name="comment" placeholder="{{ text_comments }}">{{ comment }}</textarea>				
+</div>
+
+	{% if (text_agree) %} 
+	<div class="checkout__checkbox">
+			<div class="checkout__checkbox-box-row">
+				<div class="checkout__checkbox-item">
+					<input name="agree" id="agree" type="checkbox" value="1" {{ agree ? 'checked="checked"' : ''}}>
+					<label for="agree">{{ text_agree }}</label>
+				</div>	
+			</div>	
+	</div>	
+	{% endif %} 
+
+{{ payment }} 
+<script type="text/javascript"><!--	
+
+$('#button-confirm').bindFirst('click', function(e) { 
+	if($("#agree").prop("checked") == false){
+		e.preventDefault();
+		$('.alerts').empty();
+		$('.alerts').append($('<div class="alert alert--red"><span class="alert__text"> {{ error_agree }}</span><a href="#" class="alert__close">x</a></div>').hide().fadeIn(500));
+		alertClose();
+		e.stopImmediatePropagation();
+		return ;
+	}
+});	
+//--></script>

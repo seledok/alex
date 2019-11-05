@@ -1,0 +1,25 @@
+		<!-- promo -->
+		
+		<div class="promo">
+			<div class="container">
+				<div class="row">
+				
+		    {% for banner1 in banners %} 
+				{% for banner in banner1 %} 
+					<div class="col-md-{{ banner['width'] }} col-sm-{{ banner['width'] }} col-xs-12 ">
+						<div class="promo__item {{ banner['text_position'] }} js-promo-item">
+							<a href="{{ banner['link'] }}">
+								<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ banner['image'] }}" alt="{{ banner['title'] }}">
+								<div class="promo__caption">
+									<span class="promo__title">{{ banner['text_big'] }}</span>
+									<span class="promo__price">{{ banner['text_small'] }}</span>
+								</div>
+							</a>	
+						</div>
+					</div>
+				{% endfor %} 
+  		    {% endfor %} 
+
+				</div>
+			</div>
+		</div>

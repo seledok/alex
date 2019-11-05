@@ -1,0 +1,67 @@
+{% if (products is not empty) %} 
+
+				<div class="package__pick">
+				<h3>{{ text_popup_package_title }}</h3>
+					<div class="package__pick-container" data-for="{{ set_id }}">
+								{% for product in products %} 
+									<div class="package__pick-item product product--min js-add-toset" data-for="{{ for_product }}" data-qty="{{ product['quantity'] }}">
+										<div class="products-full-list__label">
+											{% if (product['isnewest']) %} 
+												<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+											{% endif %} 
+											 {% if (product['special'] and product['sales']) %} 
+												<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+											{% endif %} 
+											{% if (product['popular']) %} 
+												<span class="label label--popular">{{ product['popular'] }}</span>
+											{% endif %} 
+											{% if (product['hit']) %} 
+												<span class="label label--hit">{{ product['hit'] }}</span>
+											{% endif %} 
+											{% if (product['catch']) %} 
+												{% if (product['nocatch']) %} 
+													<span class="label label--nocatch">{{ product['catch'] }}</span>
+												{% else %} 
+													<span class="label label--catch">{{ product['catch'] }}</span>
+												{% endif %} 
+											{% endif %} 
+										</div>
+										<span data-for="{{ product['product_id'] }}" class="package__pick-item-add" title="{{ text_item_add }}">+</span>
+										<div class="product__img">
+											<a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt="{{ product['name'] }}"></a>
+										</div>
+										<div class="product__descr">
+											{% if (product['rating'] is not same as(false)) %} 
+											<div class="product__rating product__rating--sm">
+												<div class="product__rating-fill" style="width: {{ 20*product['rating'] }}%;">
+												</div>
+											</div>
+											{% endif %} 
+											<a href="{{ product['href'] }}" class="product__descr-link link--brown">{{ product['name'] }}</a>
+
+											{% if (product['special']) %} 
+												<span class="catalogue__price-old catalogue__price-old--sm">{{ product['price'] }}</span>
+												<span class="catalogue__price catalogue__price--sm">
+													{{ product['special'] }} 
+													{% if (product['quantity'] > 1) %} 
+													<span class="product__quantity"> x {{ product['quantity'] }} {{ text_quantity }}</span>	
+													{% endif %} 
+												</span>
+											{% else %}	
+												<span class="product__price">
+												{{ product['price'] }} 
+													{% if (product['quantity'] > 1) %} 
+													<span class="product__quantity"> x {{ product['quantity'] }} {{ text_quantity }}</span>	
+													{% endif %} 
+												</span>
+											{% endif %} 
+										</div>
+									</div>
+
+								{% endfor %}			
+
+						</div>
+				</div>
+{% else %} 
+no products
+{% endif %}	

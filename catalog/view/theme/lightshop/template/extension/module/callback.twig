@@ -1,0 +1,15 @@
+	<div>
+	<div class="popup-simple__inner">
+		<form class="data-callback">
+			<h3>{{ sendthis }}</h3>
+			<input type="text" placeholder="* {{ namew }}" name="name">
+			<input type="text" placeholder="* {{ phonew }}" name="phone">
+			<textarea rows="5" placeholder="{{ comment }}" name="comment"></textarea>
+			{{ captcha }} 
+			<button type="button" class="btn contact-send">{{ sendw }}</button>
+			{% if (text_lightshop_pdata) %} 
+			<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+			{% endif %} 
+		</form>
+	</div>
+</div>

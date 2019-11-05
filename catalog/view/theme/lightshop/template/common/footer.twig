@@ -1,0 +1,454 @@
+</div><!-- FOOTER FIX [END] -->
+<!-- FOOTER -->
+{% if (scroll_to_top) %} 
+	<a href="#" class="scroll-to-top js-stt" style="{{ scroll_to_top_pos }}: 0;"><svg class="icon-chevron-top"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use></svg></a>
+{% endif %} 
+{% if (messenger_status) %}		  
+	{% if (messenger_navs is defined) %} 
+              <div class="app-chats" style="{{ messenger_pos }}: 20px;">
+                <button class="app-chats__toggle">
+				  <svg class="icon-chats-open"><use xlink:href="#icon-chats-open"></use></svg>
+				  <svg class="icon-chats-close"><use xlink:href="#icon-chats-close"></use></svg>
+                </button>
+                <div class="app-chats__dropdown" style="{{ messenger_pos }}: 0;">
+                  <ul class="app-chats__list">
+			 {% for key,messenger_nav in messenger_navs %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'whatsapp') %} 
+                    <li><a class="app-chats__item" target="_blank" href="https://wa.me/{{ messenger_nav['link'] }}">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-whatsapp.svg" alt=""></figure>
+                        <p class="app-chats__item-text">WhatsApp</p></a></li>
+				{% endif %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'viber') %} 
+                    <li><a class="app-chats__item" target="_blank" href="viber://chat/?number={{ messenger_nav['link'] }}">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-viber.png" alt=""></figure>
+                        <p class="app-chats__item-text">Viber</p></a></li>
+				{% endif %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'telegram') %} 
+                    <li><a class="app-chats__item" target="_blank" href="https://t.me/{{ messenger_nav['link'] }}">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-telegram.svg" alt=""></figure>
+                        <p class="app-chats__item-text">Telegram</p></a></li>
+				{% endif %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'skype') %} 
+                    <li><a class="app-chats__item" target="_blank" href="skype:{{ messenger_nav['link'] }}?chat">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-skype.svg" alt=""></figure>
+                        <p class="app-chats__item-text">Skype</p></a></li>
+				{% endif %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'facebook-messenger') %} 
+                    <li><a class="app-chats__item" target="_blank" href="http://m.me/{{ messenger_nav['link'] }}">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-messenger.svg" alt=""></figure>
+                        <p class="app-chats__item-text">Messenger</p></a></li>
+				{% endif %} 
+				{% if (messenger_links[messenger_nav['settype']] == 'email') %} 
+                    <li><a class="app-chats__item" target="_blank" href="mailto:{{ messenger_nav['link'] }}">
+                        <figure class="app-chats__item-image"><img src="catalog/view/theme/lightshop/img/icons/chats/icon-chats-email.svg" alt=""></figure>
+                        <p class="app-chats__item-text">Email</p></a></li>
+				{% endif %} 
+			{% endfor %} 
+                  </ul>
+                </div>
+              </div>
+	{% endif %} 
+{% endif %}
+{% if (footer_type == 1) %} 
+<footer class="footer footer--min">
+	<div class="footer__top">
+		<div class="container">
+			<div class="footer__top-inner">
+				<div class="subscribe subscribe--dark">
+					 {% if (subscribe_status) %} 
+					<div class="subscribe__heading">
+						<span class="subscribe__title">
+							{{ subscribe_title }} 
+						</span>
+						<span class="subscribe__subtitle">
+							{{ subscribe_subtitle }} 
+								{% if (text_lightshop_pdata) %} 
+									{{ text_lightshop_pdata }} 
+								{% endif %} 
+						</span>
+					</div>
+					<div class="subscribe__form">
+						
+							<span class="fake-input">
+								<input type="email"  name="emailsubscr" value="" placeholder="{{ text_footer_subscribe_email }}">
+								<button type="button" class="subscribe__btn" title="{{ text_lightshop_subscribe_btn }}">
+								<svg class="icon-plane">
+									<use xlink:href="#direction"></use>
+								</svg>
+								</button>
+							</span>
+						
+					</div>
+					{% endif %} 
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="footer__bottom">
+		<div class="container">
+			<div class="footer__bottom-inner">
+				<div class="footer__social">
+				 {% if (soc_stat) %} 
+					 {% if (social_navs is defined) %} 
+						<ul class="social">
+								 {% for key,social_nav in social_navs %} 
+									<li class="social__item">
+										<a href="{{ social_nav['link'] }}" target="{{ social_nav['attr'] }}" class="social__link" rel="nofollow">
+												<svg class="icon-fb">
+													<use xlink:href="#{{ (social_links[social_nav['settype']])|lower }}"></use>  
+												</svg>
+										</a>
+									</li>								
+								{% endfor %} 
+						</ul>
+					  {% endif %} 
+				  {% endif %} 
+				</div>
+				<div class="footer__numbers"> 
+					<div class="footer__numbers-nums">
+					{% if (phone_1) %} 
+						<a {{ 'href="tel:' ~ phone_1 ~ '"' }} class="footer__num">
+							{{ phone_1 }} 
+						</a>
+					{% endif %} 
+					{% if (phone_2) %} 
+						\
+						<a {{ 'href="tel:' ~  phone_2 ~ '"' }} class="footer__num">
+							{{ phone_2 }} 
+						</a>
+					{% endif %}	
+					</div>
+					{% if (callback_status) %} 
+					<div class="footer__call">
+						<a class="btn btn--transparent btn--sm footer__call-btn js-fancy-popup" href="#inline1">{{ text_header_callback }}</a>
+					</div>
+					<div id="inline1" style="display:none;">{{ callback }}</div>
+					{% endif %}	
+				</div>
+			</div>
+		</div>
+	</div>
+	<span class="body-overlay"></span>
+	<span class="body-overlay-filter"></span>
+	</footer><!-- FOOTER END -->
+{% else %}	
+<footer class="footer">
+ {% if (subscribe_status) %} 
+	<div class="footer__top">
+		<div class="container">
+			<div class="footer__top-inner">
+				<div class="subscribe">
+					<div class="subscribe__heading">
+						<span class="subscribe__title">
+							{{ subscribe_title }} 
+						</span>
+						<span class="subscribe__subtitle">
+							{{ subscribe_subtitle }} 
+								{% if (text_lightshop_pdata) %} 
+									{{ text_lightshop_pdata }} 
+								{% endif %} 
+						</span>
+					</div>
+				
+					<div class="subscribe__form">
+							
+							<span class="fake-input">
+								<input type="email"  name="emailsubscr" value="" placeholder="{{ text_footer_subscribe_email }}">
+								<button type="button" class="subscribe__btn" title="{{ text_lightshop_subscribe_btn }}">
+								<svg class="icon-plane">
+									<use xlink:href="#direction"></use>
+								</svg>
+								</button>
+							</span>
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endif %} 
+	<div class="footer__bottom">
+		<div class="container">
+			<div class="footer__bottom-inner">
+				<div class="footer__lists">
+						 {% for key,footer_nav in footer_navs %} 
+						  <div class="footer__lists-item">
+							<span class="footer__list-title">
+								{{ footer_nav['language'][language_id]['name'] }}
+							</span>						   
+
+						   {% if (footer_nav['settype']) %} 
+								<div>{{ footer_nav['type'][footer_nav['settype']]['links']['html'] }}</div>
+						   {% else %} 
+						   <ul class="footer__list">
+							    {% for id,link in footer_nav['type'][footer_nav['settype']]['links'] %} 
+								 <li class="footer__list-item"><a href="{{ link }}" class="footer__link" {% if (top_links[id]['target'] is defined) %}target="{{ top_links[id]['target'] }}" {% endif %}>{{ top_links[id] is defined ? top_links[id]|keys|first : '' }}</a></li>
+							   {% endfor %}						   
+						   </ul>
+						   {% endif %} 
+						  </div>
+						{% endfor %}				
+				
+				 {% if (soc_stat) %} 
+					 {% if (social_navs is defined) %} 
+						<div class="footer__lists-item">
+							<span class="footer__list-title">
+								{{ text_social_navs }} 
+							</span>
+							<ul class="footer__list">
+								 {% for key,social_nav in social_navs %} 
+									<li class="footer__list-item">
+										<a href="{{ social_nav['link'] }}" class="footer__list-icon" rel="nofollow">
+											<span class="footer__link-icon">
+												<svg class="icon-fb">
+													<use xlink:href="#{{ (social_links[social_nav['settype']])|lower }}"></use> 
+												</svg>
+											</span>
+										</a>
+										<a href="{{ social_nav['link'] }}" target="{{ social_nav['attr'] }}" class="footer__link" rel="nofollow">
+											<span class="footer__link-text">{{ social_nav['language'][language_id]['name'] }}</span>
+										</a>
+									</li>								
+								{% endfor %} 
+							</ul>
+						</div>
+					{% endif %} 
+				{% endif %} 
+				</div>
+				<div class="footer__info">					
+					{% if (footer_t_logo or footer_logo) %} 
+					<span class="footer__logo">
+						{% if (footer_logo) %} 
+						<a {{ home == og_url ? '' : 'href="' ~ home ~'"' }} class="footer__logo-link" ><img src="{{ footer_logo }}" title="{{ name }}" alt="{{ name }}"></a>
+						{% else %} 
+						<a {{ home == og_url ? '' : 'href="' ~ home ~'"' }} class="footer__logo-link">{{ text_logo }}</a>
+						{% endif %} 
+					</span>
+					{% endif %} 
+					<span class="footer__info-text">
+						{{ footer_text }} 
+					</span>
+					<span class="copyright">
+						{{ footer_copyright }} 
+					</span>
+				</div>
+			</div>
+		</div>
+	</div>
+	<span class="body-overlay">
+	</span>
+	<span class="body-overlay-filter"></span>
+	</footer><!-- FOOTER END -->
+{% endif %} 
+
+	{% if (text_lightshop_cookieagry_btn) %} 
+		{% if (not islogged and not cookieagry) %} 
+			<div class="cookieagry" style="display: block;">
+				<div class="cookieagry__text">
+					{{ text_lightshop_cookieagry_btn }} 
+					<a id="cookieagry" class="cookieagry__close">x</a>
+				</div>	
+			</div>
+		{% endif %} 
+	{% endif %} 
+	
+{% if (js_footorhead == 2) %} 
+	<!-- Stylesheets load -->
+	<link rel="stylesheet" href="catalog/view/theme/lightshop/css/widgets.css{{ '?v'~version }}">
+	{{ bootstrap ? '<link rel="stylesheet" href="catalog/view/theme/lightshop/css/bootstrap.min.css?v' ~ version ~ '">' : '' }} 
+	{{ fontawesome ? '<link rel="stylesheet" href="catalog/view/theme/lightshop/css/svg-with-js.min.css?v' ~ version ~ '">' : '' }} 
+
+ 
+{% for style in styles %} 
+	<link href="{{ style['href'] }}" type="text/css" rel="{{ style['rel'] }}" media="{{ style['media'] }}">
+{% endfor %}	
+	<link rel="stylesheet" href="catalog/view/theme/lightshop/css/main.css{{ '?v'~version }}">
+{% if (theme_color and theme_color < 6) %} 
+	<link rel="stylesheet" href="catalog/view/theme/lightshop/css/color-{{ theme_color }}.css{{ '?v'~version }}">
+{% endif %} 
+	<!-- Scripts load -->
+	<script src="catalog/view/javascript/theme_lightshop/jquery-2.2.4.min.js{{ '?v'~version }}"></script>
+	<script src="catalog/view/javascript/theme_lightshop/jquery-ui.min.js{{ '?v'~version }}"></script>
+	<script src="catalog/view/javascript/theme_lightshop/widgets.js{{ '?v'~version }}"></script>
+	{{ bootstrap ? '<script src="catalog/view/javascript/theme_lightshop/bootstrap.min.js?v' ~ version ~ '"></script>' : '' }} 
+	{{ fontawesome ? '<script defer src="catalog/view/javascript/theme_lightshop/fontawesome/js/all.min.js?v' ~ version ~ '"></script>' : '' }} 
+	<script src="catalog/view/javascript/theme_lightshop/functions.js{{ '?v'~version }}"></script>
+{% for script in scripts %} 
+	<script src="{{ script }}"></script>
+{% endfor %} 
+{% if (custom_js) %} 
+	<script>{{ custom_js }}</script>
+{% endif %} 
+{% endif %}
+{% if (theme_color == 6 or theme_fc_color == 1) %} 
+<script>
+$('<style type="text/css">').html(
+'{% if (theme_color == 6) %}'+
+'a,.ui-spinner-up:hover:after,.ui-spinner-down:hover:after,.news__link:hover .news__title-inner,.blog__title-link:hover,.tabs__list-item.active .tabs__link,.tabs__link:hover ,.tabs--light .tabs__list-item.active .tabs__link ,.tabs--light .tabs__link:hover ,.testimoniales__name,.catalogue__btn-cart,.catalogue__table-action-link:hover .catalogue__table-action-text,.products-list__compare:hover .products-list__compare-text,.products-full-list__compare:hover .products-full-list__compare-text,.products-full-list__action-link:hover,.cart__sum-price,.catalogue__filter-btn,.nav__list-item.more #overflow .nav__link:hover,.nav__link:hover,.nav__link.active,.nav-submenu__title,.nav-submenu__link:hover,.nav-submenu__link--more,.account__tabs-item.active,.cart-popup__total span,.cart-popup__link a:hover,.news-min .news__link:hover,.cart-sidebar__info span,.cart-sidebar__total span,.checkout__button-box .btn--empty:hover,.product-info__feedback-title,'+
+'.package__result-item:before,.package__result-sum,.package__result-discount span,button--link:hover,.btn--link:hover,.blog-widget__list-item a,'+
+'.blog .reviews-list__item-text:hover a,.recommendations2 .news__descr-text a:hover,.comparison__head .slick-next,.comparison__head .slick-prev,'+
+'.comparison__cont .slick-prev,.comparison__cont .slick-next,.add-to__btn .icon-add-to-list'+
+'{'+
+'	color: #{{ theme_color_1 }};'+
+'}'+
+'@media (max-width: 767px) {'+
+'	.nav-submenu__link,.product-info .tabs-content.active .tabs-content__title-link'+
+'	{'+
+'		color: #{{ theme_color_1 }};'+
+'	}'+
+'}'+
+'@media (min-width: 768px) {'+
+'	.nav-submenu__link:hover,.nav-submenu__link.active'+
+'	{'+
+'		color: #{{ theme_color_1 }};'+
+'	}'+
+'}'+
+'.header--version2 .nav__link:hover {'+
+'	color: #{{ theme_color_2 }};'+
+'}'+
+'.header--version2 .nav__link.active {'+
+'	color: #{{ theme_color_2 }};'+
+'}'+
+'.icon-cart,.icon-plane,.cart__delete:hover .icon-cross,.icon-arrow-long,.catalogue__product-detail-gallery .slick-arrow [class*="icon-"],.icon-chevron-blue-left,.icon-chevron-blue-right,.icon-add-to-list,.icon-menu,.icon-location-pin,.icon-arrow-long-right,.icon-map,.nav__list-item.more:hover svg,.cart__close-btn:hover svg,.header--version2 .nav__list-item.more:hover svg,.checkout__title [class*="icon-"],.checkout__button-box .btn--transparent [class*="icon-"],.checkout__button-box button[disabled].btn--transparent:hover [class*="icon-"],.product-page__preview-slider .slick-arrow svg,.product-page__img-slider .slick-arrow svg,.comparison__head .slick-prev .icon-left,'+
+'.comparison__head .slick-next .icon-right,.comparison__cont .slick-next .icon-right,.comparison__cont .slick-prev .icon-left'+
+'{'+
+'	fill: #{{ theme_color_1 }};'+
+'}'+
+'a.link--brown,.product-tabs__name,.catalogue__product-name,.nav-submenu__promo-name,.categories-min__item-caption'+
+'{'+
+'	color: #a38c76;'+
+'}'+
+''+
+'a:hover,'+
+'.news__link:hover .news__title-inner,'+
+'.recommendations2 .news__descr-text a:hover,'+
+'a.link--dashed:hover,'+
+'.blog .reviews-list__item-text:hover a,'+
+'.blog__title-link:hover'+
+'{'+
+'	border-color: rgba({{ theme_color_3 }});'+
+'}'+
+'a.link--brown:hover {'+
+'	border-color: rgba(163, 140, 118, 0.3);'+
+'}'+
+'input[type="checkbox"]:checked+ label:before,input[type="checkbox"]:disabled:checked+ label:before,input[type="radio"]:checked+ label:before,input[type="radio"]:disabled:checked+ label:before,button--transparent, .btn--transparent,button[disabled]:hover.btn--transparent,input[type="checkbox"]+ label:after,.account__tabs-item.active,.news-min .news__link:hover,.product-page .products-full-list__text-more,.package__pick-item-add,.sidebar-mobile-btn,.product-page__actions-link--dashed,.blog-inner .btns-block .btn--transparent:hover,.blog-tags .btn:hover'+
+'{'+
+'	border-color: #{{ theme_color_1 }};'+
+'}'+
+'.catalogue__product-name:hover {'+
+'	border-color: rgba(163, 140, 118, 0.3);'+
+'}'+
+'.products-full-list__name .catalogue__product-name:hover {'+
+'	border-color: rgba(163, 140, 118, 0.3);'+
+'}'+
+'.product-view__link {'+
+'	border-top: 1px solid rgba(163, 140, 118, 0.3);'+
+'}'+
+'.product-view__list-item:last-child .product-view__link {'+
+'	border-bottom: 1px solid rgba(163, 140, 118, 0.3);'+
+'}'+
+'@media (min-width: 768px) {'+
+'	.nav-submenu__link:hover {'+
+'		border-color: rgba(163, 140, 118, 0.3);'+
+'	}'+
+'}'+
+''+
+'.select--map,.select--map:focus,.bootstrap-datetimepicker-widget td.active, .bootstrap-datetimepicker-widget td.active:hover,.bootstrap-datetimepicker-widget td span.active'+
+'{'+
+'	background-color: #{{ theme_color_1 }};'+
+'}'+
+'input[type="radio"]+ label:after,button,.btn,button--shadow:hover,.btn--shadow:hover,button--shadow:active, .btn--shadow:active,.tabs__link:after,'+
+'.products-list__img .slick-next:hover:not(.slick-disabled),.products-list__img .slick-prev:hover:not(.slick-disabled),.products-list__btn,.product-view__link,.cart--tabs .tabs__list-item.active .tabs__link:after,.catalogue__filter-btn:hover,.catalogue__block-hide:hover,.ui-slider-range,.ui-widget-content .ui-state-default,.catalogue__product-detail-gallery .slick-arrow:hover,.new-window-link:hover,.cart-popup__close:hover,.pagination__link:hover, .pagination__link.active,.recomend-slider .slick-arrow:hover,.brands-slider .slick-arrow:hover,.product-page__preview-slider .slick-arrow:hover,'+
+'.pagination li:hover>a,.pagination li.active>a,.pagination li:hover > span, .pagination li.active > span,.nav-submenu-slider__inner .slick-prev:hover, .nav-submenu-slider__inner .slick-next:hover,.actions__counter--blue,.product-page__img-slider .slick-arrow:hover'+
+'{'+
+'	background: #{{ theme_color_1 }};'+
+'}'+
+'button:hover, button.active, .btn:hover , input[type="button"].btn:hover, .btn.active {'+
+'	background: #{{ theme_color_2 }};'+
+'	box-shadow: 0 5px 30px -10px #{{ theme_color_2 }};'+
+'}'+
+'button:active, .btn:active {'+
+'	background: #{{ theme_color_2 }};'+
+'}'+
+'.products-list__btn:hover {'+
+'	background: #{{ theme_color_2 }};'+
+'}'+
+'.product-view__link:hover {'+
+'	background: #{{ theme_color_2 }};'+
+'}'+
+'@media (max-width: 767px) {'+
+'	.popup-close:hover {'+
+'		background: #{{ theme_color_1 }};'+
+'	}'+
+'}'+
+''+
+'button--shadow:hover, .btn--shadow:hover {'+
+'	-webkit-box-shadow: 0px 8px 31px -16px #{{ theme_color_1 }};'+
+'	box-shadow: 0px 8px 31px -16px #{{ theme_color_1 }};'+
+'}'+
+''+
+'@media (max-width: 767px) {'+
+'	.comparison__head .slick-prev,'+
+'	.comparison__head .slick-next,'+
+'	.comparison__cont .slick-prev,'+
+'	.comparison__cont .slick-next'+
+'	{'+
+'	    -webkit-box-shadow: 1px 0 0 0 #{{ theme_color_1 }}, 0 1px 0 0 #{{ theme_color_1 }}, 1px 1px 0 0 #{{ theme_color_1 }}, 1px 0 0 0 #{{ theme_color_1 }} inset, 0 1px 0 0 #{{ theme_color_1 }} inset;'+
+'	    box-shadow: 1px 0 0 0 #{{ theme_color_1 }}, 0 1px 0 0 #{{ theme_color_1 }}, 1px 1px 0 0 #{{ theme_color_1 }}, 1px 0 0 0 #{{ theme_color_1 }} inset, 0 1px 0 0 #{{ theme_color_1 }} inset;'+
+'    }'+
+'}'+
+''+
+'button--transparent, .btn--transparent,button[disabled]:hover.btn--transparent,button--link, .btn--link,button--link:hover, .btn--link:hover{'+
+'	background: transparent;'+
+'}'+
+'{% endif %}'+
+'{% if (theme_fc_color == 1) %}'+
+'.header--version1 .header__top,.footer__bottom,.header--version2 .header__bottom {'+
+'	background: #{{ theme_fc_color_1 }};'+
+'}'+
+'.footer__top {'+
+'	background: #{{ theme_fc_color_3 }};'+
+'}'+
+'.footer--min .footer__top {'+
+'	background: #{{ theme_fc_color_2 }};'+
+'}'+
+'.footer--min .footer__bottom {'+
+'	background: #{{ theme_fc_color_4 }};'+
+'}'+
+{% if (theme_fc_color_1_db) %} 
+'.header__call-phones a,.header__call,.header--version1 .header__call .btn,.nav-top__link,.footer__logo-link,.footer__list-title,.footer__info-text,.footer__link,.header--version2 .nav__link {'+
+'	color: #343434;'+
+'}'+
+'.footer__list [class*="icon-"],.header--version2 .nav__list-item.more svg {'+
+'	fill: #343434;'+
+'}'+
+'.copyright {'+
+'		color: rgba(52, 52, 52, 0.75);'+
+'	opacity: 1;'+
+'}'+
+{% endif %} 
+{% if (theme_fc_color_3_db) %} 
+'.subscribe__title'+
+'{'+
+'	color: #343434;'+
+'}'+
+'.subscribe__subtitle, .subscribe__subtitle a {'+
+'	color: rgba(52, 52, 52, 0.75);'+
+'}'+
+{% endif %} 
+{% if (not theme_fc_color_2_db) %} 
+'.subscribe--dark .subscribe__subtitle, .subscribe--dark .subscribe__subtitle a,.subscribe--dark .subscribe__title {'+
+'	color: #fff;'+
+'}'+
+{% endif %} 
+{% if (not theme_fc_color_4_db) %} 
+'.footer__num,.footer__numbers-nums,.footer__call-btn {'+
+'	color: #fff;'+
+'}'+
+'.footer--min .icon-fb {'+
+'	fill: #fff;'+
+'}'+
+{% endif %} 
+'{% endif %}').appendTo('body');
+</script>
+{% endif %} 

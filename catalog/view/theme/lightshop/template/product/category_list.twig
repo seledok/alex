@@ -1,0 +1,121 @@
+
+					<!-- CATALOGUE FULL LIST-->
+					<div class="catalogue__full-list js-full-list active">
+						<ul class="catalogue__products-full-list">
+						{% for product in products %} 
+							<li class="catalogue__products-full-list-item">
+								<div class="products-full-list__label">
+										{% if (product['isnewest']) %} 
+											<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+										{% endif %} 
+										{% if (product['special'] and product['sales']) %} 
+											<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+										{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+								</div>
+								<div class="products-full-list__img">
+								{% if (product_detail == 1) %} 
+								<!-- Quick view when clicking on a link -->
+									<a href="{{ product['href'] }}" data-for="{{ product['product_id'] }}" class="products-full-list__img-link js-product-view-btn">
+										<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+									</a>
+								{% else %} 
+									<a href="{{ product['href'] }}" class="products-full-list__img-link">
+										<img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-src' : 'src' }}="{{ product['thumb'] }}" alt="{{ product['name'] }}">
+									</a>
+								{% endif %} 
+								</div>
+								<div class="products-full-list__description">
+									<span class="products-full-list__series">
+										{{ product['manufacturer'] }} 
+									</span>
+									<div class="products-full-list__title">
+										<span class="products-full-list__name">
+										{% if (product_detail == 1) %} 
+										<!-- Quick view when clicking on a link -->
+											<a href="{{ product['href'] }}" data-for="{{ product['product_id'] }}" class="catalogue__product-name catalogue__product-name--lg js-product-view-btn">
+												{{ product['name'] }} 
+											</a>
+										{% else %} 
+											<a href="{{ product['href'] }}" class="catalogue__product-name catalogue__product-name--lg">
+												{{ product['name'] }} 
+											</a>
+										{% endif %} 
+										</span>
+										{% if (product['rating'] is not same as(false)) %} 
+										<div class="products-full-list__rating">
+											<div class="product__rating">										
+												<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;"></div>
+											</div>
+										</div>
+										{% endif %} 
+									</div>
+									<div class="products-full-list__notes">
+										<span class="products-full-list__status status {{ product['quantity'] > 0 ? 'instock' : 'outofstock'}}">
+											{{ product['stock'] }} 
+										</span>
+										<span class="products-full-list__compare">
+											<a class="products-full-list__compare-link" onclick="compare.add('{{ product['product_id'] }}');">
+												<span class="products-full-list__compare-icon">
+												<svg class="icon-add-to-list">
+													<use xlink:href="#add-to-list"></use>
+												</svg>
+												</span>
+												<span class="products-full-list__compare-text">
+													{{ button_compare }} 
+												</span>
+											</a>
+										</span>
+									</div>
+									<p class="products-full-list__text">
+										{{ product['description'] }} 
+									</p>
+									<div class="products-full-list__description-bottom products-qty-info">
+										<div class="products-full-list__price">
+										{% if (product['price']) %} 
+											{% if (product['special']) %} 
+												<span class="catalogue__price-old catalogue__price-old--lg">
+													{{ product['price'] }} 
+												</span>
+												<span class="catalogue__price catalogue__price--lg">
+													{{ product['special'] }} 
+												</span>
+											{% else %}	
+												<span class="catalogue__price catalogue__price--lg">
+													{{ product['price'] }} 
+												</span>											
+											{% endif %}	
+										{% endif %}	
+										</div>
+										<div class="products-full-list__action">
+											<span class="products-full-list__action-btn">
+												<button type="button" class="btn products-full-list__btn catalogue__btn-cart-list" data-for="{{ product['product_id'] }}" {{ product['buy_btn'] ? 'disabled' : ''}}>{{ button_cart }}</button>
+											</span>
+											{% if (buy_click['status'] and not product['buy_btn']) %} 
+											<a href="#popup-buy-click" data-for="{{ product['product_id'] }}" data-typefrom="category-list" class="products-full-list__action-link js-fancy-popup-cart">{{ text_lightshop_buy_click }}</a>
+											{% endif %} 
+										</div>
+										<div class="products-full-list__spinner products-qty-info-spinner">
+											<div class="spinner-wrap">
+												<input type="text" class="spinner" name="quantity" value='{{ product['minimum'] }}' placeholder="{{ product['minimum'] }}">
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						{% endfor %} 
+						</ul>
+					</div>
+					<!-- CATALOGUE FULL LIST END-->

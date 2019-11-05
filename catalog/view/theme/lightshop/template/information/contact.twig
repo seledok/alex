@@ -1,0 +1,798 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li {{ schema ? 'itemscope itemtype="http://data-vocabulary.org/Breadcrumb"' : ''}} class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}" {{ schema ? 'itemprop="url"' : ''}}><span {{ schema ? 'itemprop="title"' : ''}}>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg>{{ breadcrumb['text'] }}</li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+    <h1 class="content__title">{{ heading_title }}</h1>
+	</div>
+	
+{% if (contact_map) %} 
+	{% if (locations) %} 
+	
+	<div class="locations-select">
+		<div class="container">
+		<select id="js-geocode" class="select--squer select--map select" data-placeholder="{{ text_store }}">
+			<option value="{{ geocode }}" >{{ store }}</option>
+			{% for location in locations %} 
+			<option value="{{ location['geocode'] }}">{{ location['name'] }}</option>
+			{% endfor %} 
+		</select>
+		</div>
+	</div>
+	{% endif %} 
+{% endif %} 
+	
+{% if (contact_map == 'google_map') %} 
+	<div class="js-map" id="js-map"></div>
+{% elseif (contact_map == 'yandex_map') %} 
+	<div class="js-yamap-wrapper">
+		<div class="js-yamap" id="js-yamap"></div>
+	</div>
+{% else %} 
+	<div class="disabled-map">
+			<div class="popup-simple__inner">
+				 <form action="{{ action }}" method="post" enctype="multipart/form-data">
+					<h3>{{ text_contact }}</h3>
+					<input name="name" id="input-name" type="text" placeholder="* {{ entry_name }}" value="{{ name }}">
+              {% if (error_name) %} 
+              <div class="popup-simple__inner-error-text">{{ error_name }}</div>
+              {% endif %} 
+					<input name="email" id="input-email" type="text" placeholder="* {{ entry_email }}" value="{{ email }}">
+              {% if (error_email) %} 
+              <div class="popup-simple__inner-error-text">{{ error_email }}</div>
+              {% endif %} 
+					<textarea rows="5" name="enquiry" id="input-enquiry" placeholder="* {{ entry_enquiry }}">{{ enquiry }}</textarea>
+              {% if (error_enquiry) %} 
+              <div class="popup-simple__inner-error-text">{{ error_enquiry }}</div>
+              {% endif %} 
+					{{ captcha }} 
+					<button type="submit" id="contact_send" class="btn">{{ button_submit }}</button>
+				{% if (text_lightshop_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+				{% endif %} 
+				</form>			
+			</div>
+	</div>
+{% endif %} 
+
+<div {{ schema ? 'itemscope itemtype="http://schema.org/Organization"' : ''}} class="contacts">
+{{ schema ? '<meta itemprop="name" content="' ~ store ~ '">' : ''}}
+	<div class="container">
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="col-sm-{{ col }}">	
+		<div class="contacts__info">
+			<div class="contacts__info-inner">
+				<div {{ schema ? 'itemprop="address" itemscope itemtype="http://schema.org/PostalAddress"' : ''}} class="contacts__info-item">
+					<span class="contacts__info-icon">
+						<svg class="icon-location-pin">
+							<use xlink:href="#location-pin"></use>
+						</svg>
+					</span>
+					<address {{ schema ? 'itemprop="streetAddress"' : ''}} class="contacts__address">
+						{{ address }} 
+					</address>
+				</div>
+				{% if (phone_1 or phone_2) %} 
+				<div class="contacts__info-item">
+					<span class="contacts__info-icon">
+						<svg class="icon-phone">
+							<use xlink:href="#phone"></use>
+						</svg>
+					</span>
+					<div class="contacts__numbers">
+					{% if (phone_1) %} 
+						<a {{ schema ? 'itemprop="telephone" ' : '' }} href="tel: {{ phone_1 }} "  rel="nofollow" class="contacts__numbers-item">
+							{{ phone_1 }} 
+						</a>
+					{% endif %} 
+					{% if (phone_2) %} 
+						<a {{ schema ? 'itemprop="telephone" ' : '' }} href="tel: {{ phone_2 }} " rel="nofollow" class="contacts__numbers-item">
+							{{ phone_2 }} 
+						</a>
+					{% endif %} 
+					</div>
+				</div>
+				{% endif %} 
+				{% if (shop_email) %} 
+				<div class="contacts__info-item">
+					<span class="contacts__info-icon">
+						<svg class="icon-mail">
+							<use xlink:href="#mail"></use>
+						</svg>
+					</span>
+					<div class="contacts__info-text">
+						<span class="contacts__info-title">
+							{{ text_lightshop_support }} 
+						</span>
+						<a href="mailto:{{ shop_email }}" class="contacts__mail">
+							<span {{ schema ? 'itemprop="email"' : ''}}>{{ shop_email }}</span>
+						</a>
+					</div>
+				</div>
+				{% endif %} 
+			</div>
+		</div>
+
+		{% if (social_navs is not empty) %} 		  
+		<div class="contacts__social">
+			<span class="contacts__social-title">
+				{{ text_lightshop_con_soc }} 
+			</span>
+			<ul class="social contacts__social-list">
+				 {% for key,social_nav in social_navs %} 
+				<li class="social__item">
+					<a href="{{ social_nav['link'] }}" target="{{ social_nav['attr'] }}" class="social__link">
+						<svg class="icon-fb icon-fb--lg">
+							<use xlink:href="#{{ social_links[social_nav['settype']]|lower }}"></use>
+						</svg>
+					</a>
+				</li>
+				{% endfor %} 
+			</ul>
+		</div>
+		{% endif %} 
+		
+{% if (contact_map) %} 
+<div style="display:none;"><a href="#contact-form"  id="contact_popup" class="btn btn--transparent js-fancy-popup">{{ text_contact }}</a></div>		
+		<div class="popup-simple" id="contact-form">
+			<div class="popup-simple__inner">
+				 <form action="{{ action }}" method="post" enctype="multipart/form-data">
+					<h3>{{ text_contact }}</h3>
+					<input name="name" id="input-name" type="text" placeholder="* {{ entry_name }}" value="{{ name }}">
+              {% if (error_name) %} 
+              <div class="popup-simple__inner-error-text">{{ error_name }}</div>
+              {% endif %} 
+					<input name="email" id="input-email" type="text" placeholder="* {{ entry_email }}" value="{{ email }}">
+              {% if (error_email) %} 
+              <div class="popup-simple__inner-error-text">{{ error_email }}</div>
+              {% endif %} 
+					<textarea rows="5" name="enquiry" id="input-enquiry" placeholder="* {{ entry_enquiry }}">{{ enquiry }}</textarea>
+              {% if (error_enquiry) %} 
+              <div class="popup-simple__inner-error-text">{{ error_enquiry }}</div>
+              {% endif %} 
+					{{ captcha }} 
+					<button type="submit" id="contact_send" class="btn">{{ button_submit }}</button>
+				{% if (text_lightshop_pdata) %} 
+					<div class="popup-simple__inner-personal-data">{{ text_lightshop_pdata }}</div>
+				{% endif %} 
+				</form>			
+			</div>
+		</div>
+{% endif %}		
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>			
+	</div>
+</div>
+
+	<div class="container">
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }} 
+
+{% if (contact_map == 'google_map') %} 
+
+ <!-- Goggle Map :: Start -->
+<script>
+
+ jQuery.getScript('https://maps.googleapis.com/maps/api/js?key={{ api_key }}&sensor=false&extension=.js', function (){
+	
+	function LightshopMarker(latlng, map, args) {
+		this.latlng = latlng;	
+		this.args = args;	
+		this.setMap(map);	
+		//fancyPopUp();
+	}
+
+	LightshopMarker.prototype = new google.maps.OverlayView();
+
+	LightshopMarker.prototype.draw = function() {
+		var self = this;
+		var div = this.div;
+		
+		if (!div) {
+			div = this.div = document.createElement('div');
+			div.className = 'contacts__marker';
+			div.style.position = 'absolute';
+			div.style.cursor = 'default';
+			div.innerHTML = self.args.m_html;
+			if (typeof(self.args.marker_id) !== 'undefined') {
+				div.dataset.marker_id = self.args.marker_id;
+			}
+			var panes = this.getPanes();
+			panes.overlayImage.appendChild(div);
+
+
+		}
+
+		var point = this.getProjection().fromLatLngToDivPixel(this.latlng);
+
+		if (point) {
+		div.style.left = (point.x ) + 'px';
+		div.style.top = (point.y ) + 'px';
+		}
+		fancyImg();
+		fancyPopUp();
+	};
+
+	google.maps.Map.prototype.LightshopCenterOffset= function(latlng, offsetX, offsetY) {
+		var map = this;
+		var ov = new google.maps.OverlayView(); 
+		ov.onAdd = function() { 
+			var proj = this.getProjection(); 
+			var aPoint = proj.fromLatLngToContainerPixel(latlng);
+			aPoint.x = aPoint.x+offsetX;
+			aPoint.y = aPoint.y+offsetY;
+			map.setCenter(proj.fromContainerPixelToLatLng(aPoint));
+		}
+		ov.draw = function() {}; 
+		ov.setMap(this); 
+	};
+
+	var map;
+
+	function initialize() {
+		 	map = new google.maps.Map(document.getElementById('js-map'), {
+				zoom: {{ zoom }},
+				zoomControl: {{ zoom_control ? 'true' : 'false' }},
+				disableDoubleClickZoom: true,
+				mapTypeControl: false,
+				scaleControl: false,
+				scrollwheel: false,
+				panControl: false,
+				streetViewControl: false,
+				draggable : true,
+				center: new google.maps.LatLng({{ geocode }}),
+			});
+			
+			map.LightshopCenterOffset(new google.maps.LatLng({{ geocode }}), 143, 200);
+
+			var overlay = new LightshopMarker(
+				new google.maps.LatLng({{ geocode }}), 
+				map,
+				{
+					//marker_id: 'id-0',
+					m_html: '<span class="contacts__marker-location"></span>' + 
+							'<div class="contacts__marker-inner">' +
+							'<span class="contacts__marker-close"></span>' +
+'<div class="contacts__marker-item"><div class="contacts__marker-adress"><span class="contacts__marker-icon"><svg class="icon-location-pin"><use xlink:href="#location-pin"></use></svg>{{ address|replace({"\r": '',"\n": ''}) }}</span></div></div>' +
+{% if (open) %}
+'<div class="contacts__marker-item"><div class="contacts__marker-open">{{ open|replace({"\r": '',"\n": ''}) }}</div></div>' +
+{% endif %}
+'<div class="contacts__marker-item"><div class="contacts__marker-telephone">{{ telephone }}</div></div>' +
+{% if (fax) %}
+'<div class="contacts__marker-item"><div class="contacts__marker-fax">{{ fax }}</div></div>' +
+{% endif %} 
+{% if (image) %} 
+'<div class="contacts__marker-item"><div class="contacts__marker-img"><a class="js-fancy-img" href="{{ image }}"><img src="{{ image }}" alt="{{ store }}" title="{{ store }}"></a></div></div>' +
+{% endif %} 
+{% if (comment) %} 
+'<div class="contacts__marker-item"><div class="contacts__marker-comment">{{ comment|replace({"\r": '',"\n": ''}) }}</div></div>' +
+{% endif %}
+'<div class="contacts__marker-btn"><a href="#contact-form" class="btn btn--transparent js-fancy-popup">{{ text_contact }}</a></div>' +
+'</div>'
+				}
+			);
+			
+{% if (locations) %} 
+{% for location in locations %} 
+			var overlay = new LightshopMarker(
+				new google.maps.LatLng({{ location['geocode'] }}), 
+				map,
+				{
+					//marker_id: 'id-{{ location['location_id'] }}',
+					m_html: '<span class="contacts__marker-location"></span>' + 
+						'<div class="contacts__marker-inner">' +
+							'<span class="contacts__marker-close"></span>' +
+'<div class="contacts__marker-item"><div class="contacts__marker-adress"><span class="contacts__marker-icon"><svg class="icon-location-pin"><use xlink:href="#location-pin"></use></svg>{{  location['address']|replace({"\r": '',"\n": ''}) }}</span></div></div>' +
+{% if (location['open']) %}
+'<div class="contacts__marker-item"><div class="contacts__marker-open">{{  location['open']|replace({"\r": '',"\n": ''}) }}</div></div>' +
+{% endif %}
+'<div class="contacts__marker-item"><div class="contacts__marker-telephone">{{ location['telephone'] }}</div></div>' +
+{% if (location['fax']) %}
+'<div class="contacts__marker-item"><div class="contacts__marker-fax">{{ location['fax'] }}</div></div>' +
+{% endif %} 
+{% if (location['image']) %} 
+'<div class="contacts__marker-item"><div class="contacts__marker-img"><a class="js-fancy-img" href="{{ location['image'] }}"><img src="{{ location['image'] }}" alt="{{ location['name'] }}" title="{{ location['name'] }}"></a></div></div>' +
+{% endif %} 
+{% if (location['comment']) %} 
+'<div class="contacts__marker-item"><div class="contacts__marker-comment">{{ location['comment']|replace({"\r": '',"\n": ''}) }}</div></div>' +
+{% endif %}
+'<div class="contacts__marker-btn"><a href="#contact-form" class="btn btn--transparent js-fancy-popup">{{ text_contact }}</a></div>' +
+'</div>'
+				}
+			);
+{% endfor %} 
+{% endif %} 
+
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+	jQuery(document).on('change','#js-geocode',function() {
+		var latlng = jQuery(this).val().split(','),
+			newlat = 1*latlng[0],
+			newlng = 1*latlng[1];
+			
+			map.LightshopCenterOffset(new google.maps.LatLng(newlat, newlng), 143, 200);
+
+
+			$('.contacts__marker').removeClass('is-hide');
+
+	});
+});
+
+$(document).on('ready', function() {
+	var $errors = $('#contact-form .popup-simple__inner-error-text') ;
+	if($errors.length){
+		$("#contact_popup").trigger('click');
+	}
+});
+
+
+$(document).on('click', '.contacts__marker-close', function(event) {
+	event.preventDefault();
+	$(this).closest('.contacts__marker').addClass('is-hide');
+});
+
+
+$(document).on('click', '.contacts__marker-location', function(event) {
+	event.preventDefault();
+	$(this).closest('.contacts__marker').removeClass('is-hide');
+});
+
+</script>
+
+ <!-- Goggle Map :: End -->
+
+{% elseif (contact_map == 'yandex_map') %} 
+
+<!-- Yandex Map :: Start -->
+
+<script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+<script>
+
+
+	var myPlacemark = [];
+
+	ymaps.ready(function () {
+
+
+		var myMap = new ymaps.Map('js-yamap', {
+	            center: [{{ geocode }}],
+	            zoom: {{ zoom }},
+	            controls: []
+	        }, {
+	            searchControlProvider: 'yandex#search'
+	        }),
+
+	    	// Создание макета балуна
+	        MyBalloonLayout = ymaps.templateLayoutFactory.createClass(
+            	'<div class="contacts__marker">' +
+	                '<span class="contacts__marker-arrow"></span>' +
+	                '<div class="contacts__marker-inner">' +
+	                	'<span class="contacts__marker-close"></span>' +
+	                	'$[[options.contentLayout observeSize minWidth=220 maxWidth=220 maxHeight=500]]' +
+	                '</div>' +
+                '</div>', {
+                /**
+                 * Строит экземпляр макета на основе шаблона и добавляет его в родительский HTML-элемент.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/layout.templateBased.Base.xml#build
+                 * @function
+                 * @name build
+                 */
+                build: function () {
+                    this.constructor.superclass.build.call(this);
+
+                    this._$element = $('.contacts__marker', this.getParentElement());
+
+                    this.applyElementOffset();
+
+                    this._$element.find('.contacts__marker-close')
+                        .on('click', $.proxy(this.onCloseClick, this));
+                },
+
+                /**
+                 * Удаляет содержимое макета из DOM.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/layout.templateBased.Base.xml#clear
+                 * @function
+                 * @name clear
+                 */
+                clear: function () {
+                    this._$element.find('.contacts__marker-close')
+                        .off('click');
+
+                    this.constructor.superclass.clear.call(this);
+                },
+
+                /**
+                 * Метод будет вызван системой шаблонов АПИ при изменении размеров вложенного макета.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/IBalloonLayout.xml#event-userclose
+                 * @function
+                 * @name onSublayoutSizeChange
+                 */
+                onSublayoutSizeChange: function () {
+                    MyBalloonLayout.superclass.onSublayoutSizeChange.apply(this, arguments);
+
+                    if(!this._isElement(this._$element)) {
+                        return;
+                    }
+
+                    this.applyElementOffset();
+
+                    this.events.fire('shapechange');
+                },
+
+                /**
+                 * Сдвигаем балун, чтобы "хвостик" указывал на точку привязки.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/IBalloonLayout.xml#event-userclose
+                 * @function
+                 * @name applyElementOffset
+                 */
+                applyElementOffset: function () {
+                    // this._$element.css({
+                    //     left: -(this._$element[0].offsetWidth / 2),
+                    //     top: -(this._$element[0].offsetHeight + this._$element.find('.contacts__marker-arrow')[0].offsetHeight)
+                    // });
+                },
+
+                /**
+                 * Закрывает балун при клике на крестик, кидая событие "userclose" на макете.
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/IBalloonLayout.xml#event-userclose
+                 * @function
+                 * @name onCloseClick
+                 */
+                onCloseClick: function (e) {
+                    e.preventDefault();
+
+                    this.events.fire('userclose');
+                },
+
+                /**
+                 * Используется для автопозиционирования (balloonAutoPan).
+                 * @see https://api.yandex.ru/maps/doc/jsapi/2.1/ref/reference/ILayout.xml#getClientBounds
+                 * @function
+                 * @name getClientBounds
+                 * @returns {Number[][]} Координаты левого верхнего и правого нижнего углов шаблона относительно точки привязки.
+                 */
+                getShape: function () {
+                    if(!this._isElement(this._$element)) {
+                        return MyBalloonLayout.superclass.getShape.call(this);
+                    }
+
+                    var position = this._$element.position();
+
+                    return new ymaps.shape.Rectangle(new ymaps.geometry.pixel.Rectangle([
+                        [position.left, position.top], [
+                            position.left + this._$element[0].offsetWidth,
+                            position.top + this._$element[0].offsetHeight - 40
+                        ]
+                    ]));
+                },
+
+                /**
+                 * Проверяем наличие элемента (в ИЕ и Опере его еще может не быть).
+                 * @function
+                 * @private
+                 * @name _isElement
+                 * @param {jQuery} [element] Элемент.
+                 * @returns {Boolean} Флаг наличия.
+                 */
+                _isElement: function (element) {
+                    return element && element[0] && element.find('.contacts__marker-arrow')[0];
+                }
+            }),
+
+	    	// Создание вложенного макета содержимого балуна.
+	        MyBalloonContentLayout = ymaps.templateLayoutFactory.createClass(
+	            '$[properties.balloonContent]'
+	        );
+
+	    
+		// myMap.controls.add('zoomControl');
+		myMap.behaviors.disable('scrollZoom'); 
+		
+{% if (zoom_control) %} 
+		myMap.controls.add('zoomControl', {
+		    float: 'none',
+		    size: 'small',
+		    position: {
+		        right: 20,
+		        bottom: 120
+		    }
+		});
+{% endif %} 
+
+
+		// Создание метки с пользовательским макетом балуна.
+        myPlacemark[0] = new ymaps.Placemark([{{ geocode }}], {
+            balloonContent: 
+            	'<div class="contacts__marker-item">' +
+            		'<div class="contacts__marker-adress">' +
+            			'<span class="contacts__marker-icon">' +
+            				'<svg class="icon-location-pin">' +
+            					'<use xlink:href="#location-pin"></use>' +
+            				'</svg>' +
+            				'{{  address|replace({"\r": '',"\n": ''}) }}' +
+            			'</span>' +
+            		'</div>' + 
+            	'</div>' +
+				{% if (open) %}
+				'<div class="contacts__marker-item">' +
+					'<div class="contacts__marker-open">{{ open|replace({"\r": '',"\n": ''}) }}</div>' +
+				'</div>' +
+				{% endif %}
+				'<div class="contacts__marker-item">' +
+					'<div class="contacts__marker-telephone">{{ telephone }}</div>'+
+				'</div>' +
+				{% if (fax) %}
+				'<div class="contacts__marker-item">' +
+					'<div class="contacts__marker-fax">{{ fax }}</div>'+
+				'</div>' +
+				{% endif %} 
+				{% if (image) %} 
+				'<div class="contacts__marker-item">' +
+					'<div class="contacts__marker-img">' +
+						'<a href="{{ image }}" class="js-fancy-img">' +
+							'<img src="{{ image }}" alt="{{ store }}" title="{{ store }}">' +
+						'</a>' +
+					'</div>' +
+				'</div>' +
+				{% endif %} 
+				{% if (comment) %} 
+				'<div class="contacts__marker-item">' +
+					'<div class="contacts__marker-comment">' +
+						'{{ comment|replace({"\r": '',"\n": ''}) }}' +
+					'</div>' +
+				'</div>' +
+				{% endif %}
+				'<div class="contacts__marker-btn">' +
+					'<a href="#contact-form" class="btn btn--transparent js-fancy-popup-ymap">{{ text_contact }}</a>' +
+				'</div>'
+        }, {
+            balloonShadow: false,
+            balloonLayout: MyBalloonLayout,
+            balloonContentLayout: MyBalloonContentLayout,
+            balloonPanelMaxMapArea: 0,
+            hideIconOnBalloonOpen: false,
+            balloonOffset: [40, -40],
+            balloonAutoPan: false
+        });
+
+
+		myMap.geoObjects.add(myPlacemark[0]);
+		myPlacemark[0].balloon.open();
+
+		var isMobile = {
+			Android: function () {
+				return navigator.userAgent.match(/Android/i)
+			},
+			BlackBerry: function () {
+				return navigator.userAgent.match(/BlackBerry/i)
+			},
+			iOS: function () {
+				return navigator.userAgent.match(/iPhone|iPad|iPod/i)
+			},
+			Opera: function () {
+				return navigator.userAgent.match(/Opera Mini/i)
+			},
+			Windows: function () {
+				return navigator.userAgent.match(/IEMobile/i)
+			},
+			any: function () {
+				return (isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows())
+			}
+		}
+		if (isMobile.any()) {
+			myMap.behaviors.disable('drag')
+		}
+
+		// Создание других меток если из больше одной с пользовательским макетом балуна.
+
+		// Добавляем метки с id в Массив
+		$i = 1;
+
+		{% if (locations) %} 
+			{% for location in locations %} 
+
+				var id = $i++;
+
+				// Создание метки с пользовательским макетом балуна.
+		        myPlacemark[id] = new ymaps.Placemark([{{ location['geocode'] }}], {
+		            balloonContent: 
+		            	'<div class="contacts__marker-item">' +
+		            		'<div class="contacts__marker-adress">' +
+		            			'<span class="contacts__marker-icon">' +
+		            				'<svg class="icon-location-pin">' +
+		            					'<use xlink:href="#location-pin"></use>' +
+		            				'</svg>' +
+		            				'{{ location["address"]|replace({"\r": '',"\n": ''}) }}' +
+		            			'</span>' +
+		            		'</div>' + 
+		            	'</div>' +
+						{% if (location['open']) %}
+						'<div class="contacts__marker-item">' +
+							'<div class="contacts__marker-open">{{ location["open"]|replace({"\r": '',"\n": ''}) }}</div>' +
+						'</div>' +
+						{% endif %}
+						'<div class="contacts__marker-item">' +
+							'<div class="contacts__marker-telephone">{{ location["telephone"] }}</div>'+
+						'</div>' +
+						{% if (location['fax']) %}
+						'<div class="contacts__marker-item">' +
+							'<div class="contacts__marker-fax">{{ location["fax"] }}</div>'+
+						'</div>' +
+						{% endif %} 
+						{% if (location['image']) %} 
+						'<div class="contacts__marker-item">' +
+							'<div class="contacts__marker-img">' +
+								'<a href="{{ location['image'] }}" class="js-fancy-img">' +
+									'<img src="{{ location['image'] }}" alt="{{ location.name }}" title="{{ location.name }}">' +
+								'</a>' +
+							'</div>' +
+						'</div>' +
+						{% endif %} 
+						{% if (location['comment']) %} 
+						'<div class="contacts__marker-item">' +
+							'<div class="contacts__marker-comment">' +
+								'{{ location["comment"]|replace({"\r": '',"\n": ''}) }}' +
+							'</div>' +
+						'</div>' +
+						{% endif %}
+						'<div class="contacts__marker-btn">' +
+							'<a href="#contact-form" class="btn btn--transparent js-fancy-popup-ymap">{{ text_contact }}</a>' +
+						'</div>'
+		        }, {
+		            balloonShadow: false,
+		            balloonLayout: MyBalloonLayout,
+		            balloonContentLayout: MyBalloonContentLayout,
+		            balloonPanelMaxMapArea: 0,
+		            hideIconOnBalloonOpen: false,
+		            balloonOffset: [40, -40],
+		            balloonAutoPan: false
+		        });
+
+				myMap.geoObjects.add(myPlacemark[id]);
+				
+
+			{% endfor %} 
+		{% endif %} 
+
+
+
+
+		myMap.geoObjects.events.add([
+			'balloonopen'
+			], function (e) {
+			var geoObject = e.get('target');
+			myMap.panTo(geoObject.geometry.getCoordinates(), {
+				delay: 0
+			});
+		});
+
+	
+		$(document).on('change','#js-geocode', function(e) {
+
+			var latlng = $(this).val().split(','),
+				index  = $(this).find(':selected').index();
+
+			myMap.panTo([latlng], {
+			    flying: false,
+			    safe: false,
+			    duration: 700
+			}).then(function(){
+				
+
+				setTimeout(function() {
+
+					myPlacemark[index].balloon.open();
+
+				}, 350);
+
+
+
+			});
+
+
+		});
+
+
+		$(document).on('click', '.js-fancy-popup-ymap', function(event) {
+
+			event.preventDefault();
+
+			var id = $(this).attr('href');
+
+			$.fancybox.open({
+				src  : id,
+				type : 'inline',
+				slideClass : 'popup-simple--fancybox', 
+				autoFocus : false,
+				touch: false,
+				closeClickOutside : true,
+				btnTpl : {
+					smallBtn   : '<button data-fancybox-close class="popup-simple__close" title="{{ '{{' }}CLOSE{{ '}}' }}">x</button>'
+				}
+				
+			});
+
+		});	
+
+
+		$(document).on('click', '.js-fancy-img', function(event) {
+
+			event.preventDefault();
+
+			var id = $(this).attr('href');
+
+			$.fancybox.open({
+				src  : id,
+				margin : [110, 20, 20, 20],
+				slideShow  : false,
+				fullScreen : false,
+				thumbs     : false,
+				loop: true,
+				buttons: [
+					"thumbs",
+					"close"
+				],
+				baseTpl	:
+				'<div class="fancybox-container" role="dialog" tabindex="-1">' +
+					'<div class="fancybox-bg"></div>' +
+						'<div class="fancybox-toolbar">' +
+							'{{ '{{' }}buttons{{ '}}' }}' +
+						'</div>' +
+						
+					'<div class="fancybox-inner">' +
+						'<div class="fancybox-navigation">' +
+							'<button data-fancybox-prev title="{{ '{{' }}PREV{{ '}}' }}" class="fancybox-arrow fancybox-arrow--left"><svg class="icon-chevron-left"><use xlink:href="#chevron-small-left"></use></svg></button>' +
+							'<button data-fancybox-next title="{{ '{{' }}NEXT{{ '}}' }}" class="fancybox-arrow fancybox-arrow--right"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg></button>' +
+						'</div>' +
+						'<div class="fancybox-stage"></div>' +
+						'<div class="fancybox-caption-wrap">' +
+							'<div class="fancybox-caption"></div>' +
+						'</div>' +
+					'</div>' +
+				'</div>',
+				btnTpl : {
+					close   : '<button data-fancybox-close class="popup-simple__close" title="{{ '{{' }}CLOSE{{ '}}' }}">x</button>'
+				},
+				transitionEffect : 'slide',
+				closeClickOutside : true,
+				afterLoad : function() {
+					svgFix();
+				}
+				
+			});
+
+		});	
+
+	});
+	
+		$(document).on('ready', function() {
+			var $errors = $('#contact-form .popup-simple__inner-error-text') ;
+			if($errors.length){
+				$("#contact_popup").trigger('click');
+			}
+		});
+
+</script>
+ <!-- Yandex Map :: End -->
+ 
+{% endif %} 
+
+</body></html>

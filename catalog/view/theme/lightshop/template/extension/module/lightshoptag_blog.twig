@@ -1,0 +1,11 @@
+{% if (tags is not empty) %} 
+						<div class="blog-tags">
+							<div class="blog-widget__title">{{ heading_title }}</div>
+							<div class="blog-line"></div>
+							{% for tag in tags %} 
+								<a class="btn btn--transparent" href = "{{ tag['href'] }}">{{ tag['tag'] }} 
+									<span class="count">{{ tag['total'] }}</span>
+								</a>
+							{% endfor %} 
+						</div>
+{% endif %} 

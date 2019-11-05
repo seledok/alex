@@ -1,0 +1,154 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (error_warning) %} 
+	<div class="alert alert--red">
+		<span class="alert__text">
+			{{ error_warning }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %}
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+			<p>{{ text_description }}</p>
+			<form action="{{ action }}" method="post" enctype="multipart/form-data">
+			<div class="form-box">
+			<div class="checkout">
+				<h3 class="checkout__h3">{{ text_order }}</h3>
+				<div class="checkout__input-row">							
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_firstname }}</span>
+						<input type="text" name="firstname" value="{{ firstname }}" placeholder="{{ entry_firstname }}" id="input-firstname" class="{{ error_firstname ? 'error' : ''}}">
+						{% if (error_firstname) %} 
+						<div class="checkout__input-box-error">{{ error_firstname }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_lastname }}</span>
+						<input type="text" name="lastname" value="{{ lastname }}" placeholder="{{ entry_lastname }}" id="input-lastname" class="{{ error_lastname ? 'error' : ''}}">
+						{% if (error_lastname) %} 
+						<div class="checkout__input-box-error">{{ error_lastname }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_email }}</span>
+						<input type="email" name="email" value="{{ email }}" placeholder="{{ entry_email }}" id="input-email" class="checkout__input-box-title {{ error_email ? 'error' : ''}}">
+						{% if (error_email) %} 
+						<div class="checkout__input-box-error">{{ error_email }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_telephone }}</span>
+						<input type="text" name="telephone" value="{{ telephone }}" placeholder="{{ entry_telephone }}" id="input-telephone" class=" {{ error_telephone ? 'error' : ''}}">
+						{% if (error_telephone) %} 
+						<div class="checkout__input-box-error">{{ error_telephone }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_order_id }}</span>
+						<input type="text" name="order_id" value="{{ order_id }}" placeholder="{{ entry_order_id }}" id="input-order-id" class=" {{ error_order_id ? 'error' : ''}}">
+						{% if (error_order_id) %} 
+						<div class="checkout__input-box-error">{{ error_order_id }}</div>
+						{% endif %} 
+					</div>
+				</div>
+				<h3 class="checkout__h3">{{ entry_date_ordered }}</h3>
+				<div class="checkout__input-row">
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_date_ordered }}</span>
+						<input type="text" name="date_ordered" value="{{ date_ordered }}" placeholder="{{ entry_date_ordered }}" data-date-format="YYYY-MM-DD" id="input-date-ordered" class="date">
+					</div>
+				</div>
+				<h3 class="checkout__h3">{{ text_product }}</h3>
+				<div class="checkout__input-row">
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_product }}</span>
+						<input type="text" name="product" value="{{ product }}" placeholder="{{ entry_product }}" id="input-product" class=" {{ error_product ? 'error' : ''}}">
+						{% if (error_product) %} 
+						<div class="checkout__input-box-error">{{ error_product }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_model }}</span>
+						<input type="text" name="model" value="{{ model }}" placeholder="{{ entry_model }}" id="input-model" class=" {{ error_product ? 'error' : ''}}">
+						{% if (error_model) %} 
+						<div class="checkout__input-box-error">{{ error_model }}</div>
+						{% endif %} 
+					</div>
+					<div class="checkout__input-box form-group">
+						<span class="checkout__input-box-title">{{ entry_quantity }}</span>
+						<input type="text" name="quantity" value="{{ quantity }}" placeholder="{{ entry_quantity }}" id="input-quantity">
+					</div>
+					<div class="checkout__radio-box form-group">
+						<span class="checkout__input-box-title required">{{ entry_reason }}</span>
+						{% for return_reason in return_reasons %}
+						<div class="checkout__radio-item">
+							<input name="return_reason_id" id="return_reason_id-{{ return_reason.return_reason_id }}" type="radio" value="{{ return_reason.return_reason_id }}" {{ return_reason.return_reason_id == return_reason_id ? 'checked="checked"' : ''}}>
+							<label for="return_reason_id-{{ return_reason.return_reason_id }}">{{ return_reason.name }}</label>
+						</div>	
+						{% endfor %}
+						{% if (error_reason) %} 
+						<div class="checkout__input-box-error">{{ error_reason }}</div>
+						{% endif %} 
+					</div>	
+					<div class="checkout__radio-box form-group">
+						<span class="checkout__input-box-title">{{ entry_opened }}</span>
+						<div class="checkout__radio-item">
+							<input name="opened" id="opened-1" type="radio" value="1" {{ opened ? 'checked="checked"' : ''}}>
+							<label for="opened-1">{{ text_yes }}</label>
+						</div>	
+						<div class="checkout__radio-item">
+							<input name="opened" id="opened-0" type="radio" value="0" {{ not opened ? 'checked="checked"' : ''}}>
+							<label for="opened-0">{{ text_no }}</label>
+						</div>	
+					</div>	
+					<div class="checkout__textarea-box form-group">
+						<span class="checkout__input-box-title">{{ entry_fault_detail }}</span>
+						<textarea name="comment" placeholder="{{ entry_fault_detail }}" id="input-comment">{{ comment }}</textarea>
+					</div>
+					{{ captcha }}
+				</div>
+				 {% if text_agree %}
+				<div class="checkout__checkbox">
+						<div class="checkout__checkbox-box-row">
+							<div class="checkout__checkbox-item">
+								<input name="agree" id="agree" type="checkbox" value="1" {{ agree ? 'checked="checked"' : ''}}>
+								<label for="agree">{{ text_agree }}</label>
+							</div>					
+						</div>					
+				</div>	
+				{% endif %}
+			</div>
+				<div class="checkout__button-box">
+					<a href="{{ back }}" class="btn btn--empty">{{ button_back }}</a>
+					<button type="submit" class="btn btn--transparent">{{ button_submit }}<svg class="icon-arrow-long-right"><use xlink:href="#arrow-long-right"></use></svg></button>
+				</div>
+			</div>
+			</form>			
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>	
+{{ footer }}</body></html>

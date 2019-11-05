@@ -1,0 +1,29 @@
+<div class="sidebar">
+	<a href="#sidebar-navigation" class="js-popup-call sidebar-mobile-btn">{{ text_lightshop_menu }}</a>
+	<div class="popup left popup-nav" id="sidebar-navigation">
+	<span class="popup-close js-popup-close"><svg class="icon-chevron-left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use></svg></span>
+	<span class="popup__title">{{ text_lightshop_menu }}</span>
+	<div class="popup__submenu-scroll">
+		<div class="nav-submenu nav-submenu--sidebar">
+			<ul class="nav-submenu__list">
+				{% if (not logged) %} 
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ login }}">{{ text_login }}</a></li>
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ register }}">{{ text_register }}</a></li>
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ forgotten }}">{{ text_forgotten }}</a>
+				{% endif %} 
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ account }}">{{ text_account }}</a>
+				{% if (logged) %} 
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ edit }}">{{ text_edit }}</a></li>
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ password }}">{{ text_password }}</a>
+				{% endif %} 
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ payment }}">{{ text_payment }}</a></li>
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ tracking }}">{{ text_tracking }}</a></li>
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ transaction }}">{{ text_transaction }}</a>
+				{% if (logged) %} 
+				<li class="nav-submenu__list-item"><a class="nav-submenu__link" href="{{ logout }}">{{ text_logout }}</a>
+				{% endif %} 
+			</ul>
+		</div>
+	</div>
+	</div>
+</div>

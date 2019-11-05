@@ -1,0 +1,420 @@
+ <!-- CATALOGUE PRODUCT DETAIL-->
+
+	<!-- CATALOGUE PRODUCT DETAIL TABS CONTAINER -->
+											
+
+	<div class="catalogue__tabs-container">
+		<div class="catalogue__product-detail-top">
+			<a href="{{ popup_link }}" id="popup_link_prod" target="_blank" class="new-window-link">
+				{{ text_lightshop_popup_link }} 
+			</a>
+			<a href="#" class="catalogue__block-hide js-product-view-hide">
+				<svg class="icon-chevron-bottom"> 
+					<use xlink:href="#chevron-small-left"></use>
+				</svg>
+			</a>
+		</div>
+		<div class="js-custom-scroll">
+			<div class="scroll-container">
+				
+				<div class="catalogue__tabs-container-inner">
+					{% for product in products %} 
+						{% if (product['product_id'] == product_id) %} 
+					<div class="catalogue__product-detail-main  js-tab-content active" id="popupprodid_{{ product['product_id'] }}">
+						{% else %} 
+					<div class="catalogue__product-detail-main js-tab-content" data-page="{{ page }}" id="popupprodid_{{ product['product_id'] }}">
+						{% endif %} 
+					  
+						<div class="catalogue__product-detail-gallery">
+							<input type="hidden" name="product_href" value="{{ product['href'] }}">
+							<div class=" arrows-container"></div>
+							<div  class="catalogue__product-detail-gallery-inner js-simple-slider">
+
+								<div class="catalogue__product-detail-gallery-item">
+									<img data-lazy="{{ product['thumb'] }}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" alt="{{ product['name'] }}">
+									<div class="catalogue__product-detail-label">
+										{% if (product['isnewest']) %} 
+											<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+										{% endif %} 
+										{% if (product['special'] and product['sales']) %} 
+											<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+										{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+									</div>
+									<span onclick="wishlist.add('{{ product_id }}');" class="products-list__like catalogue__product-detail-like">
+										<svg class="icon-heart icon-heart--gray">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</span>
+								</div>
+
+							   {% for image in product['images'] %} 
+								<div class="catalogue__product-detail-gallery-item">
+									<img data-lazy="{{ image }}" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs%3D" alt="{{ product['name'] }}" >
+									<div class="catalogue__product-detail-label">
+										{% if (product['isnewest']) %} 
+											<span class="label">{{ labelsinfo['new']['name'][language_id] }}</span>
+										{% endif %} 
+										{% if (product['special'] and product['sales']) %} 
+											<span class="label label--red">{{ labelsinfo['sale']['name'][language_id] ~ ' ' ~ product['discount'] }}</span>
+										{% endif %} 
+										{% if (product['popular']) %} 
+											<span class="label label--popular">{{ product['popular'] }}</span>
+										{% endif %} 
+										{% if (product['hit']) %} 
+											<span class="label label--hit">{{ product['hit'] }}</span>
+										{% endif %} 
+										{% if (product['catch']) %} 
+											{% if (product['nocatch']) %} 
+												<span class="label label--nocatch">{{ product['catch'] }}</span>
+											{% else %} 
+												<span class="label label--catch">{{ product['catch'] }}</span>
+											{% endif %} 
+										{% endif %} 
+									</div>
+									<span class="products-list__like catalogue__product-detail-like">
+										<svg class="icon-heart icon-heart--gray">
+											<use xlink:href="#heart"></use>
+										</svg>
+									</span>
+								</div>
+							   {% endfor %} 
+							</div>
+						</div>
+						{# foreach ($products as $product) { #}
+							<form>
+						<div class="catalogue__product-detail-info">						
+							<div class="catalogue__product-detail-info-left">
+								<div class="catalogue__product-detail-info-top">
+									<span class="catalogue__product-detail-series">
+										{{ product['manufacturer'] }} 
+									</span>
+									{% if (review_status) %} 
+									<div class="catalogue__product-detail-rating">
+										<div class="product__rating catalogue__rating">
+											<div class="product__rating-fill" style="width: {{ product['rating']*20 }}%;">	
+											</div>
+										</div>
+									</div>
+									{% endif %} 
+								</div>
+								<span class="catalogue__product-name catalogue__product-name--lgx catalogue__product-detail-name">
+									{{ product['name'] }} 
+								</span>
+								<input type="hidden" name="product_id" value="{{ product['product_id'] }}">
+								<span class="catalogue__product-detail-compare">
+									<a onclick="compare.add('{{ product['product_id'] }}');" class="products-list__compare">
+										<span class="products-list__compare-icon">
+											<svg class="icon-add-to-list">
+												<use xlink:href="#add-to-list"></use>
+											</svg>
+										</span>
+										<span class="products-list__compare-text">
+											{{ button_compare }} 
+										</span>
+									</a>
+								</span>
+								<div class="catalogue__product-detail-description">
+									<p class="catalogue__product-detail-text">
+										{{ product['description'] }} 
+									</p>
+									<a href="{{ product['href'] }}" target="_blank">{{ text_lightshop_popup_link_more }}</a>
+								</div>
+
+					{% if (product['customTabs']['popup'] is defined) %} 
+						<div class="catalogue__product-detail-popup">
+							{% for key,popup in product['customTabs']['popup'] %} 
+								<a href="index.php?route=product/product/custtabload&product_ids={{ product['product_id'] }}&tab={{ key }}" class="product-page__actions-link--dashed js-fancy-tab">{{ popup['title'] }}</a>
+							{% endfor %} 
+						</div>
+					{% endif %} 
+
+
+								{% if (product['options']) %} 
+<style>
+/* options css */
+{% for option in product['options'] %} 
+			{% if (option['type'] == 'radio' or option['type'] == 'checkbox') %} 
+				{% for option_value in option['product_option_value'] %} 
+					{% if (option_value['image']) %} 
+.radiobox-colors__list-item input[type='radio']+ label.label--img-{{ option_value['product_option_value_id'] }}:before, .radiobox-colors__list-item input[type='checkbox']+ label.label--img-{{ option_value['product_option_value_id'] }}:before {
+	background-image: url({{ option_value['image'] }});
+}
+			{% endif %} 
+				{% endfor %} 
+			{% endif %} 
+		{% endfor %} 
+</style>
+
+								<div class="catalogue__product-detail-filter">
+									{% for i,option in product['options'] %} 
+										{% if (option['type'] == 'select') %} 
+											<div class="catalogue__product-detail-option">
+												<span class="catalogue__product-detail-filter-title">
+													{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}
+													{{ option['name'] }} 
+												</span>												
+												<span class="select">
+													<select  name="option[{{ option['product_option_id'] }}]" id="input-option{{ option['product_option_id'] }}" class="select" data-placeholder="{{ text_select }}">
+														<option value="">{{ text_select }}</option>
+														{% for option_value in option['product_option_value'] %} 
+															<option value="{{ option_value['product_option_value_id'] }}">{{ option_value['name'] }} 
+															{% if (option_value['price']) %} 
+															\{{ option_value['price_prefix'] }} {{ option_value['price'] }} 
+															{% endif %} 
+															</option>
+														{% endfor %} 
+													</select>
+												</span>
+											</div>
+										{% endif %} 
+										{% if (option['type'] == 'radio') %} 
+											<div class="catalogue__product-detail-option">
+												<span class="catalogue__product-detail-filter-title">
+													{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}
+													{{ option['name'] }} 
+												</span>
+												<div class="radiobox-colors" id="input-option{{ option['product_option_id'] }}">
+													<form>
+														<ul class="radiobox-colors__list">
+												{% for option_value in option['product_option_value'] %} 
+													{% if (option_value['image']) %} 
+														<li class="radiobox-colors__list-item option-value-id-{{ option_value['option_value_id'] }}">
+															<input type="radio" name="option[{{ option['product_option_id'] }}]" value="{{ option_value['product_option_value_id'] }}" id="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															<label title="{{ option_value['name'] }}" for="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}" class="label label--img-{{ option_value['product_option_value_id'] }}"></label>
+														</li>
+													{% else %} 
+														<li class="catalogue__type-item option-value-id-{{ option_value['option_value_id'] }}">
+															<input type="radio" name="option[{{ option['product_option_id'] }}]" value="{{ option_value['product_option_value_id'] }}" id="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															<label for="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															{{ option_value['name'] }}	
+															{% if (option_value['price']) %} 
+															\{{ option_value['price_prefix'] }} {{ option_value['price'] }} 
+															{% endif %}															
+															</label>
+														</li>
+													{% endif %} 
+												{% endfor %} 
+														</ul>
+													</form>
+												</div>
+											</div>
+										{% endif %} 
+										{% if (option['type'] == 'checkbox') %} 
+											<div class="catalogue__product-detail-option">
+												<span class="catalogue__product-detail-filter-title">
+													{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}
+													{{ option['name'] }} 
+												</span>
+												<div class="radiobox-colors" id="input-option{{ option['product_option_id'] }}">
+													<form>
+														<ul class="radiobox-colors__list">
+												{% for option_value in option['product_option_value'] %} 
+													{% if (option_value['image']) %} 
+														<li class="radiobox-colors__list-item option-value-id-{{ option_value['option_value_id'] }}">
+															<input type="checkbox" name="option[{{ option['product_option_id'] }}][]" value="{{ option_value['product_option_value_id'] }}" id="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															<label title="{{ option_value['name'] }}" for="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}" class="label label--img-{{ option_value['product_option_value_id'] }}"></label>
+														</li>
+													{% else %} 
+													
+														<li class="catalogue__type-item option-value-id-{{ option_value['option_value_id'] }}">
+															<input type="checkbox" name="option[{{ option['product_option_id'] }}][]" value="{{ option_value['product_option_value_id'] }}" id="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															<label for="close-type-{{ option_value['product_option_value_id'] ~ '-' ~ option['product_option_id'] }}">
+															{{ option_value['name'] }}	
+															{% if (option_value['price']) %} 
+															\{{ option_value['price_prefix'] }} {{ option_value['price'] }} 
+															{% endif %}																
+															</label>
+														</li>
+													{% endif %} 
+												{% endfor %} 
+														</ul>
+													</form>
+												</div>
+											</div>
+										{% endif %} 
+										{% if (option['type'] == 'text') %} 
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<input type="text" name="option[{{ option['product_option_id'] }}]" value="{{ option['value'] }}" placeholder="{{ option['name'] }}" id="input-option{{ option['product_option_id'] }}">
+										</div>
+										{% endif %} 
+										{% if (option['type'] == 'textarea') %} 
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<textarea name="option[{{ option['product_option_id'] }}]" rows="5" placeholder="{{ option['name'] }}" id="input-option{{ option['product_option_id'] }}">{{ option['value'] }}</textarea>
+										</div>
+										{% endif %} 
+										{% if (option['type'] == 'file') %} 
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<button type="button" id="button-upload{{ option['product_option_id'] }}" class="btn btn--transparent btn--sm">{{ text_lightshop_popup_upload }}</button>
+											<input type="hidden" name="option[{{ option['product_option_id'] }}]" value="" id="input-option{{ option['product_option_id'] }}" />
+										</div>
+										{% endif %} 
+										{% if (option['type'] == 'date') %} 
+
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<input type="text" name="option[{{ option['product_option_id'] }}]" value="{{ option['value'] }}" data-date-format="YYYY-MM-DD" id="input-option{{ option['product_option_id'] }}" class="date">
+										</div>
+										{% endif %} 
+										{% if (option['type'] == 'datetime') %} 
+
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<input type="text" name="option[{{ option['product_option_id'] }}]" value="{{ option['value'] }}" data-date-format="YYYY-MM-DD HH:mm" id="input-option{{ option['product_option_id'] }}" class="datetime">
+										</div>
+										{% endif %} 
+										{% if (option['type'] == 'time') %} 
+
+										<div class="catalogue__product-detail-option">
+											<span class="catalogue__product-detail-filter-title">{{ option['required'] ? '<span style="color: red;">* </span>' : '' }}{{ option['name'] }}</span>
+											<input type="text" name="option[{{ option['product_option_id'] }}]" value="{{ option['value'] }}" data-date-format="HH:mm" id="input-option{{ option['product_option_id'] }}" class="time">
+										</div>
+										{% endif %} 
+									{% endfor %} 
+								</div>
+								{% endif %} 
+							</div>
+							<div class="catalogue__product-detail-info-right">
+								<div class="catalogue__sell-info products-qty-info">
+									<div class="catalogue__sell-info-top">
+										<div class="catalogue__product-detail-price">
+											{% if (product['special']) %} 
+												<span class="catalogue__price-old">
+													{{ product['price'] }} 
+												</span>
+												<span class="catalogue__price catalogue__price--lg">
+													{{ product['special'] }} 
+												</span>
+											{% else %} 
+												<span class="catalogue__price catalogue__price--lg">
+													{{ product['price'] }} 
+												</span>												
+											{% endif %} 
+										</div>
+										<span class="status {{ product['quantity'] > 0 ? 'instock' : ''}}">
+											{{ product['stock'] }} 
+										</span>
+									</div>
+									<div class="catalogue__sell-info-bottom">
+										<div class="catalogue__sell-info-btns">
+											<div class="catalogue__sell-info-item products-qty-info-spinner">
+												<div class="spinner-wrap">
+													<input name="quantity" type="text" class="spinner" value="{{ product['minimum'] }}" placeholder="{{ product['minimum'] }}">
+												</div>
+											</div>
+											<div class="catalogue__sell-info-item">
+												<button for="{{ product['product_id'] }}" type="button" class="btn products-full-list__btn js-btn-add-cart-popup" {{ product['buy_btn'] ? 'disabled' : ''}}>{{ button_cart }}</button>
+											</div>
+										</div>
+										{% if (buy_click['status'] and not product['buy_btn']) %} 
+										<a href="#popup-buy-click" data-typefrom="category-popup" data-for="{{ product['product_id'] }}" class="products-full-list__action-link js-fancy-popup-cart catalogue__product-detail-action-link">{{ text_lightshop_buy_click }}</a>
+										{% endif %} 
+									</div>
+								</div> 
+							</div>						
+						</div>
+						</form>
+						{# } #}
+						
+					</div>
+					 {% endfor %} 
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- CATALOGUE PRODUCT DETAIL TABS CONTAINER END -->
+	<!-- CATALOGUE PRODUCT DETAIL TABS LINKS -->
+	<div class="catalogue__product-detail-side">
+		<div class="product-tabs">
+			<ul class="product-tabs__list">
+				{% if (prevLink is defined and not prodkey ) %} 
+					<li class="product-tabs__list-item js-tab-tabpopuplink">
+						<a href="{{ prevLink }}" class="product-tabs__link product-tabs__link--prevlast">
+							<svg class="icon-chevron-left"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use></svg>
+						</a>
+					</li>
+				{% endif %} 
+				{% for key,product in products %} 
+						{% if (product['product_id'] == product_id) %} 
+				<li class="product-tabs__list-item js-tab-tabpopup active" id="popupprodtabid_{{ product['product_id'] }}">
+						{% else %} 
+				<li class="product-tabs__list-item js-tab-tabpopup" {{ key < minVisKey ? "style='display:none'":"" }} id="popupprodtabid_{{ product['product_id'] }}">							
+						{% endif %} 
+					<a href="#" class="product-tabs__link">
+						<div class="product-tabs__photo">
+							<img src="{{ product['thumb'] }}" alt="{{ product['name'] }}" title="{{ product['name'] }}">
+						</div>
+						<div class="product-tabs__description">
+							<span class="product-tabs__name" title="{{ product['name'] }}">
+								<span class="product-tabs__name-inner">{{ product['name'] }}</span>
+							</span>
+							{% if (product['special']) %} 
+								<span class="product-tabs__price-old">
+									{{ product['price'] }} 
+								</span>
+								<span class="product-tabs__price">
+									{{ product['special'] }} 
+								</span>
+							{% else %} 
+								<span class="product-tabs__price">
+									{{ product['price'] }} 
+								</span>												
+							{% endif %}												
+						</div>
+					</a>
+				</li>
+				{% endfor %} 
+				{% if (nextLink is defined and isLast is defined) %} 
+					<li class="product-tabs__list-item js-tab-tabpopuplink">
+						<a href="{{ nextLink }}" class="product-tabs__link product-tabs__link--prevlast">
+							<svg class="icon-chevron-right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#chevron-small-left"></use></svg>
+						</a>
+					</li>
+				{% endif %} 
+			</ul>
+		</div>
+	</div>
+					<div class="catalogue__pagination_popup" style="display:none;">
+						{{ pagination }} 
+					</div>
+	<!-- CATALOGUE PRODUCT DETAIL TABS LINKS END-->
+
+<!-- CATALOGUE PRODUCT DETAIL END-->
+
+
+<script type="text/javascript"><!--
+$(document).ready(function() {
+	$(".js-fancy-tab").fancybox({
+//		closeTpl : '<button data-fancybox-close class="popup-simple__close">x</button>',
+				slideClass : 'popup-simple--fancybox',
+				autoFocus : false,
+		maxWidth	: 100,
+		maxHeight	: 100,
+		fitToView	: false,
+		autoSize	: false,
+		closeClick	: false,
+		closeBtn   : false,
+		baseClass: 'custom-popup',
+		type: 'ajax',
+		btnTpl : {
+		       smallBtn   : '<button data-fancybox-close class="popup-simple__close popup-simple--fancybox" title="{{ '{{' }}CLOSE{{ '}}' }}">x</button>'
+		      },
+	});
+});
+
+//--></script>

@@ -1,0 +1,12 @@
+/images/**/*
+/export/*.xml
+/system/storage/**/*
+/config.php
+/admin/config.php
+/config.php
+/lk/config.php
+/config-a.php
+config.php
+/.idea/**/*
+/config.json
+config.json

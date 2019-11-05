@@ -1,0 +1,22 @@
+<div class="header__currencies {% if (currencies|length < 2) %} header__currencies--hide {% endif %}" >
+
+	<div class="header__select">
+	<span class="account__title">{{ text_currency }}</span>
+		<form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-currency">
+			<span class="select">
+				<select class="select select--header  select--transparent">
+					{% for currency in currencies %} 
+						{% if (currency['code'] == code) %} 
+						<option value="{{ currency['code'] }}" selected="selected">{{ currency['symbol_left'] }}{{ currency['symbol_right'] }}</option>
+						{% else %} 
+						<option value="{{ currency['code'] }}">{{ currency['symbol_left'] }}{{ currency['symbol_right'] }}</option>
+						{% endif %} 
+					{% endfor %} 
+				
+				</select>
+			</span>
+		<input type="hidden" name="code" value="">
+		<input type="hidden" name="redirect" value="{{ redirect }}">			
+		</form>	
+	</div>
+</div>

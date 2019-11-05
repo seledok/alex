@@ -1,0 +1,24 @@
+		<div class="recomend recomend--featured">
+			<div class="container">
+				<span class="h2">{{ heading_title }}</span>
+				<div class="recomend-slider js-recom-slider">
+				 {% for article in articles %}
+					<div class="recomend-slider__item product product--min" style="height: 370px;">
+						<div class="product__img">
+							<a href="{{ article['href'] }}"><img {{ lazyload ? 'src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" data-lazy' : 'src' }}="{{ article['thumb'] }}" alt="{{ article['name'] }}"></a>
+						</div>
+						<div class="product__descr">
+							{% if (article['rating'] != constant('false')) %} 
+							<div class="product__rating product__rating--sm">
+								<div class="product__rating-fill" style="width: {{ 20*article['rating'] }}%;">
+								</div>
+							</div>
+							{% endif %} 
+							<a href="{{ article['href'] }}" class="product__descr-link link--brown"><span>{{ article['name'] }}</span></a>
+							<p style="max-height: 69px;overflow: hidden;padding: 0;">{{ article.description }}</p>
+						</div>
+					</div>
+					{% endfor %}			
+				</div>
+			</div>
+		</div>

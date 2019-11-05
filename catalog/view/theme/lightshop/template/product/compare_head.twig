@@ -1,0 +1,21 @@
+						<span class="account__title"><svg class="icon-add-to-list"><use xlink:href="#list"></use></svg>{{ text_lightshop_comp_head }} 
+							 {{ '('~countcomp~')' }} 
+						</span>
+						{% if (productscomp) %} 
+						<ul class="account__list">
+						  
+							   {% for key,product in productscomp %} 
+								<li class="account__list-item">
+									<div class="account__list-img">
+										<a href="{{ product['href'] }}"><img src="{{ product['thumb'] }}" alt=""></a>
+									</div>
+									<span class="link"><a href="{{ product['href'] }}" class="link--brown">{{ product['name'] }}</a></span>
+								</li>
+							  {% endfor %} 
+						</ul>
+						{{ text_compare_href }} 
+						{% else %} 
+							<span class="account__empty-text">
+								<span>{{ text_empty_compare }}</span>
+							</span>
+						{% endif %} 

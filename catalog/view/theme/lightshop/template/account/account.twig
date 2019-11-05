@@ -1,0 +1,92 @@
+{{ header }} {% set col = column_left ? 9 : 12 %} {% set col = column_right ? col - 3 : col %} 
+<div class="alerts">
+{% if (success) %} 
+	<div class="alert alert--green">
+		<span class="alert__text">
+			{{ success }} 
+		</span>
+		<a href="#" class="alert__close">x</a>
+	</div>
+{% endif %} 
+</div>
+<main class="content">
+	<div class="container">
+	{{ content_top }} 
+		<div class="breadcrumbs breadcrumbs--sm-pad {{ col < 12 ? '' : 'breadcrumbs--center'}}">
+			<ul class="breadcrumb__list">
+			{% for i,breadcrumb in breadcrumbs %} 
+			{% if (i == 0) %} 
+				<li class="breadcrumb__list-item"><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>
+			{% elseif (i + 1 < (breadcrumbs)|length) %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><a href="{{ breadcrumb['href'] }}"><span>{{ breadcrumb['text'] }}</span></a></li>		
+			{% else %} 
+				<li class="breadcrumb__list-item"><svg class="icon-chevron-right"><use xlink:href="#chevron-small-left"></use></svg><span>{{ breadcrumb['text'] }}</span></li>		
+			{% endif %} 
+			{% endfor %} 			
+			</ul>
+		</div>
+	<h2 class="content__title {{ col < 12 ? '' : 'content__title--center'}}">{{ heading_title }}</h2>
+	<div class="row">
+		{{ column_left ? '<div class="col-sm-3">' ~ column_left ~ '</div>' : ''}}
+		<div class="{{ col < 12 ? 'col-sm-' ~ col : 'col-sm-10 col-sm-offset-1' }}">
+			<div id="sidebar-mob-btn"></div>
+				<div class="account-form">
+					<div class="account-form__col">
+						<div class="account-logged">	
+							<div class="account-logged__box">	
+								<span class="account__title">{{ text_my_account }}</span>						
+								<ul class="account-logged__list">			
+									<li class="account-logged__list-item"><a href="{{ edit }}">{{ text_edit }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ password }}">{{ text_password }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ address }}">{{ text_address }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ wishlist }}">{{ text_wishlist }}</a></li>
+									{% if (credit_cards) %} 
+										{% for credit_card in credit_cards %} 
+										<li class="account-logged__list-item"><a href="{{ credit_card['href'] }}">{{ credit_card['name'] }}</a></li>
+										{% endfor %} 
+									{% endif %} 
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="account-form__col">
+						<div class="account-logged">	
+							<div class="account-logged__box">	
+								<span class="account__title">{{ text_my_orders }}</span>						
+								<ul class="account-logged__list">			
+									<li class="account-logged__list-item"><a href="{{ order }}">{{ text_order }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ download }}">{{ text_download }}</a></li>
+									{% if (reward) %} 
+									<li class="account-logged__list-item"><a href="{{ reward }}">{{ text_reward }}</a></li>
+									{% endif %} 
+									<li class="account-logged__list-item"><a href="{{ return }}">{{ text_return }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ transaction }}">{{ text_transaction }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ recurring }}">{{ text_recurring }}</a></li>
+									{% if not tracking %}
+									<li class="account-logged__list-item"><a href="{{ affiliate }}">{{ text_affiliate_add }}</a></li>
+									{% else %}
+									<li class="account-logged__list-item"><a href="{{ affiliate }}">{{ text_affiliate_edit }}</a></li>
+									<li class="account-logged__list-item"><a href="{{ tracking }}">{{ text_tracking }}</a></li>
+									{% endif %}
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="account-form__col">
+						<div class="account-logged">	
+							<div class="account-logged__box">	
+								<span class="account__title">{{ text_my_newsletter }}</span>						
+								<ul class="account-logged__list">			
+									<li class="account-logged__list-item"><a href="{{ newsletter }}">{{ text_newsletter }}</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+		{{ column_right ? '<div class="col-sm-3">' ~ column_right ~ '</div>' : ''}}
+	</div>
+	{{ content_bottom }} 
+	</div>
+</main>
+{{ footer }}</body></html>
