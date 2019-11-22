@@ -14,6 +14,8 @@ class ControllerApiCommerceml extends Controller {
 
     public function index() {
 
+        var_dump($_SERVER);
+
         if(isset($_SERVER['PHP_AUTH_USER'])) {
              $username = $_SERVER['PHP_AUTH_USER'];
              $password = $_SERVER['PHP_AUTH_PW'];
