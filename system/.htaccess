@@ -1,8 +1,56 @@
-<Files *.*>
-Order Deny,Allow
-Deny from all
-</Files>
-<Files ~ "\.(js|css)$">
-Order Allow,Deny
-Allow from all
-</Files>
+# 1.To use URL Alias you need to be running apache with mod_rewrite enabled.
+
+# 2. In your opencart directory rename htaccess.txt to .htaccess.
+
+# For any support issues please visit: http://www.opencart.com
+
+Options +FollowSymlinks
+
+# Prevent Directoy listing
+Options -Indexes
+
+<ifmodule mod_headers.c>
+  Header always set Access-Control-Allow-Origin: "*"
+  Header always set Access-Control-Allow-Methods "POST, GET, PUT, DELETE, OPTIONS"
+  Header always set Access-Control-Allow-Headers "X-Requested-With, content-type"
+</ifModule>
+
+# Prevent Direct Access to files
+<FilesMatch "(?i)((\.tpl|\.ini|\.log|(?<!robots)\.txt))">
+ Order deny,allow
+ Deny from all
+</FilesMatch>
+
+# SEO URL Settings
+RewriteEngine On
+# If your opencart installation does not run on the main web folder make sure you folder it does run in ie. / becomes /shop/
+
+
+RewriteBase /
+
+# для 1С
+RewriteRule .? - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+
+
+#RewriteRule ^sitemap.xml$ index.php?route=feed/yandex_feed [L]
+
+RewriteRule ^system/download/(.*) index.php?route=error/not_found [L]
+RewriteRule ^.git/(.*) index.php?route=error/not_found [L]
+RewriteRule ^\?route(.*) index.php?route=error/not_found [L]
+RewriteRule ^image/og/(.*) get_img.php?id=$1 [L]
+
+RewriteCond %{REQUEST_URI} !=/server-status
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
+RewriteCond %{REQUEST_URI} lk/.*
+RewriteRule ^([^?]*) /lk/index.php [L,QSA]
+
+RewriteCond %{REQUEST_URI} !=/server-status
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !.*\.(ico|gif|jpg|jpeg|png|js|css)
+RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
+
+

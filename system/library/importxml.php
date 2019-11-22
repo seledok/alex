@@ -161,7 +161,7 @@ class importXml
     {
 
         $xml = simplexml_load_string($inner);
-        $vendor['vendor_id'] = $this->vendor_id; // ГОТТИ
+
         $vendor['guid'] = $product['model']  = $xml->Ид->__toString();
         $vendor['ean'] = $product['ean']  =$xml->Штрихкод->__toString();
         $vendor['vendor_key'] = $product['ean']  =$xml->Код->__toString();
