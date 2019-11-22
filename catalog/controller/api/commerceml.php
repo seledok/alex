@@ -14,8 +14,11 @@ class ControllerApiCommerceml extends Controller {
 
     public function index() {
 
-        mail('seledkov@itresh.com','commercML',print_r($_SERVER,true));
+        list($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']) =
+            explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
 
+        mail('seledkov@itresh.com','commercML',print_r($_SERVER,true));
+        header('WWW-Authenticate: Basic realm="My Realm"');
         if(isset($_SERVER['PHP_AUTH_USER'])) {
              $username = $_SERVER['PHP_AUTH_USER'];
              $password = $_SERVER['PHP_AUTH_PW'];
