@@ -13,11 +13,11 @@ class toStore
 {
     static function link($what,$id)
     {
-        \sDB::query("INSERT IGNORE INTO gotti.`" . DB_PREFIX . $what."_to_store`  SET "
+        \sDB::query("INSERT IGNORE INTO `" . DB_PREFIX . $what."_to_store`  SET "
             . "`".$what."_id` = '".$id."', "
             . "`store_id` = '0' ");
 
-        \sDB::query("INSERT IGNORE INTO gotti.`" . DB_PREFIX . $what."_to_layout`  SET "
+        \sDB::query("INSERT IGNORE INTO `" . DB_PREFIX . $what."_to_layout`  SET "
             . "`".$what."_id` = '".$id."', "
             . "`store_id` = '0',"
             . "layout_id = '0' ");
@@ -25,7 +25,7 @@ class toStore
 
     static function unlink($what,$id)
     {
-        \sDB::query("DELETE FROM gotti.`" . DB_PREFIX . $what."_to_store`  WHERE "
+        \sDB::query("DELETE FROM `" . DB_PREFIX . $what."_to_store`  WHERE "
             . "`".$what."_id` = '".$id."' ");
 
         \sDB::query("DELETE FROM gotti.`" . DB_PREFIX . $what."_to_layout`  WHERE "

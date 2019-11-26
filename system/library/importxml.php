@@ -33,11 +33,12 @@ class importXml
     public function parseXml($path)
     {
 
+        //dd($path);
+
         $reader = new XMLReader();
         $reader->open($path);
 
-
-        while (@$reader->read()) {
+        while ($reader->read()) {
             if ($reader->nodeType == XMLReader::ELEMENT) {
                 // если находим объект
                 if($reader->localName == 'КоммерческаяИнформация') $idate = $reader->getAttribute('ДатаФормирования');
