@@ -166,6 +166,7 @@ class importXml
               'ean'=>$xml->Штрихкод->__toString(),
               'name'=>$xml->Наименование->__toString(),
               'sku'=>$xml->Артикул->__toString(),
+              'status'=>1
           ]
         );
 

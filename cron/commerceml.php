@@ -35,13 +35,13 @@ function base_clear(){
         'oc_attribute',
         'oc_attribute_description',
         // 'oc_attribute_value',
-        'oc_category',
-        'oc_category_description',
+       // 'oc_category',
+      //  'oc_category_description',
         'oc_product_to_store',
-        'oc_category_to_store',
+       // 'oc_category_to_store',
         'oc_manufacturer_to_store',
         'oc_product_to_layout',
-        'oc_category_to_layout',
+       // 'oc_category_to_layout',
     );
     foreach ($tables as $table)
     {
