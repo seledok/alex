@@ -1,5 +1,7 @@
 <?php
 
+require_once "init.php";
+
 $zippath = DIR_UPLOAD;
 $xmlpath = DIR_UPLOAD.'xml';
 //
