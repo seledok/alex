@@ -43,6 +43,8 @@ class ocProduct extends Model
 
     protected $main_key = 'product_id';
 
+    protected $sub_identifier = ['model','upc'];
+
     protected $linked_fields = ['oc_product_description'=>['product_id']];
 
     protected function afterInsertStore()

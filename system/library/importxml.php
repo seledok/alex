@@ -24,25 +24,21 @@ class importXml
 
 
 
-    public function __construct($registry)
+
+    static function xml()
     {
-
-
+        return new static();
     }
 
-    public function parseXml($path,$vendor_id = 3)
+    public function parseXml($path)
     {
 
-        $this->vendor_id = $vendor_id;
         $reader = new XMLReader();
         $reader->open($path);
-
-        $this->category_array = $this->shipper->get_categoryes_by_key($vendor_id);
 
 
         while (@$reader->read()) {
             if ($reader->nodeType == XMLReader::ELEMENT) {
-                //var_dump($reader->localName);
                 // если находим объект
                 if($reader->localName == 'КоммерческаяИнформация') $idate = $reader->getAttribute('ДатаФормирования');
                 if($reader->localName == 'Классификатор' || $reader->localName == 'ПакетПредложений') {
@@ -162,121 +158,35 @@ class importXml
 
         $xml = simplexml_load_string($inner);
 
-        $vendor['guid'] = $product['model']  = $xml->Ид->__toString();
-        $vendor['ean'] = $product['ean']  =$xml->Штрихкод->__toString();
-        $vendor['vendor_key'] = $product['ean']  =$xml->Код->__toString();
-        $vendor['name'] = $product['name'] = $xml->Наименование->__toString();
-        if(isset($xml->Группы->Ид)) $product['category'] = $xml->Группы->Ид->__toString();
-        if(isset($xml->Артикул)) $vendor['sku'] = $product['sku'] = $vendor['sku'] = $xml->Артикул->__toString();
-
-        if(isset($xml->Группы->Ид) && isset($this->category_array[$xml->Группы->Ид->__toString()])) $vendor['cat_id'] = $this->category_array[$xml->Группы->Ид->__toString()];
-
-        foreach ($xml->ЗначенияРеквизитов->ЗначениеРеквизита as $rekv) {
-            if ($rekv->Наименование->__toString() == 'Код') $vendor['vendor_key'] = $product['upc'] = $rekv->Значение->__toString();
-        }
-
-        $vendor['quantity'] = null;
-
-        $this->shipper->import($vendor);
+        \Oc\Product::model()->import(
+          [
+              'model'=>$xml->Код->__toString(),
+              'upc'=>$xml->Ид->__toString(),
+              'ean'=>$xml->Штрихкод->__toString(),
+              'name'=>$xml->Наименование->__toString(),
+              'sku'=>$xml->Артикул->__toString(),
+          ]
+        );
 
     }
 
 
     public function xmlOffer($inner)
     {
-
-       // echo 'offer';
-
         $xml = simplexml_load_string($inner);
-        $vendor['vendor_id'] = $this->vendor_id; // ГОТТИ
-        $vendor['guid'] = $xml->Ид->__toString();
-        //$product['ean'] = $xml->Штрихкод->__toString();
-        $vendor['name'] = $xml->Наименование->__toString();
-        $vendor['quantity'] = (int)$xml->Количество->__toString();
+        \Oc\Product::model()->import(
+            [
+                'model'=>$xml->Код->__toString(),
+                'upc'=>$xml->Ид->__toString(),
+                'quantity'=>(int)$xml->Количество->__toString(),
+                'price'=>(int)$xml->Количество->__toString(),
+            ]
+        );
 
+        //todo: конвретер тип цен в колонки у нас
 
-        //var_dump($this->shipper->getPrices($this->vendor_id));
-        $prices = array_flip($this->shipper->getPrices($this->vendor_id));
-        $storage = $this->shipper->getStorage($this->vendor_id);
-
-
-        foreach ($xml->Цены->Цена as $price) {
-           /** ждем своего часа */
-
-           if($prices) {
-               if (isset($prices[$price->ИдТипаЦены->__toString()])) {
-                   $vendor[$prices[$price->ИдТипаЦены->__toString()]] = (float)$price->ЦенаЗаЕдиницу->__toString();
-                  // var_dump($vendor['guid'].': '.$prices[$price->ИдТипаЦены->__toString()].' - '.$price->ЦенаЗаЕдиницу->__toString());
-               }
-           } else {
-               $vendor['price'] = (float)$price->ЦенаЗаЕдиницу->__toString();
-           }
-        }
-
-        //if(isset($vendor['price_red'])) var_dump($vendor);
-
-
-        if($storage) {
-            $delivery_array = array();
-            foreach ($xml->Склад as $sklad) {
-
-                // задача: получить наличе по самом ближнему складу
-                $delivery_array[$storage[(string)$sklad['ИдСклада']]] = (int)$sklad['КоличествоНаСкладе'];
-
-            }
-        }
-
-        if(!empty($delivery_array)) {
-
-            ksort($delivery_array);
-
-            //var_dump($storage);
-            //var_dump($delivery_array);
-
-            foreach ($delivery_array as $delivery => $quantity) {
-                if ($quantity > 0) {
-                    $vendor['delivery'] = $delivery;
-                    $vendor['quantity'] = $quantity;
-                    break;
-                }
-            }
-
-            if (!isset($vendor['delivery'])) {
-                $this->null_cnt++;
-                $vendor['quantity'] = 0;
-                $vendor['delivery'] = 100;
-            }
-        } else {
-            $vendor['delivery'] = 0;
-        }
-
-        // для админа
-
-       // $this->sync->setB2bPrice($product['product_id'],$price_6);
-
-
-
-
-        $result_cnt = $this->shipper->import($vendor);
-        //echo  $result_cnt.' ';
-        if(isset($this->{$result_cnt})) $this->{$result_cnt}++;
 
 
     }
 
-    public function xmlCategory($xml)
-    {
-
-        $xml = simplexml_load_string($xml);
-
-
-        $cat['xml'] = $xml->Ид->__toString();
-        $cat['name'] = $xml->Наименование->__toString();
-
-        $this->shipper->vendor_id = $this->vendor_id;
-        $this->shipper->get_category_id($cat['name'],$cat['xml']);
-
-        //echo $cat['xml'].' - '.$cat['name'];
-
-    }
 }

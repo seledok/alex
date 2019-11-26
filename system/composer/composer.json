@@ -1,0 +1,12 @@
+{
+    "require": {
+        "myclabs/deep-copy": "=1.8.1",
+        "larapack/dd": "1.*",
+        "kilylabs/odata-1c": "^0.2.0",
+        "mgp25/instagram-php": "^5.0",
+        "phpoffice/phpspreadsheet": "^1.9"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8"
+    }
+}

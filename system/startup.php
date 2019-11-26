@@ -71,6 +71,8 @@ if (is_file(DIR_STORAGE . 'vendor/autoload.php')) {
 	require_once(DIR_STORAGE . 'vendor/autoload.php');
 }
 
+require __DIR__ . 'composer/vendor/autoload.php';
+
 function library($class) {
 	$file = DIR_SYSTEM . 'library/' . str_replace('\\', '/', strtolower($class)) . '.php';
 

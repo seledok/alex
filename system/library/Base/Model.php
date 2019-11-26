@@ -261,15 +261,16 @@ abstract class Model
              {
                  $this->selected_identifier_or[$key] = $this->data[$key];
              }
-             elseif(!empty($this->sub_identifier) && isset($this->sub_identifier[$key])) { // это группа
+             elseif(!empty($this->sub_identifier) && isset($this->sub_identifier[$key])) { // это группа внутри одного идентификатора
                  $this->selected_identifier_and[$key] = $value;
 
                  foreach ($this->sub_identifier[$key] as $sub_identifier) { // береберем вложденные идетификаторы
-                     if(isset($this->data[$sub_identifier])) // елси мы получили такой то добавим его
+                     if (isset($this->data[$sub_identifier])) // елси мы получили такой то добавим его
                          $this->selected_identifier_or[$sub_identifier] = $this->data[$sub_identifier];
                  }
+             } elseif(!empty($this->sub_identifier) && in_array($key,$this->sub_identifier)) { // это группа идентификаторов
+                 $this->selected_identifier_or[$key] = $value;
              }
-
 
             // elseif(in_array($key,$this->identifier))
             //     $selected_identifier_and[$key] = $value;
