@@ -75,13 +75,17 @@ require DIR_SYSTEM . 'composer/vendor/autoload.php';
 
 function library($class) {
 	$file = DIR_SYSTEM . 'library/' . str_replace('\\', '/', strtolower($class)) . '.php';
+	$file_cups = DIR_SYSTEM . 'library/' . str_replace('\\', '/', $class) . '.php';
 
 	if (is_file($file)) {
 		include_once(modification($file));
 
 		return true;
 	} else {
-		return false;
+	    if(is_file($file_cups))
+            include_once(modification($file_cups));
+	    else
+		    return false;
 	}
 }
 
