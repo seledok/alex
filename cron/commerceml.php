@@ -11,7 +11,7 @@ $file_list = glob($zippath.'v8*.zip');
 foreach ($file_list as $file) {
     shell_exec("unzip -o $file -d " . $xmlpath);
     shell_exec("cp '".$file."' ".DIR_UPLOAD.'old');
-    unlink($file);
+    //unlink($file);
 
     $xml_list = glob($xmlpath.'*.xml');
 
