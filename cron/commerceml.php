@@ -8,7 +8,7 @@ $xmlpath = DIR_UPLOAD.'xml/';
 
 $file_list = glob($zippath.'v8*.zip');
 
-base_clear();
+//base_clear();
 
 foreach ($file_list as $file) {
     shell_exec("unzip -o $file -d " . $xmlpath);
