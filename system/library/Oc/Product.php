@@ -35,13 +35,22 @@ class Product extends MultiTableInstance
             ->create($data)
             ->save();
 
-        $product_id = $model->getField('product_id');
-
-        //todo пробелма елси product_id был передан ранее!!!
+        if(empty($data['product_id']))
+            $product_id = $model->getField('product_id');
+        else
+            $product_id = $data['product_id'];
 
         // описание товара
         ocProductDescription::model()
-            ->create(array_merge(['language_id'=>1,'product_id'=>$product_id],$data))
+            ->create(
+                array_merge
+                (
+                    [
+                        'language_id'=>1,
+                        'product_id'=>$product_id
+                    ],$data
+                )
+            )
             ->save();
 
         // категория

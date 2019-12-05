@@ -18,7 +18,7 @@ abstract class MultiTableInstance
         abstract public function import(Array $data);
         abstract public static function scopeFull();
 
-     public  function drop(int $id)
+     public function drop(int $id)
      {
         foreach ($this->classes as $class)
         {

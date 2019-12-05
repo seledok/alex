@@ -384,8 +384,11 @@ abstract class Model
         return $this;
     }
 
+
     /** обновляет элемент если он был ранее найден в базе
      * @return $this
+     * @throws \Exception - если нет ключей по которым обновлять
+     *
      */
     protected function update()
     {
@@ -404,12 +407,11 @@ abstract class Model
             $key_fields = $main_key_fields . ' && ('.$sub_key_fields.' )';
         elseif (!$sub_key_fields && $main_key_fields)
             $key_fields = $main_key_fields;
-        //elseif ($sub_key_fields && !$main_key_fields)
-        //    $key_fields = $main_key_fields;
+        elseif ($sub_key_fields && !$main_key_fields)
+            $key_fields = $main_key_fields;
         else {
-            dd($this);
-            trigger_error("Нет основного ключа", E_USER_ERROR);
-
+            d($this);
+            throw new \Exception('Нет ключей');
         }
             //die('Error: Нет основного ключа! ');
 
@@ -455,7 +457,7 @@ abstract class Model
 
 
         // если нет идентификаторов то вернем false
-        if(!$this->selected_identifier_and)
+        if(!$this->selected_identifier_and && !$this->selected_identifier_or)
             return false;
 
          foreach ($this->selected_identifier_or as $key => $val) {
@@ -467,8 +469,6 @@ abstract class Model
          }
 
          $this->get();
-         //var_dump($this->toSql());
-
 
         return $this->total_count ? true : false;
      }
