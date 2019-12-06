@@ -1,5 +1,5 @@
 <?php
-
+die('ну нахуй');
 require_once "init.php";
 
 /**
