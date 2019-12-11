@@ -487,7 +487,10 @@ abstract class Model
         $query = $method == self::SELECT ? 'SELECT ' : 'DELETE '  ;
 
         if($this->sql_select && $method == self::SELECT)
-            $query .= ' SQL_CALC_FOUND_ROWS '. implode(', ', $this->sql_select)."\n";
+            if(is_array($this->sql_select))
+                $query .= ' SQL_CALC_FOUND_ROWS '. implode(', ', $this->sql_select)."\n";
+            else
+                $query .= ' SQL_CALC_FOUND_ROWS '. $this->sql_select." \n";
         elseif($method == self::SELECT)
             $query .= " SQL_CALC_FOUND_ROWS * "."\n";
 

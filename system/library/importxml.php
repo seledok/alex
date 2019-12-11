@@ -159,6 +159,11 @@ class importXml
 
         $xml = simplexml_load_string($inner);
 
+        if(! \Oc\ocProduct::model()
+            ->where('upc',$xml->Ид->__toString())
+            ->get()
+            ->count()
+        )
         \Oc\Product::model()->import(
           [
               'model'=>$xml->Код->__toString(),
