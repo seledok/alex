@@ -164,7 +164,8 @@ class importXml
             ->get()
             ->count()
         )
-        \Oc\Product::model()->import(
+            echo '.';
+        /*\Oc\Product::model()->import(
           [
               'model'=>$xml->Код->__toString(),
               'upc'=>$xml->Ид->__toString(),
@@ -173,7 +174,10 @@ class importXml
               'sku'=>$xml->Артикул->__toString(),
               'status'=>1
           ]
-        );
+
+        );*/
+        else
+            echo '+';
 
     }
 

@@ -39,6 +39,7 @@ class ocProduct extends Model
             'status',
             'rrc',
             'warranty',
+            'import_time',
         ];
 
     protected $main_key = 'product_id';

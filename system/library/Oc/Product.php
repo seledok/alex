@@ -28,8 +28,16 @@ class Product extends MultiTableInstance
         'ocProductSpecial'
     ];
 
+    static $time;
+
+    function __construct()
+    {
+        self::$time = time();
+    }
+
     public function import(array $data)
     {
+        $data['import_time'] = self::$time;
         // основная таблица
         $model =  ocProduct::model()
             ->create($data)

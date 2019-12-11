@@ -22,6 +22,8 @@ foreach ($file_list as $file) {
     }
 }
 
+
+
 function base_clear(){
     //sDb::query("ALTER TABLE `oc_product` CHANGE `upc` `upc` VARCHAR(150)  CHARACTER SET utf8  COLLATE utf8_general_ci  NOT NULL  DEFAULT '';");
     $tables = array(
