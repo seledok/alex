@@ -203,28 +203,42 @@ class importXml
                 //'model'=>$xml->Код->__toString(),
                 'upc'=>$xml->Ид->__toString(),
                 'quantity'=>(int)$xml->Количество->__toString(),
-                'price'=>(int)$xml->Количество->__toString(),
+                //'price'=>(int)$xml->Количество->__toString(),
                 'status'=>1,
                 'import_time' => $this->import_time,
                 'stock_status_id' => 7
             ]
         );
-
+/*
         // очистим скидки
         \Oc\ocProductDiscount::model()
             ->where('product_id',$product_id)
             ->delete();
+*/
+
+       // d($product_id);
 
         // добаивим скидки
         foreach($xml->Цены->Цена as $price)
         {
-            if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()]) && $this->customer_groups[$price->ИдТипаЦены->__toString()] != 0 )
-                Oc\ocProductDiscount::model()
+            if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()])) {
+                if ($this->customer_groups[$price->ИдТипаЦены->__toString()] != 0)
+                    Oc\ocProductDiscount::model()
+                        ->set('product_id', $product_id)
+                        ->set('price', (int)$price->ЦенаЗаЕдиницу->__toString())
+                        ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()])
+                        ->set('quantity', 1)
+                        ->save();
+                else
+                    \Oc\ocProduct::model()
                         ->set('product_id',$product_id)
                         ->set('price',(int)$price->ЦенаЗаЕдиницу->__toString())
-                        ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()] )
-                        ->set('quantity',1)
                         ->save();
+
+
+                //d($price->ЦенаЗаЕдиницу->__toString());
+            }
+
         }
 
 
@@ -257,6 +271,8 @@ class importXml
                 $this->customer_groups[$xml->Ид->__toString()] = $customer_group_id;
             }
         }
+
+        d($this->customer_groups);
 
 
     }
