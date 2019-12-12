@@ -159,12 +159,13 @@ class importXml
 
         $xml = simplexml_load_string($inner);
 
+
         if(! \Oc\ocProduct::model()
-            ->where('upc',$xml->Ид->__toString())
-            ->get()
+            ->orWhere('upc',$xml->Ид->__toString())
+            ->orWhere('model',$xml->Код->__toString())
             ->count()
         )
-            echo '.';
+            echo 'u';
         /*\Oc\Product::model()->import(
           [
               'model'=>$xml->Код->__toString(),
@@ -177,7 +178,7 @@ class importXml
 
         );*/
         else
-            echo '+';
+            echo '.';
 
     }
 
@@ -187,7 +188,7 @@ class importXml
         $xml = simplexml_load_string($inner);
         \Oc\Product::model()->import(
             [
-                'model'=>$xml->Код->__toString(),
+                //'model'=>$xml->Код->__toString(),
                 'upc'=>$xml->Ид->__toString(),
                 'quantity'=>(int)$xml->Количество->__toString(),
                 'price'=>(int)$xml->Количество->__toString(),

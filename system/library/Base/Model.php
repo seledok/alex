@@ -80,7 +80,7 @@ abstract class Model
      */
     protected $table;
 
-     // READ
+    // READ
 
     /**
      * @var array
@@ -174,32 +174,32 @@ abstract class Model
      * @param array $data
      */
     public function __construct(Array $data = [])
-     {
-         if($data) {
-             // добаивим все подходящие поля
-             $this->data = array_intersect_key($data, array_flip($this->allowed_fields));
-             // установим идентификаторы
-             $this->updateIdentifier();
-         }
-     }
+    {
+        if($data) {
+            // добаивим все подходящие поля
+            $this->data = array_intersect_key($data, array_flip($this->allowed_fields));
+            // установим идентификаторы
+            $this->updateIdentifier();
+        }
+    }
 
     /**
      * @return Model
      * возвращает экземпляр класса
      */
     public static function model()
-     {
-         return new static();
-     }
+    {
+        return new static();
+    }
 
-     public function db($db)
-     {
-         $this->db = $db;
-         return $this;
-     }
+    public function db($db)
+    {
+        $this->db = $db;
+        return $this;
+    }
 
 
-     ///////////////////////// WRITE ////////////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////// WRITE ////////////////////////////////////////////////////////////////////////////////////////////////
 
     /** Устанавливает значение поля
      * @param $key -имя поля
@@ -207,13 +207,13 @@ abstract class Model
      * @return $this
      */
     public function set($key, $value)
-     {
-         $this->data[$key] = $value;
-         $this->updateIdentifier();
+    {
+        $this->data[$key] = $value;
+        $this->updateIdentifier();
 
-         //var_dump($this);
-         return $this;
-     }
+        //var_dump($this);
+        return $this;
+    }
 
 
     /** Слудит для получения ИД элемента по имени, елси такого имени нет - создает и возвращает ИД созданного элемента
@@ -221,86 +221,88 @@ abstract class Model
      * @return mixed|null
      */
     public function getIdbyName($name)
-     {
+    {
         // поищем по имени
-         $id = $this->where('name',$name)->get()->getField($this->main_key); //\sDB::get_first("SELECT ? FROM ? WHERE name = '?' ",$this->main_key,$this->table,$data['name']);
+        $id = $this->where('name',$name)->get()->getField($this->main_key); //\sDB::get_first("SELECT ? FROM ? WHERE name = '?' ",$this->main_key,$this->table,$data['name']);
 
-         if($id)
-             return $id;
-         else {
-             $this->data['name'] = $name;
-             return $this->create($this->data)->insert()->getField($this->main_key);
-         }
+        if($id)
+            return $id;
+        else {
+            $this->data['name'] = $name;
+            return $this->create($this->data)->insert()->getField($this->main_key);
+        }
 
-     }
+    }
 
     /** Возвращает значение осноновго ключа таблицы
      * @return bool|mixed
      */
     public function getMainKey()
-     {
-         return isset($this->first_result[$this->main_key]) ? $this->first_result[$this->main_key] : false;
-     }
+    {
+        return isset($this->first_result[$this->main_key]) ? $this->first_result[$this->main_key] : false;
+    }
 
 
     /**
      * Заполняет идентификаторы из полученных полей
      */
     protected function updateIdentifier()
-     {
-         foreach ($this->data as $key => $value)
-         {
-             // ключ
-             if($this->main_key == $key) {
-                 $this->selected_identifier_and[$key] = $value;
-                 $this->selected_identifier_or = [];
-                 // другие поля не рассмтаривали бы но иногад главный ключ совсем не галвный
-                 //return;
-             }
-             elseif (!empty($this->multi_identifier) && in_array($key,$this->multi_identifier))
-             {
-                 $this->selected_identifier_or[$key] = $this->data[$key];
-             }
-             elseif(!empty($this->sub_identifier) && isset($this->sub_identifier[$key])) { // это группа внутри одного идентификатора
-                 $this->selected_identifier_and[$key] = $value;
+    {
+        foreach ($this->data as $key => $value)
+        {
+            // ключ
+            if($this->main_key == $key) {
+                $this->selected_identifier_and[$key] = $value;
+                $this->selected_identifier_or = [];
+                // другие поля не рассмтаривали бы но иногад главный ключ совсем не галвный
+                //return;
+            }
+            elseif (!empty($this->multi_identifier) && in_array($key,$this->multi_identifier))
+            {
+                $this->selected_identifier_or[$key] = $this->data[$key];
+            }
+            elseif(!empty($this->sub_identifier) && isset($this->sub_identifier[$key])) { // это группа внутри одного идентификатора
+                $this->selected_identifier_and[$key] = $value;
 
-                 foreach ($this->sub_identifier[$key] as $sub_identifier) { // береберем вложденные идетификаторы
-                     if (isset($this->data[$sub_identifier])) // елси мы получили такой то добавим его
-                         $this->selected_identifier_or[$sub_identifier] = $this->data[$sub_identifier];
-                 }
-             } elseif(!empty($this->sub_identifier) && in_array($key,$this->sub_identifier)) { // это группа идентификаторов
-                 $this->selected_identifier_or[$key] = $value;
-             }
+                foreach ($this->sub_identifier[$key] as $sub_identifier) { // береберем вложденные идетификаторы
+                    if (isset($this->data[$sub_identifier])) // елси мы получили такой то добавим его
+                        $this->selected_identifier_or[$sub_identifier] = $this->data[$sub_identifier];
+                }
+            } elseif(!empty($this->sub_identifier) && in_array($key,$this->sub_identifier)) { // это группа идентификаторов
+                $this->selected_identifier_or[$key] = $value;
+            }
 
             // elseif(in_array($key,$this->identifier))
             //     $selected_identifier_and[$key] = $value;
-         }
+        }
+
+        //d($this->selected_identifier_or);
 
 
-     }
+    }
 
     /** добавляет поля из массива
      * @param $data
      * @return $this
      */
     public function create($data)
-     {
-         if($data) {
-             // добаивим все подходящие поля
-             $this->data = array_intersect_key($data, array_flip($this->allowed_fields));
-             // установим идентификаторы
-             $this->updateIdentifier();
-         }
+    {
+        if($data) {
+            // добаивим все подходящие поля
+            $this->data = array_intersect_key($data, array_flip($this->allowed_fields));
+            // установим идентификаторы
+            $this->updateIdentifier();
+        }
 
-         return $this;
-     }
+        return $this;
+    }
 
     /**
      * сохраняет в базу элемент
      */
     public function save()
-     {
-         $this->mutate_data();
+    {
+        $this->mutate_data();
 
         if($this->sql_where || $this->sql_orWhere)
             return $this->updateWhere();
@@ -309,27 +311,34 @@ abstract class Model
         else
             return $this->insert();
 
-     }
+    }
+
+    public function fake()
+    {
+        return $this->make_query(self::UPDATE);
+    }
 
     /** Удаляет элемент
      * @return $this
      */
     public function delete()
-     {
+    {
 
-         \sDb::query($this->make_query(self::DELETE));
+        //var_dump($this->make_query(self::DELETE));
+        \sDb::query($this->make_query(self::DELETE));
 
-         $this->afterDelete();
+        $this->afterDelete();
 
-         return $this;
+        return $this;
 
-     }
+    }
 
     /** Создает новый элемент
      * @return $this
      */
     protected function insert()
     {
+
         // приготоввим sql
         $insert_fields = $this->makeSql($this->data);
 
@@ -341,8 +350,16 @@ abstract class Model
 
         // вставим в базу
         \sDb::query("INSERT INTO ? SET $insert_fields ",$this->table);
+        //var_dump("INSERT INTO {$this->table} SET $insert_fields ");
+
         // получим id
         $this->data[$this->main_key] =  \sDb::insert_id();
+
+        if(!$this->data[$this->main_key] && !$this->multi_identifier)
+        {
+            trigger_error('Ни одного значнеи не было вставлено!');
+            //die('Ни одного значнеи не было вставлено!');
+        }
         // присвоим результату все что втсаивли
         $this->first_result = $this->data;
         $this->result[0] = $this->data;
@@ -374,6 +391,8 @@ abstract class Model
         return $this->data;
     }
 
+
+
     /** Обновляет элмент по заданым в методом Where условиям
      * @return $this
      */
@@ -384,6 +403,31 @@ abstract class Model
         return $this;
     }
 
+    /** Обновляет все эдменты найденные  результ
+     * @return $this
+     */
+    public function updateEach()
+    {
+
+        if(!$this->data) {
+            trigger_error("Не указаны поля для обновления");
+            return  null;
+        }
+
+        $this->get();
+
+        $update_fields = $this->makeSql($this->data);
+        foreach ($this->result as $item)
+        {
+            $key_fields = " mt.{$this->main_key} = '".$item[$this->main_key]."' ";
+            \sDb::query("UPDATE ? mt SET $update_fields WHERE $key_fields ",$this->table);
+        }
+
+        $this->last_query = "UPDATE {$this->table} SET $update_fields WHERE $key_fields ";
+        $this->last_action = self::UPDATE;
+
+        return $this;
+    }
 
     /** обновляет элемент если он был ранее найден в базе
      * @return $this
@@ -408,22 +452,22 @@ abstract class Model
         elseif (!$sub_key_fields && $main_key_fields)
             $key_fields = $main_key_fields;
         elseif ($sub_key_fields && !$main_key_fields)
-            $key_fields = $main_key_fields;
+            $key_fields = $sub_key_fields;
         else {
             d($this);
             throw new \Exception('Нет ключей');
         }
-            //die('Error: Нет основного ключа! ');
 
         //todo: обновлять только то что имзенилось!
+        //d($key_fields);
 
         if($update_fields) {
-        // обновим
-        \sDb::query("UPDATE ? SET $update_fields WHERE $key_fields ",$this->table);
+            // обновим
+            \sDb::query("UPDATE ? SET $update_fields WHERE $key_fields ",$this->table);
 
 
-        $this->last_query = "UPDATE {$this->table} SET $update_fields WHERE $key_fields ";
-        $this->last_action = self::UPDATE;
+            $this->last_query = "UPDATE {$this->table} SET $update_fields WHERE $key_fields ";
+            $this->last_action = self::UPDATE;
         } else {
 
             $this->last_action = self::SKIP;
@@ -439,16 +483,16 @@ abstract class Model
      * @return string
      */
     protected function makeSql($data, $delimiter=', ')
-     {
-         $sql_fields_array = [];
-         foreach ($data as $key => $val)
-         {
-                 $sql_fields_array[] = " `".$key."` = '" . \sDB::escape($val) . "' ";
-         }
+    {
+        $sql_fields_array = [];
+        foreach ($data as $key => $val)
+        {
+            $sql_fields_array[] = " `".$key."` = '" . \sDB::escape($val) . "' ";
+        }
 
-         return implode($delimiter, $sql_fields_array);
+        return implode($delimiter, $sql_fields_array);
 
-     }
+    }
 
     /**
      * @return bool
@@ -460,21 +504,23 @@ abstract class Model
         if(!$this->selected_identifier_and && !$this->selected_identifier_or)
             return false;
 
-         foreach ($this->selected_identifier_or as $key => $val) {
+        foreach ($this->selected_identifier_or as $key => $val) {
             $this->orWhere($key,$val);
-         }
+        }
 
-         foreach ($this->selected_identifier_and as $key => $val) {
-             $this->where($key,$val);
-         }
+        foreach ($this->selected_identifier_and as $key => $val) {
+            $this->where($key,$val);
+        }
 
-         $this->get();
+        $this->get();
+        //var_dump($this->toSql());
+
 
         return $this->total_count ? true : false;
-     }
+    }
 
 
-     /////////////////////////////////////////////////////// READ ////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////// READ ////////////////////////////////////////////////////////////////////////
 
 
     /**
@@ -483,8 +529,15 @@ abstract class Model
      */
     protected function make_query($method=1)
     {
+        $query = '';
+
         /// SELECT
-        $query = $method == self::SELECT ? 'SELECT ' : 'DELETE '  ;
+        if($method==self::SELECT)
+            $query = 'SELECT ';
+        elseif ($method == self::DELETE)
+            $query = 'DELETE mt ';
+        elseif ($method == self::UPDATE)
+            $query = 'UPDATE '.$this->table.' ';
 
         if($this->sql_select && $method == self::SELECT)
             if(is_array($this->sql_select))
@@ -495,9 +548,9 @@ abstract class Model
             $query .= " SQL_CALC_FOUND_ROWS * "."\n";
 
         /// FROM
-        if(!$this->db)
+        if(!$this->db && $method != self::UPDATE)
             $query .= " FROM ".$this->table .' as mt '. PHP_EOL;
-        else
+        elseif($method != self::UPDATE)
             $query .= " FROM {$this->db}.".$this->table ." as mt ". PHP_EOL;
 
         // JOIN
@@ -506,6 +559,10 @@ abstract class Model
 
         if($this->sql_inner_join)
             $query .= implode(PHP_EOL, $this->sql_inner_join).PHP_EOL;
+
+        // SET
+        if($this->data && $method == self::UPDATE)
+            $query .= ' SET '. $this->makeSql($this->onlyNewValue()).' '.PHP_EOL;
 
 
         if($this->sql_where || $this->sql_orWhere)
@@ -553,7 +610,7 @@ abstract class Model
      */
     public function getCached()
     {
-      //
+        //
     }
 
     /**
@@ -642,10 +699,15 @@ abstract class Model
         return $this;
     }
 
+    public function getResultArray()
+    {
+        return $this->result;
+    }
     /**
      * @param null $key - ключ
      * @param null $only_value - сделать одномерный массив ключ - значение
      * @return array
+     * возвращает или список всех результатов или единмтвенный результат!!!!
      */
     public function toArray($key=null,$only_value=null)
     {
@@ -699,16 +761,16 @@ abstract class Model
 
         foreach ($on as $index => $condition)
         {
-                if (count($condition) == 1) {  // это просто список условий
-                    foreach ($condition as $key => $value) {
-                        $on_or[$index] = " $table.`$key` = '$value' ";
-                    }
-                } else {
-                    foreach ($condition as $key => $value) {
-                        $on_group[$index] .= " && ";
-                        $on_group[$index] .= " $table.`$key` = '$value' ";
-                    }
+            if (count($condition) == 1) {  // это просто список условий
+                foreach ($condition as $key => $value) {
+                    $on_or[$index] = " $table.`$key` = '$value' ";
                 }
+            } else {
+                foreach ($condition as $key => $value) {
+                    $on_group[$index] .= " && ";
+                    $on_group[$index] .= " $table.`$key` = '$value' ";
+                }
+            }
         }
 
         if($on_or)
@@ -733,8 +795,18 @@ abstract class Model
 
             $foreign_key = isset($this->linked_fields[$table][1]) ? $this->linked_fields[$table][1] : $this->linked_fields[$table][0];
 
-            $this->sql_left_join[] = "$type JOIN $table as $alias ON $alias.$foreign_key = mt.$main_key ";
+            $this->sql_left_join[$alias] = "$type JOIN $table as $alias ON $alias.$foreign_key = mt.$main_key ";
         }
+    }
+
+    public function on($alias,$field1,$field2=null,$compare='=')
+    {
+        if(!$field2)
+            $this->sql_left_join[$alias] .= " && ".$field1;
+        else
+            $this->sql_left_join[$alias] .= " && $field1 $compare $field2";
+
+        return $this;
     }
 
     /**
@@ -756,7 +828,7 @@ abstract class Model
      */
     public function orWhere($val1, $val2, $compare='=')
     {
-        $this->makeWhere('where',$val1,$val2,$compare);
+        $this->makeWhere('orWhere',$val1,$val2,$compare);
         return $this;
     }
 
