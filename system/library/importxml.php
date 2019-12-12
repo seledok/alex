@@ -19,10 +19,22 @@ class importXml
     private $category_array = array();
     public $status = '';
     public $type = 0;
-    public $import_time;
+    protected $import_time;
     protected $parent_cat=array(0,0,0,0,0,0,0);
+    protected $customer_groups;
 
 
+
+
+    function __construct()
+    {
+        $this->import_time = time();
+    }
+
+    public function import_time()
+    {
+        return $this->import_time;
+    }
 
 
     static function xml()
@@ -54,6 +66,7 @@ class importXml
                         if($reader->localName == 'ПакетПредложений') $this->type = 0;
                     }
                 }
+                elseif ($reader->localName == 'ТипыЦен') $this->xmlPrice($reader->readOuterXML());
                 elseif ($reader->localName == 'Товар') $this->xmlProduct($reader->readOuterXML());
                 elseif ($reader->localName == 'Предложение') $this->xmlOffer($reader->readOuterXML());
                 elseif ($reader->localName == 'Документ') $this->xmlOrder($reader->readOuterXML());
@@ -68,7 +81,7 @@ class importXml
 
 
 
-    public function xmlOrder($inner)
+    protected function xmlOrder($inner)
     {
 
         $xml = simplexml_load_string($inner);
@@ -154,9 +167,10 @@ class importXml
 
     }
 
-    public function xmlProduct($inner)
+    protected function xmlProduct($inner)
     {
 
+        //dd($this->customer_groups);
         $xml = simplexml_load_string($inner);
 
 
@@ -165,38 +179,83 @@ class importXml
             ->orWhere('model',$xml->Код->__toString())
             ->count()
         )
-            echo 'u';
-        /*\Oc\Product::model()->import(
-          [
-              'model'=>$xml->Код->__toString(),
-              'upc'=>$xml->Ид->__toString(),
-              'ean'=>$xml->Штрихкод->__toString(),
-              'name'=>$xml->Наименование->__toString(),
-              'sku'=>$xml->Артикул->__toString(),
-              'status'=>1
-          ]
+            \Oc\Product::model()->import(
+              [
+                  'model'=>$xml->Код->__toString(),
+                  'upc'=>$xml->Ид->__toString(),
+                  'ean'=>$xml->Штрихкод->__toString(),
+                  'name'=>$xml->Наименование->__toString(),
+                  'sku'=>$xml->Артикул->__toString(),
+                 // 'status'=>1
+              ]
 
-        );*/
-        else
-            echo '.';
+            );
+
 
     }
 
 
-    public function xmlOffer($inner)
+    protected function xmlOffer($inner)
     {
         $xml = simplexml_load_string($inner);
-        \Oc\Product::model()->import(
+        $product_id = \Oc\Product::model()->import(
             [
                 //'model'=>$xml->Код->__toString(),
                 'upc'=>$xml->Ид->__toString(),
                 'quantity'=>(int)$xml->Количество->__toString(),
                 'price'=>(int)$xml->Количество->__toString(),
+                'status'=>1,
+                'import_time' => $this->import_time,
+                'stock_status_id' => 7
             ]
         );
 
-        //todo: конвретер тип цен в колонки у нас
+        // очистим скидки
+        \Oc\ocProductDiscount::model()
+            ->where('product_id',$product_id)
+            ->delete();
 
+        // добаивим скидки
+        foreach($xml->Цены->Цена as $price)
+        {
+            if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()]) && $this->customer_groups[$price->ИдТипаЦены->__toString()] != 0 )
+                Oc\ocProductDiscount::model()
+                        ->set('product_id',$product_id)
+                        ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()] )
+                        ->set('quantity',1)
+                        ->save();
+        }
+
+
+    }
+
+    protected function xmlPrice($inner)
+    {
+        $groups = simplexml_load_string($inner);
+
+
+
+        foreach ($groups as $xml) {
+
+
+            $customer_group_id = \Oc\ocCustomerGroupDescription::model()
+                ->where('name', $xml->Наименование->__toString())
+                ->get()
+                ->getField('customer_group_id');
+
+            if ($customer_group_id)
+                $this->customer_groups[$xml->Ид->__toString()] = $customer_group_id;
+            else {
+                $customer_group_id = \Oc\CustomerGroup::model()->import(
+                    [
+                        'name' => $xml->Наименование->__toString(),
+                        'language_id' => 1,
+                        'approval' => 1
+                    ]
+                );
+                $this->customer_groups[$xml->Ид->__toString()] = $customer_group_id;
+            }
+        }
 
 
     }

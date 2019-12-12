@@ -37,7 +37,6 @@ class Product extends MultiTableInstance
 
     public function import(array $data)
     {
-        $data['import_time'] = self::$time;
         // основная таблица
         $model =  ocProduct::model()
             ->create($data)

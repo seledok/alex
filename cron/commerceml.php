@@ -8,7 +8,7 @@ $xmlpath = DIR_UPLOAD.'xml/';
 
 $file_list = glob($zippath.'v8*.zip');
 
-//base_clear();
+$model = new importXml();
 
 foreach ($file_list as $file) {
     shell_exec("unzip -o $file -d " . $xmlpath);
@@ -17,10 +17,17 @@ foreach ($file_list as $file) {
     $xml_list = glob($xmlpath.'*.xml');
 
     foreach ($xml_list as $xml_file) {
-        echo  importXml::xml()->parseXml($xml_file);
+        $model->parseXml($xml_file);
         unlink($xml_file);
     }
 }
+
+\Oc\ocProduct::model()
+    ->where('import_time',$model->import_time(),'!=')
+    ->set('quantity',0)
+    ->set('status',0)
+    ->set('stock_status_id',5) //'stock_status_id' => 7
+    ->save();
 
 
 

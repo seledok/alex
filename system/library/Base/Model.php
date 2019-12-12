@@ -355,11 +355,12 @@ abstract class Model
         // получим id
         $this->data[$this->main_key] =  \sDb::insert_id();
 
+        /* // отключил потому что кака разница етсь ключи или нет елси я делаю инсерт?
         if(!$this->data[$this->main_key] && !$this->multi_identifier)
         {
-            trigger_error('Ни одного значнеи не было вставлено!');
+           // trigger_error('Ни одного значнеи не было вставлено!');
             //die('Ни одного значнеи не было вставлено!');
-        }
+        }*/
         // присвоим результату все что втсаивли
         $this->first_result = $this->data;
         $this->result[0] = $this->data;
@@ -537,7 +538,7 @@ abstract class Model
         elseif ($method == self::DELETE)
             $query = 'DELETE mt ';
         elseif ($method == self::UPDATE)
-            $query = 'UPDATE '.$this->table.' ';
+            $query = 'UPDATE '.$this->table.' mt ';
 
         if($this->sql_select && $method == self::SELECT)
             if(is_array($this->sql_select))
