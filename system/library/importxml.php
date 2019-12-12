@@ -29,6 +29,8 @@ class importXml
     function __construct()
     {
         $this->import_time = time();
+        // получим из кеша
+        //$this->customer_groups = @file_get_contents(DIR_CONFIG.'customer_groups.json');
     }
 
     public function import_time()
@@ -272,9 +274,18 @@ class importXml
             }
         }
 
-        d($this->customer_groups);
+        //d($this->customer_groups);
 
+    }
 
+    public function __destruct()
+    {
+        /*
+        file_put_contents(
+            DIR_CONFIG.'customer_groups.json',
+            json_encode($this->customer_groups)
+        );
+        */
     }
 
 }
