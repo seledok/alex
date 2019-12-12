@@ -221,6 +221,7 @@ class importXml
             if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()]) && $this->customer_groups[$price->ИдТипаЦены->__toString()] != 0 )
                 Oc\ocProductDiscount::model()
                         ->set('product_id',$product_id)
+                        ->set('price',(int)$price->ЦенаЗаЕдиницу->__toString())
                         ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()] )
                         ->set('quantity',1)
                         ->save();
