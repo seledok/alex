@@ -20,6 +20,8 @@ foreach ($file_list as $file) {
         $model->parseXml($xml_file);
         unlink($xml_file);
     }
+    unlink($file);
+    //copy($file,);
 }
 
 \Oc\ocProduct::model()
