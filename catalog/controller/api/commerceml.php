@@ -144,14 +144,7 @@ file_limit=2000000');
      function make_order_xml()
     {
 
-
-        // для тестов
-        if(!self::$vendor_id) self::$vendor_id = 7;
-
-
-        $base = $this->base;
-        $sync = new product_sync($this->registry);
-        $orders = $this->get_vendor_orders(self::$vendor_id);
+        $orders = $this->get_orders();
 
         $dom = new domDocument("1.0", "windows-1251");
         //$dom = new domDocument("1.0", "utf-8");
@@ -164,68 +157,34 @@ file_limit=2000000');
 
         if($orders) {
 
-            $this->db->query("INSERT INTO gotti.1c_replic_out SET filename = 'order.xml' ");
-            $replic_id = $this->db->getLastId();
-
             foreach ($orders as $order) {
-                // проверка что заказ был в статусе 5 // передан на склад
-                $is_work = $this->db->query("SELECT * FROM " . $order['shop'] . ".oc_order_history WHERE order_id = '" . $order['order_id'] . "' && order_status_id =  '5' ");
 
-                if (!$is_work->num_rows && $order['order_status_id'] != 5) {
-                    echo 'Note: Заказ ' . $order['order_id'] . " из магазина " . $order['shop'] . " не выгружкен - его не пердавали на склад\n\r";
-                    continue;
-                }
-                // проверка что товар не локальный будет ниже
+                    $order_customer_info = $this->db->get_row("SELECT * FROM oc_order as o 
+                    LEFT JOIN oc_customer as c ON c.customer_id = o.customer_id 
+                    LEFT JOIN oc_address as a ON a.customer_id = o.customer_id 
+                    WHERE o.order_id = '" . $order['order_id'] . "' ");
 
-                // что делать с заказами где локальный и не локальный товар?
+                    $custom_fields = json_decode($order_customer_info['custom_field'],true);
+                    $inn = $custom_fields[1];
+                    $org_name = addslashes($order_customer_info['company']);
 
-                /** если заказ из оптового магазина то возьмеме ИНН покупателя
-                 *   если заказ от пратенра то используем его ИНН
-                 */
-                if ($base->shops[$order['shop']]['tariff'] > 4) {
-                    $order_customer_info = $this->db->get_row("SELECT * FROM " . $order['shop'] . ".oc_order as o 
-                LEFT JOIN " . $order['shop'] . ".oc_customer as c ON c.customer_id = o.customer_id 
-                LEFT JOIN " . $order['shop'] . ".oc_address as a ON a.customer_id = o.customer_id 
-                WHERE o.order_id = '" . $order['order_id'] . "' ");
 
-                    // var_dump($order_customer_info);
-                    // если это база готти получим INN
 
-                    if (!$order_customer_info['fax'] || !stat::is_valid_inn($order_customer_info['fax'])) {
-                        //echo 'Note: Заказ ' . $order['order_id'] . " из магазина " . $order['shop'] . " не выгружкен - он сделан без регистрации или ИНН указан неверно\n\r";
-                        $not[] = $order['global_order_id'];
-                        continue;
-                    } else {
-                        $inn = $order_customer_info['fax'];
-                        $org_name = addslashes($order_customer_info['company']);
 
-                    }
-
-                } else {
-                    $inn = $base->shops[$order['shop']]['inn'];
-                    $set = $sync->getSetting('config', $order['shop']);
-                    $org_name = $set['config_owner'];
-                    if (!$inn) {
-                        echo 'Note: Заказ ' . $order['order_id'] . " из магазина " . $order['shop'] . " не выгружкен - нет ИНН партнера\n\r";
-                        $not[] = $order['global_order_id'];
-                        continue;
-                    }
-                }
 
                 $summ = 0;
-                $products = $this->db->query("SELECT op.order_id, o.date_added, vp.guid as model, p.sku, op.quantity, op.price_in as price, pd.name, o.store_name, o.shipping_zone 
-    FROM " . $order['shop'] . ".oc_order_product op
-    LEFT JOIN " . $order['shop'] . ".oc_order o ON o.order_id = op.order_id
-    LEFT JOIN gotti.oc_product p ON p.product_id = op.product_id
-    LEFT JOIN gotti.1c_vendor_product vp ON vp.vendor_id = " . self::$vendor_id . " && vp.product_id = p.product_id
-    LEFT JOIN gotti.oc_product_description pd ON pd.product_id = op.product_id
-     
-    WHERE op.order_id = '" . $order['order_id'] . "' && p.product_id IS NOT NULL");
+                $products = $this->db->query("SELECT op.order_id, o.date_added, p.guid, p.sku, op.quantity, op.price_in as price, pd.name, o.store_name, o.shipping_zone 
+                FROM oc_order_product op
+                LEFT JOIN oc_order o ON o.order_id = op.order_id
+                LEFT JOIN oc_product p ON p.product_id = op.product_id
+                LEFT JOIN oc_product_description pd ON pd.product_id = op.product_id
+                WHERE op.order_id = '" . $order['order_id'] . "' && p.product_id IS NOT NULL");
 
                 // echo 'Выгружен заказ № '.$order['order_id'].' из базы '.$order['shop'].' ИНН:'.$inn."\n\r";
 
 
-                if ($products->num_rows == 0) continue;
+                if ($products->num_rows == 0)
+                    continue;
 
 
                 foreach ($products->rows as $item) {
@@ -234,8 +193,8 @@ file_limit=2000000');
                 unset($doc);
                 unset($docdata);
                 $doc = $dom->createElement("Документ");
-                $docdata[] = $dom->createElement("Ид", 'itr-order-' . $order['global_order_id']);
-                $docdata[] = $dom->createElement("Номер", $order['global_order_id']);
+                $docdata[] = $dom->createElement("Ид", 'kk-' . $order['order_id']);
+                $docdata[] = $dom->createElement("Номер", $order['order_id']);
                 $docdata[] = $dom->createElement("ХозОперация", 'Заказ товара');
                 $docdata[] = $dom->createElement("Роль", 'Продавец');
                 $docdata[] = $dom->createElement("Валюта", 'Руб');
@@ -263,10 +222,8 @@ file_limit=2000000');
                 $docdata['users']->appendChild($user);
 
 
-                $zone = ' /' . $products->row['shipping_zone'] . '/';
-                $gorod = isset($sync->shops[$order['shop']]['gorod']) ? $sync->shops[$order['shop']]['gorod'] . $zone : 'Новосибирск-ОПТ';
 
-                $docdata[] = $dom->createElement("Комментарий", $gorod . ' - ' . addslashes($products->row['store_name']) . ' / ');
+                $docdata[] = $dom->createElement("Комментарий", 'Закз с сайта');
 
                 $docdata['taxes'] = $dom->createElement("Налоги");
                 unset($tax);
