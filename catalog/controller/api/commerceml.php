@@ -136,9 +136,9 @@ file_limit=2000000');
         die('success');
     }
 
-    private function get_vendor_orders($vendor_id)
+    private function get_orders()
     {
-        return  $this->db->get_rows("SELECT * FROM gotti.1c_order_log WHERE order_status_id = '5' && replic_id = '0' && vendor_id = '$vendor_id'");
+        return  $this->db->get_rows("SELECT * FROM oc_order WHERE order_status_id = '1' ");
     }
 
      function make_order_xml()
@@ -311,7 +311,7 @@ file_limit=2000000');
 
 
 
-            //
+            /*
             foreach ($orders as $order) {
                 // если заказ не надо выгружать
                 if(isset($not) && in_array($order['global_order_id'],$not))
@@ -325,7 +325,7 @@ file_limit=2000000');
                     $this->db->query("INSERT INTO ".$order['shop'].".oc_order_history SET order_status_id = '7', order_id = ".$order['order_id'].", `comment` = 'Заказ был передан в учетную систему склада', date_added = NOW()  ");
                 }
 
-            }
+            }*/
 
 
             //$orders = implode(',',$orders_in_replic);
