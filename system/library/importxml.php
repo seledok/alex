@@ -22,6 +22,7 @@ class importXml
     protected $import_time;
     protected $parent_cat=array(0,0,0,0,0,0,0);
     protected $customer_groups;
+    public $have_offers;
 
 
 
@@ -47,7 +48,7 @@ class importXml
     public function parseXml($path)
     {
 
-        //dd($path);
+        $this->have_offers = false;
 
         $reader = new XMLReader();
         $reader->open($path);
@@ -199,6 +200,7 @@ class importXml
 
     protected function xmlOffer($inner)
     {
+        $this->have_offers = true;
         $xml = simplexml_load_string($inner);
         $product_id = \Oc\Product::model()->import(
             [

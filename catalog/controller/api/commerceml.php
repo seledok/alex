@@ -19,7 +19,7 @@ class ControllerApiCommerceml extends Controller {
 
         //mail('seledkov@itresh.com', 'commercML', $login . '- ' . $password . PHP_EOL . print_r($_SERVER, true));
         //header('WWW-Authenticate: Basic realm="My Realm"');
-        if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) ) {
+        if (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION'])) {
             list($username, $password) =
                 $data = explode(':', base64_decode(substr($_SERVER['REDIRECT_HTTP_AUTHORIZATION'], 6)));
         } elseif(isset($_SERVER['PHP_AUTH_USER'])) {
@@ -146,8 +146,8 @@ file_limit=2000000');
 
         $orders = $this->get_orders();
 
-        $dom = new domDocument("1.0", "windows-1251");
-        //$dom = new domDocument("1.0", "utf-8");
+        //$dom = new domDocument("1.0", "windows-1251");
+        $dom = new domDocument("1.0", "utf-8");
         $dom->formatOutput = true;
         $root = $dom->createElement("КоммерческаяИнформация");
         $root->setAttribute("ВерсияСхемы", '2.07');
@@ -159,10 +159,13 @@ file_limit=2000000');
 
             foreach ($orders as $order) {
 
-                    $order_customer_info = $this->db->get_row("SELECT * FROM oc_order as o 
+                    $order_customer_info = $this->db->get_row("SELECT o.* FROM oc_order as o 
                     LEFT JOIN oc_customer as c ON c.customer_id = o.customer_id 
                     LEFT JOIN oc_address as a ON a.customer_id = o.customer_id 
                     WHERE o.order_id = '" . $order['order_id'] . "' ");
+
+
+                    var_dump($order_customer_info);
 
                     $custom_fields = json_decode($order_customer_info['custom_field'],true);
                     $inn = $custom_fields[1];
@@ -173,7 +176,7 @@ file_limit=2000000');
 
 
                 $summ = 0;
-                $products = $this->db->query("SELECT op.order_id, o.date_added, p.guid, p.sku, op.quantity, op.price_in as price, pd.name, o.store_name, o.shipping_zone 
+                $products = $this->db->query("SELECT op.order_id, o.date_added, p.guid, p.sku, op.quantity, op.price, pd.name, o.store_name, o.shipping_zone 
                 FROM oc_order_product op
                 LEFT JOIN oc_order o ON o.order_id = op.order_id
                 LEFT JOIN oc_product p ON p.product_id = op.product_id

@@ -25,13 +25,13 @@ foreach ($file_list as $file) {
 
     //copy($file,);
 }
-
-\Oc\ocProduct::model()
-    ->where('import_time',$model->import_time(),'!=')
-    ->set('quantity',0)
-    ->set('status',0)
-    ->set('stock_status_id',5) //'stock_status_id' => 7
-    ->save();
+if($model->have_offers)
+    \Oc\ocProduct::model()
+        ->where('import_time',$model->import_time(),'!=')
+        ->set('quantity',0)
+        ->set('status',0)
+        ->set('stock_status_id',5) //'stock_status_id' => 7
+        ->save();
 
 
 

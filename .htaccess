@@ -3,17 +3,11 @@
 # 2. In your opencart directory rename htaccess.txt to .htaccess.
 
 # For any support issues please visit: http://www.opencart.com
-
+Require all granted
 Options +FollowSymlinks
 
 # Prevent Directoy listing
 Options -Indexes
-
-<ifmodule mod_headers.c>
-  Header always set Access-Control-Allow-Origin: "*"
-  Header always set Access-Control-Allow-Methods "POST, GET, PUT, DELETE, OPTIONS"
-  Header always set Access-Control-Allow-Headers "X-Requested-With, content-type"
-</ifModule>
 
 # Prevent Direct Access to files
 <FilesMatch "(?i)((\.tpl|\.ini|\.log|(?<!robots)\.txt))">
