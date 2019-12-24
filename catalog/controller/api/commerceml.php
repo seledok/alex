@@ -111,7 +111,6 @@ file_limit=2000000');
 
     private function sale_query()
     {
-        //die('success');
         echo $this->make_order_xml();
     }
 
@@ -168,7 +167,7 @@ file_limit=2000000');
                    // var_dump($order_customer_info);
 
                     $custom_fields = json_decode($order_customer_info['custom_field'],true);
-                    $inn = $custom_fields[1];
+                    $inn = isset($custom_fields[1]) ? $custom_fields[1] : '';
                     $org_name = addslashes($order_customer_info['company']);
 
 
