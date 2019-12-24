@@ -159,13 +159,13 @@ file_limit=2000000');
 
             foreach ($orders as $order) {
 
-                    $order_customer_info = $this->db->get_row("SELECT o.* FROM oc_order as o 
+                    $order_customer_info = $this->db->get_row("SELECT o.*, a.company FROM oc_order as o 
                     LEFT JOIN oc_customer as c ON c.customer_id = o.customer_id 
                     LEFT JOIN oc_address as a ON a.customer_id = o.customer_id 
                     WHERE o.order_id = '" . $order['order_id'] . "' ");
 
 
-                    var_dump($order_customer_info);
+                   // var_dump($order_customer_info);
 
                     $custom_fields = json_decode($order_customer_info['custom_field'],true);
                     $inn = $custom_fields[1];
@@ -176,7 +176,7 @@ file_limit=2000000');
 
 
                 $summ = 0;
-                $products = $this->db->query("SELECT op.order_id, o.date_added, p.guid, p.sku, op.quantity, op.price, pd.name, o.store_name, o.shipping_zone 
+                $products = $this->db->query("SELECT op.order_id, o.date_added, p.upc, p.sku, op.quantity, op.price, pd.name, o.store_name, o.shipping_zone 
                 FROM oc_order_product op
                 LEFT JOIN oc_order o ON o.order_id = op.order_id
                 LEFT JOIN oc_product p ON p.product_id = op.product_id
@@ -246,7 +246,7 @@ file_limit=2000000');
                     unset($oneproduct);
                     unset($oneproductdata);
                     $oneproduct = $dom->createElement("Товар");
-                    $oneproductdata[] = $dom->createElement("Ид", $product['model']);
+                    $oneproductdata[] = $dom->createElement("Ид", $product['upc']);
                     $oneproductdata[] = $dom->createElement("Артикул", $product['sku']);
                     $oneproductdata[] = $dom->createElement("Наименование", htmlspecialchars($product['name']));
                     $oneproductdata[] = $dom->createElement("Количество", $product['quantity']);
@@ -283,7 +283,7 @@ file_limit=2000000');
 
                 $sait = $dom->createElement("ЗначениеРеквизита");
                 $sait_name = $dom->createElement("Наименование", 'Сайт');
-                $sait_zn = $dom->createElement("Значение", '[s1] ГОТТИ Регион');
+                $sait_zn = $dom->createElement("Значение", 'keramo-kazan.ru');
 
                 $otm = $dom->createElement("ЗначениеРеквизита");
                 $otm_name = $dom->createElement("Наименование", 'Отменен');
@@ -309,7 +309,7 @@ file_limit=2000000');
 
                 $root->appendChild($doc);
 
-                $orders_in_replic[$order['shop']][] = $order['global_order_id'];
+                $orders_in_replic[] = $order['order_id'];
             }
 
 
