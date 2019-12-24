@@ -19,8 +19,10 @@ foreach ($file_list as $file) {
     foreach ($xml_list as $xml_file) {
         $model->parseXml($xml_file);
         unlink($xml_file);
+        echo $xml_file . 'import time: '.$model->import_time(). PHP_EOL;
     }
     unlink($file);
+
     //copy($file,);
 }
 
