@@ -386,7 +386,7 @@ function initCustomSelect($obj) {
 function spinner() {
 	if ($('.spinner').length) {
 		$('.spinner').spinner({
-			min: 2.2,
+			//min: 2.2,
 			//step: 2.2
 		});
 	}
