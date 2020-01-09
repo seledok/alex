@@ -842,16 +842,23 @@
             incremental: !0,
             max: null,
             min: null,
-            numberFormat: null,
+            numberFormat: 'n',
             page: 10,
-            step: 2,//$(this).children('input').attr('placeholder'), // 1 // svtol
+            step: 1.2,//$(this).children('input').attr('placeholder'), // 1 // svtol
             change: null,
             spin: null,
             start: null,
             stop: null
         },
         _create: function () {
-            this._setOption("max", this.options.max), this._setOption("min", this.options.min), this._setOption("step", this.options.step), "" !== this.value() && this._value(this.element.val(), !0), this._draw(), this._on(this._events), this._refresh(), this._on(this.window, {
+            this._setOption("max", this.options.max),
+                this._setOption("min", this.options.min),
+                this._setOption("step", this.options.step),
+                "" !== this.value() && this._value(this.element.val(), !0),
+                this._draw(),
+                this._on(this._events),
+                this._refresh(),
+                this._on(this.window, {
                 beforeunload: function () {
                     this.element.removeAttr("autocomplete")
                 }
