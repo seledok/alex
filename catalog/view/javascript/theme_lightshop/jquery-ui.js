@@ -844,7 +844,7 @@
             min: null,
             numberFormat: null,
             page: 10,
-            step: $(this).children('input').attr('placeholder'), // 1 // svtol
+            step: 1.2,//$(this).children('input').attr('placeholder'), // 1 // svtol
             change: null,
             spin: null,
             start: null,
