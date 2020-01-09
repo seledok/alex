@@ -844,7 +844,7 @@
             min: null,
             numberFormat: 'n',
             page: 10,
-            step: $(this).children('input').attr('placeholder'), // 1 // svtol
+            step:  1, // svtol
             change: null,
             spin: null,
             start: null,
@@ -853,7 +853,7 @@
         _create: function () {
             this._setOption("max", this.options.max),
                 this._setOption("min", this.options.min),
-                this._setOption("step", this.options.step),
+                this._setOption("step", this.element.val()), //this.options.step),
                 "" !== this.value() && this._value(this.element.val(), !0),
                 this._draw(),
                 this._on(this._events),
