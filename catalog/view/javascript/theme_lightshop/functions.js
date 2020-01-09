@@ -386,7 +386,7 @@ function initCustomSelect($obj) {
 function spinner() {
 	if ($('.spinner').length) {
 		$('.spinner').spinner({
-			min: 1.5,
+			min: parseFloat($(this).attr('placeholder')),
 			step: 1.5
 		});
 	}
