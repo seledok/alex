@@ -387,6 +387,7 @@ function spinner() {
 	if ($('.spinner').length) {
 		$('.spinner').spinner({
 			min: 1,
+			step: 1.5
 		});
 	}
 

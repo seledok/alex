@@ -273,8 +273,9 @@
 	<script src="catalog/view/javascript/theme_lightshop/widgets.js{{ '?v'~version }}"></script>
 	{{ bootstrap ? '<script src="catalog/view/javascript/theme_lightshop/bootstrap.min.js?v' ~ version ~ '"></script>' : '' }} 
 	{{ fontawesome ? '<script defer src="catalog/view/javascript/theme_lightshop/fontawesome/js/all.min.js?v' ~ version ~ '"></script>' : '' }} 
-	<script src="catalog/view/javascript/theme_lightshop/functions.js{{ '?v'~version }}"></script>
-{% for script in scripts %} 
+	<script src="catalog/view/javascript/theme_lightshop/functions.js?v{{ random() }}"></script>
+<!-- 	<script src="catalog/view/javascript/theme_lightshop/functions.js{{ '?v'~version }}"></script> -->
+{% for script in scripts %}
 	<script src="{{ script }}"></script>
 {% endfor %} 
 {% if (custom_js) %} 
