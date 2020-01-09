@@ -92,7 +92,7 @@
 								</td>					
 								<td class="cart__table-spinner">
 									<div class="spinner-wrap">
-										<input name="quantity[{{ product['cart_id'] }}]" type="text" class="spinner" value='{{ product['quantity'] }}' placeholder="{{ product['quantity'] }}" >
+										<input name="quantity[{{ product['cart_id'] }}]" type="text" class="spinner" value='{{ product['quantity'] }}' step='{{ product['minimum'] }}' min='{{ product['minimum'] }}' placeholder="{{ product['quantity'] }}" >
 									</div>
 								</td>
 
