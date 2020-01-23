@@ -176,6 +176,21 @@ class importXml
         //dd($this->customer_groups);
         $xml = simplexml_load_string($inner);
 
+        /*
+         <ЗначенияСвойств>
+					<ЗначенияСвойства>
+						<Ид>05ac61b1-2854-11ea-9e1e-00155d466405</Ид>
+						<Значение>1,62</Значение>
+					</ЗначенияСвойства>
+				</ЗначенияСвойств>
+         */
+
+        $minimum = 1;
+        foreach($xml->ЗначенияСвойств->ЗначенияСвойства as $property)
+        {
+            if($property->Ид->__toString() == '05ac61b1-2854-11ea-9e1e-00155d466405')
+                $minimum = (float) $property->Значение->__toString();
+        }
 
         if(! \Oc\ocProduct::model()
             ->orWhere('upc',$xml->Ид->__toString())
@@ -189,10 +204,21 @@ class importXml
                   'ean'=>$xml->Штрихкод->__toString(),
                   'name'=>$xml->Наименование->__toString(),
                   'sku'=>$xml->Артикул->__toString(),
+                  'minimum'=>$minimum,
                  // 'status'=>1
               ]
 
             );
+
+        // обновим минимум всегда // потом можно убрать
+        \Oc\Product::model()->import(
+            [
+                'model'=>$xml->Код->__toString(),
+                'upc'=>$xml->Ид->__toString(),
+                'minimum'=>$minimum,
+                // 'status'=>1
+            ]
+        );
 
 
     }
@@ -206,7 +232,7 @@ class importXml
             [
                 //'model'=>$xml->Код->__toString(),
                 'upc'=>$xml->Ид->__toString(),
-                'quantity'=>(int)$xml->Количество->__toString(),
+                'quantity'=>(float)$xml->Количество->__toString(),
                 //'price'=>(int)$xml->Количество->__toString(),
                 'status'=>1,
                 'import_time' => $this->import_time,
@@ -222,21 +248,24 @@ class importXml
 
        // d($product_id);
 
+        // дефолтная цена
+        $default_customer_group = sDB::get_one("SELECT value FROM oc_setting WHERE `key` = 'config_customer_group_id' ");
+
         // добаивим скидки
         foreach($xml->Цены->Цена as $price)
         {
             if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()])) {
-                if ($this->customer_groups[$price->ИдТипаЦены->__toString()] != 0)
+                if ($this->customer_groups[$price->ИдТипаЦены->__toString()] != $default_customer_group)
                     Oc\ocProductDiscount::model()
                         ->set('product_id', $product_id)
-                        ->set('price', (int)$price->ЦенаЗаЕдиницу->__toString())
+                        ->set('price', (float)$price->ЦенаЗаЕдиницу->__toString())
                         ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()])
                         ->set('quantity', 1)
                         ->save();
                 else
                     \Oc\ocProduct::model()
                         ->set('product_id',$product_id)
-                        ->set('price',(int)$price->ЦенаЗаЕдиницу->__toString())
+                        ->set('price',(float)$price->ЦенаЗаЕдиницу->__toString())
                         ->save();
 
 
