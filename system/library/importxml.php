@@ -192,6 +192,8 @@ class importXml
                 $minimum = (float) $property->Значение->__toString();
         }
 
+        echo 'min: '.$minimum . PHP_EOL;
+
         if(! \Oc\ocProduct::model()
             ->orWhere('upc',$xml->Ид->__toString())
             ->orWhere('model',$xml->Код->__toString())
