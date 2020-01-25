@@ -310,7 +310,7 @@ class importXml
             }
         }
 
-        //d($this->customer_groups);
+        d($this->customer_groups);
 
     }
 
