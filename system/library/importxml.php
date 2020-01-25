@@ -185,7 +185,7 @@ class importXml
 				</ЗначенияСвойств>
          */
 
-        $minimum = 1;
+        $minimum = 0;
         foreach($xml->ЗначенияСвойств->ЗначенияСвойства as $property)
         {
             if($property->Ид->__toString() == '05ac61b1-2854-11ea-9e1e-00155d466405')
