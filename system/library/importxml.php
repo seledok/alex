@@ -194,7 +194,7 @@ class importXml
         }
 
 
-        echo 'min: '.$minimum . PHP_EOL;
+        //echo 'min: '.$minimum . PHP_EOL;
 
         if(! \Oc\ocProduct::model()
             ->orWhere('upc',$xml->Ид->__toString())
@@ -243,17 +243,18 @@ class importXml
                 'stock_status_id' => 7
             ]
         );
-/*
+
         // очистим скидки
         \Oc\ocProductDiscount::model()
             ->where('product_id',$product_id)
             ->delete();
-*/
+
 
        // d($product_id);
 
         // дефолтная цена
         $default_customer_group = sDB::get_one("SELECT value FROM oc_setting WHERE `key` = 'config_customer_group_id' ");
+
 
         // добаивим скидки
         foreach($xml->Цены->Цена as $price)
@@ -274,7 +275,7 @@ class importXml
 
 
                 //d($price->ЦенаЗаЕдиницу->__toString());
-            }
+            } echo 'No '.$price->ИдТипаЦены->__toString().' price group ! '.PHP_EOL;
 
         }
 
