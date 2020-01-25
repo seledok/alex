@@ -259,6 +259,7 @@ class importXml
         // добаивим скидки
         foreach($xml->Цены->Цена as $price)
         {
+            $Price_id = $price->ИдТипаЦены->__toString();
             if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()])) {
                 if ($this->customer_groups[$price->ИдТипаЦены->__toString()] != $default_customer_group)
                     Oc\ocProductDiscount::model()
@@ -275,7 +276,11 @@ class importXml
 
 
                 //d($price->ЦенаЗаЕдиницу->__toString());
-            } echo 'No '.$price->ИдТипаЦены->__toString().' price group ! '.PHP_EOL;
+            } else {
+                echo 'No '.$price->ИдТипаЦены->__toString().' price group ! '.PHP_EOL;
+                d($this->customer_groups);
+            }
+
 
         }
 
@@ -310,7 +315,7 @@ class importXml
             }
         }
 
-        d($this->customer_groups);
+
 
     }
 
