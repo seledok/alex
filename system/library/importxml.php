@@ -261,24 +261,19 @@ class importXml
         {
             $Price_id = $price->ИдТипаЦены->__toString();
             if(isset($this->customer_groups[$price->ИдТипаЦены->__toString()])) {
-                if ($this->customer_groups[$price->ИдТипаЦены->__toString()] != $default_customer_group)
+                if ($this->customer_groups[$price->ИдТипаЦены->__toString()] == $default_customer_group)
+                    \Oc\ocProduct::model()
+                        ->where('product_id', $product_id)
+                        ->set('price', (float)$price->ЦенаЗаЕдиницу->__toString())
+                        ->save();
+
                     Oc\ocProductDiscount::model()
                         ->set('product_id', $product_id)
                         ->set('price', (float)$price->ЦенаЗаЕдиницу->__toString())
                         ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()])
                         ->set('quantity', 1)
                         ->save();
-                else {
-                    // var_dump(
-                    $res = \Oc\ocProduct::model()
-                        ->where('product_id', $product_id)
-                        ->set('price', (float)$price->ЦенаЗаЕдиницу->__toString())
-                        //->toSql()
-                        ->save();
-                    //);
-                    if($product_id == 82)
-                        dd($res);
-                }
+
 
 
                 //d($price->ЦенаЗаЕдиницу->__toString());
