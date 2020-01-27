@@ -268,15 +268,16 @@ class importXml
                         ->set('customer_group_id', $this->customer_groups[$price->ИдТипаЦены->__toString()])
                         ->set('quantity', 1)
                         ->save();
-                else
-                       // var_dump(
-                        \Oc\ocProduct::model()
-                        ->where('product_id',$product_id)
-                        ->set('price',(float)$price->ЦенаЗаЕдиницу->__toString())
+                else {
+                    // var_dump(
+                    $res = \Oc\ocProduct::model()
+                        ->where('product_id', $product_id)
+                        ->set('price', (float)$price->ЦенаЗаЕдиницу->__toString())
                         //->toSql()
                         ->save();
-                        //);
-
+                    //);
+                    dd($res);
+                }
 
 
                 //d($price->ЦенаЗаЕдиницу->__toString());
