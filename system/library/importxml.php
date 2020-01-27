@@ -269,13 +269,13 @@ class importXml
                         ->set('quantity', 1)
                         ->save();
                 else
-                        var_dump(
+                       // var_dump(
                         \Oc\ocProduct::model()
-                        ->set('product_id',$product_id)
+                        ->where('product_id',$product_id)
                         ->set('price',(float)$price->ЦенаЗаЕдиницу->__toString())
                         //->toSql()
-                        //->save()
-                        );
+                        ->save();
+                        //);
 
 
 
