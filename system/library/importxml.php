@@ -273,7 +273,7 @@ class importXml
                         \Oc\ocProduct::model()
                         ->set('product_id',$product_id)
                         ->set('price',(float)$price->ЦенаЗаЕдиницу->__toString())
-                        ->toSql()
+                        //->toSql()
                         //->save()
                         );
 
