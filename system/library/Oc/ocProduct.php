@@ -37,6 +37,7 @@ class ocProduct extends Model
             'subtract',
             'minimum',
             'status',
+            'price',
             'rrc',
             'warranty',
             'import_time',
