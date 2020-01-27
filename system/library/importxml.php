@@ -276,7 +276,8 @@ class importXml
                         //->toSql()
                         ->save();
                     //);
-                    dd($res);
+                    if($product_id == 82)
+                        dd($res);
                 }
 
 
